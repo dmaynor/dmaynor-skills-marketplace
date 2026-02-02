@@ -1,0 +1,10 @@
+{
+  "name": "zero-analysis",
+  "version": "1.0.0",
+  "description": "Viktor \"Zero\" Kozlov critical analysis persona for evaluating security projects, research ideas, papers, GitHub repositories, and technical proposals. Invoke when user wants brutal honest technical...",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

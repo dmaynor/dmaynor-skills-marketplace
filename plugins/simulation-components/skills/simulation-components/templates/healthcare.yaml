@@ -1,0 +1,70 @@
+# Healthcare Organization Template
+# Hospital System
+
+organization:
+  name: "Summit Regional Medical Center"
+  short_name: "Summit"
+  domain: "summitmedical.org"
+  internal_domain: "summit.local"
+  
+  industry:
+    sector: "healthcare"
+    subsector: "hospital_system"
+    
+  size:
+    employees: 4000
+    locations: 8
+    
+  geography:
+    headquarters: "Denver, CO"
+    country: "US"
+    timezone: "America/Denver"
+    
+  structure:
+    departments:
+      - name: "Executive"
+        headcount: 20
+        prefix: "EXEC"
+      - name: "Medical Staff"
+        headcount: 500
+        prefix: "MED"
+      - name: "Nursing"
+        headcount: 1200
+        prefix: "NRS"
+      - name: "IT"
+        headcount: 150
+        prefix: "IT"
+      - name: "Administration"
+        headcount: 300
+        prefix: "ADM"
+      - name: "Finance"
+        headcount: 100
+        prefix: "FIN"
+      - name: "Facilities"
+        headcount: 200
+        prefix: "FAC"
+      - name: "Human Resources"
+        headcount: 80
+        prefix: "HR"
+      - name: "Laboratory"
+        headcount: 150
+        prefix: "LAB"
+      - name: "Pharmacy"
+        headcount: 100
+        prefix: "PHARM"
+        
+  network:
+    external_ip_range: "198.51.100.0/24"
+    internal_ip_range: "10.20.0.0/16"
+    dmz_range: "172.17.0.0/24"
+    
+  branding:
+    primary_color: "#065f46"
+    secondary_color: "#d1fae5"
+    logo_text: "SUMMIT"
+    tagline: "Compassionate Care, Advanced Medicine"
+    
+  scenario_context:
+    threat_actors: ["APT41", "Orangeworm", "ransomware_gangs"]
+    critical_assets: ["EHR_system", "PACS", "medical_devices", "patient_data"]
+    compliance_frameworks: ["HIPAA", "HITECH", "Joint_Commission"]

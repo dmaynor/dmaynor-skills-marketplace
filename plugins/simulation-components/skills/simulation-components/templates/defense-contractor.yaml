@@ -1,0 +1,70 @@
+# Defense Contractor Organization Template
+# Aerospace & Defense
+
+organization:
+  name: "Aegis Defense Systems"
+  short_name: "Aegis"
+  domain: "aegisdefense.com"
+  internal_domain: "aegis.local"
+  
+  industry:
+    sector: "defense"
+    subsector: "aerospace_defense"
+    
+  size:
+    employees: 8000
+    locations: 12
+    
+  geography:
+    headquarters: "McLean, VA"
+    country: "US"
+    timezone: "America/New_York"
+    
+  structure:
+    departments:
+      - name: "Executive"
+        headcount: 30
+        prefix: "EXEC"
+      - name: "Engineering"
+        headcount: 2000
+        prefix: "ENG"
+      - name: "Programs"
+        headcount: 800
+        prefix: "PGM"
+      - name: "Cybersecurity"
+        headcount: 400
+        prefix: "CYBER"
+      - name: "IT"
+        headcount: 300
+        prefix: "IT"
+      - name: "Contracts"
+        headcount: 200
+        prefix: "CONT"
+      - name: "Security"
+        headcount: 150
+        prefix: "SEC"
+      - name: "Human Resources"
+        headcount: 120
+        prefix: "HR"
+      - name: "Finance"
+        headcount: 150
+        prefix: "FIN"
+      - name: "Manufacturing"
+        headcount: 1500
+        prefix: "MFG"
+        
+  network:
+    external_ip_range: "192.0.2.0/24"
+    internal_ip_range: "10.30.0.0/16"
+    dmz_range: "172.18.0.0/24"
+    
+  branding:
+    primary_color: "#1e3a5f"
+    secondary_color: "#94a3b8"
+    logo_text: "AEGIS"
+    tagline: "Defending What Matters Most"
+    
+  scenario_context:
+    threat_actors: ["APT28", "APT29", "Lazarus", "nation_state"]
+    critical_assets: ["classified_programs", "CUI", "weapons_systems", "supply_chain"]
+    compliance_frameworks: ["NIST_800-171", "CMMC", "ITAR", "DFARS"]

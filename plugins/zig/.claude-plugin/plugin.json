@@ -1,0 +1,10 @@
+{
+  "name": "zig",
+  "version": "1.0.0",
+  "description": "\"Zig systems programming language skill for memory-safe, high-performance code. Use when writing Zig code, build.zig configurations, build.zig.zon package manifests, or working with .zig files. Tri...",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

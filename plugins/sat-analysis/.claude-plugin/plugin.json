@@ -1,0 +1,10 @@
+{
+  "name": "sat-analysis",
+  "version": "1.0.0",
+  "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

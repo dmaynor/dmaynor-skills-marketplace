@@ -1,0 +1,10 @@
+{
+  "name": "swarm-orchestration",
+  "version": "1.0.0",
+  "description": "Multi-agent swarm orchestration for complex tasks. TD (Technical Director) decomposes user requests into task lists, delegates to specialized role-based agents (Architect, Programmer, QA, Critic, S...",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "godot",
+  "version": "1.0.0",
+  "description": "\"Godot Engine 4.x game development skill for GDScript, scene architecture, physics, UI, shaders, and project structure. Use when creating games, prototypes, or interactive applications in Godot. Tr...",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

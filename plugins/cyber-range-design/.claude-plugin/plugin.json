@@ -1,0 +1,10 @@
+{
+  "name": "cyber-range-design",
+  "version": "1.0.0",
+  "description": "Design, architect, and implement high-fidelity cyber ranges for training and exercises.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

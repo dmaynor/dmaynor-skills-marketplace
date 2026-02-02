@@ -1,0 +1,10 @@
+{
+  "name": "purple-teaming",
+  "version": "1.0.0",
+  "description": "Plan and execute purple team exercises for detection validation.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

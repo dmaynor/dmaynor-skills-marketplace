@@ -1,0 +1,10 @@
+{
+  "name": "gits-dual-plane-isometric-assets",
+  "version": "1.0.0",
+  "description": "Generate isometric sprite sheet images for Ghost-in-the-Shell-inspired dual-plane city simulation.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

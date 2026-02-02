@@ -1,0 +1,64 @@
+# Financial Services Organization Template
+# Investment Banking / Wealth Management
+
+organization:
+  name: "Meridian Financial Services"
+  short_name: "Meridian"
+  domain: "meridianfs.com"
+  internal_domain: "meridian.local"
+  
+  industry:
+    sector: "financial_services"
+    subsector: "investment_banking"
+    
+  size:
+    employees: 2500
+    locations: 5
+    
+  geography:
+    headquarters: "New York, NY"
+    country: "US"
+    timezone: "America/New_York"
+    
+  structure:
+    departments:
+      - name: "Executive"
+        headcount: 15
+        prefix: "EXEC"
+      - name: "Trading"
+        headcount: 200
+        prefix: "TRD"
+      - name: "Risk Management"
+        headcount: 75
+        prefix: "RISK"
+      - name: "Technology"
+        headcount: 300
+        prefix: "TECH"
+      - name: "Operations"
+        headcount: 400
+        prefix: "OPS"
+      - name: "Compliance"
+        headcount: 100
+        prefix: "COMPL"
+      - name: "Human Resources"
+        headcount: 50
+        prefix: "HR"
+      - name: "Finance"
+        headcount: 80
+        prefix: "FIN"
+        
+  network:
+    external_ip_range: "203.0.113.0/24"
+    internal_ip_range: "10.10.0.0/16"
+    dmz_range: "172.16.0.0/24"
+    
+  branding:
+    primary_color: "#1a365d"
+    secondary_color: "#e2e8f0"
+    logo_text: "MERIDIAN"
+    tagline: "Building Tomorrow's Wealth Today"
+    
+  scenario_context:
+    threat_actors: ["FIN7", "APT38", "Carbanak"]
+    critical_assets: ["trading_platform", "client_data", "wire_transfer_system"]
+    compliance_frameworks: ["SOX", "PCI-DSS", "SEC", "FINRA"]
