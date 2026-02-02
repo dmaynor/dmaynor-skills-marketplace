@@ -7,6 +7,16 @@ description: "Zig systems programming language skill for memory-safe, high-perfo
 
 Systems programming language emphasizing explicit behavior, manual memory management, and compile-time metaprogramming. Target version: **0.13+** (adapt for older versions as needed).
 
+## Additional Resources
+
+This skill includes supplementary materials:
+
+- **references/build-system.md** - Comprehensive build.zig and build.zig.zon guide, cross-compilation, dependency management
+- **references/comptime-metaprogramming.md** - Advanced comptime techniques, generics, reflection, code generation
+- **references/c-interop.md** - C library integration, FFI patterns, type conversions, exporting to C
+- **scripts/scaffold_project.py** - Create new Zig projects with standard structure
+- **scripts/analyze_code.py** - Static analysis tool for common Zig issues and best practices
+
 ## Core Philosophy
 
 - No hidden control flow or memory allocations
