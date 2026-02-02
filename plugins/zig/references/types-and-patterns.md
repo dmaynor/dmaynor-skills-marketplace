@@ -1,99 +1,9 @@
----
-name: zig
-description: "Zig systems programming language skill for memory-safe, high-performance code. Use when writing Zig code, build.zig configurations, build.zig.zon package manifests, or working with .zig files. Triggers on: Zig syntax, allocators, comptime, error unions, defer/errdefer, slices, optionals, cross-compilation, C interop, or any request mentioning Zig explicitly. Covers build system, testing, memory management, generics via comptime, and idiomatic patterns."
----
-
-# Zig Programming
-
-Systems programming language emphasizing explicit behavior, manual memory management, and compile-time metaprogramming. Target version: **0.13+** (adapt for older versions as needed).
-
-## Core Philosophy
-
-- No hidden control flow or memory allocations
-- Allocators passed explicitly as parameters
-- Errors are values, not exceptions
-- `comptime` replaces macros and generics
-- Interoperates directly with C
-
-## Project Structure
-
-```
-project/
-├── build.zig           # Build configuration (Zig code)
-├── build.zig.zon       # Package manifest (Zig Object Notation)
-├── src/
-│   ├── main.zig        # Entry point
-│   └── lib.zig         # Library root (if library)
-└── zig-out/            # Build output (gitignore)
-```
-
-## build.zig Essentials
-
-```zig
-const std = @import("std");
-
-pub fn build(b: *std.Build) void {
-    const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
-
-    // Executable
-    const exe = b.addExecutable(.{
-        .name = "myapp",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("src/main.zig"),
-            .target = target,
-            .optimize = optimize,
-        }),
-    });
-    b.installArtifact(exe);
-
-    // Run step
-    const run_cmd = b.addRunArtifact(exe);
-    run_cmd.step.dependOn(b.getInstallStep());
-    const run_step = b.step("run", "Run the application");
-    run_step.dependOn(&run_cmd.step);
-
-    // Tests
-    const tests = b.addTest(.{
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("src/main.zig"),
-            .target = target,
-            .optimize = optimize,
-        }),
-    });
-    const run_tests = b.addRunArtifact(tests);
-    const test_step = b.step("test", "Run unit tests");
-    test_step.dependOn(&run_tests.step);
-}
-```
-
-## build.zig.zon Package Manifest
-
-```zig
-.{
-    .name = "myproject",
-    .version = "0.1.0",
-    .dependencies = .{
-        .some_dep = .{
-            .url = "https://github.com/user/repo/archive/refs/tags/v1.0.0.tar.gz",
-            .hash = "1220...",  // Use any hash, zig build shows correct one
-        },
-    },
-    .paths = .{""},
-}
-```
-
-Add dependencies: `zig fetch --save <url>` or `zig fetch --save git+https://github.com/user/repo/#HEAD`
-
-Use in build.zig:
-```zig
-const dep = b.dependency("some_dep", .{ .target = target, .optimize = optimize });
-exe.root_module.addImport("some_dep", dep.module("some_dep"));
-```
+# Zig Types, Patterns, and Standard Library Reference
 
 ## Types
 
 ### Primitives
+
 ```zig
 const a: i32 = -42;           // Signed integers: i8, i16, i32, i64, i128
 const b: u64 = 42;            // Unsigned: u8, u16, u32, u64, u128
@@ -104,6 +14,7 @@ const f: comptime_int = 100;   // Arbitrary precision at comptime
 ```
 
 ### Optionals
+
 ```zig
 var maybe: ?i32 = null;
 maybe = 42;
@@ -118,35 +29,47 @@ const val3 = maybe.?;                 // Assert non-null (panic if null)
 ```
 
 ### Error Unions
+
 ```zig
 const FileError = error{ NotFound, PermissionDenied };
 
 fn openFile(path: []const u8) FileError!std.fs.File {
-    // !T means error union: can return T or an error
     return error.NotFound;
 }
 
-// Handling
 const file = openFile("test.txt") catch |err| {
     std.debug.print("Error: {}\n", .{err});
     return err;
 };
 
-// Propagate with try (equivalent to catch |e| return e)
 const file2 = try openFile("test.txt");
 ```
 
+### Error Sets
+
+```zig
+const ReadError = error{ EndOfStream, Timeout };
+const WriteError = error{ BrokenPipe, DiskFull };
+const IoError = ReadError || WriteError;  // Merge error sets
+
+// Inferred error set with !
+fn process() !void {
+    try read();
+    try write();
+}
+```
+
 ### Slices and Arrays
+
 ```zig
 const array: [5]u8 = .{ 1, 2, 3, 4, 5 };  // Fixed-size array
 const slice: []const u8 = array[1..4];     // Slice (pointer + length)
 const str: []const u8 = "hello";           // String literal is []const u8
-
-// Sentinel-terminated
 const c_str: [*:0]const u8 = "hello";      // Null-terminated for C interop
 ```
 
 ### Structs
+
 ```zig
 const Point = struct {
     x: f32,
@@ -170,6 +93,7 @@ const p2 = Point{ .x = 0.0 };  // y defaults to 0.0
 ```
 
 ### Enums and Tagged Unions
+
 ```zig
 const Color = enum { red, green, blue };
 
@@ -195,9 +119,10 @@ switch (v) {
 }
 ```
 
-## Memory Management
+## Memory Management Details
 
 ### Allocator Pattern
+
 ```zig
 const std = @import("std");
 const Allocator = std.mem.Allocator;
@@ -207,7 +132,6 @@ fn createBuffer(allocator: Allocator, size: usize) ![]u8 {
 }
 
 pub fn main() !void {
-    // General purpose allocator (debug mode detects leaks)
     var gpa: std.heap.GeneralPurposeAllocator(.{}) = .{};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
@@ -219,11 +143,12 @@ pub fn main() !void {
     var arena: std.heap.ArenaAllocator = .init(allocator);
     defer arena.deinit();
     const arena_alloc = arena.allocator();
-    // All arena allocations freed at once with deinit
+    _ = arena_alloc;
 }
 ```
 
 ### Common Allocators
+
 ```zig
 std.heap.page_allocator         // Direct OS pages
 std.heap.c_allocator            // libc malloc/free
@@ -233,62 +158,10 @@ std.heap.FixedBufferAllocator   // Stack-based, no heap
 std.testing.allocator           // For tests (detects leaks)
 ```
 
-## Error Handling
-
-### try, catch, errdefer
-```zig
-fn processFile(path: []const u8) !void {
-    const file = try std.fs.cwd().openFile(path, .{});
-    defer file.close();  // Always runs on scope exit
-
-    var buffer: [1024]u8 = undefined;
-    _ = try file.readAll(&buffer);
-}
-
-fn allocateAndProcess(allocator: Allocator) ![]u8 {
-    const data = try allocator.alloc(u8, 100);
-    errdefer allocator.free(data);  // Only runs if function returns error
-
-    try validateData(data);  // If this fails, data is freed
-    return data;
-}
-
-// catch for inline handling
-const result = doThing() catch |err| switch (err) {
-    error.NotFound => return null,
-    error.OutOfMemory => return error.OutOfMemory,
-    else => unreachable,
-};
-```
-
-### Error Sets
-```zig
-const ReadError = error{ EndOfStream, Timeout };
-const WriteError = error{ BrokenPipe, DiskFull };
-const IoError = ReadError || WriteError;  // Merge error sets
-
-fn read() ReadError!void { return error.Timeout; }
-fn write() WriteError!void { return error.BrokenPipe; }
-
-// Inferred error set with !
-fn process() !void {
-    try read();
-    try write();
-}
-```
-
-## Comptime (Generics & Metaprogramming)
-
-### Generic Functions
-```zig
-fn max(comptime T: type, a: T, b: T) T {
-    return if (a > b) a else b;
-}
-
-const result = max(i32, 10, 20);  // T inferred as i32
-```
+## Comptime Details
 
 ### Generic Data Structures
+
 ```zig
 fn ArrayList(comptime T: type) type {
     return struct {
@@ -328,6 +201,7 @@ fn ArrayList(comptime T: type) type {
 ```
 
 ### anytype Parameter
+
 ```zig
 fn debugPrint(value: anytype) void {
     const T = @TypeOf(value);
@@ -340,6 +214,7 @@ fn debugPrint(value: anytype) void {
 ```
 
 ### Compile-Time Computation
+
 ```zig
 fn fibonacci(comptime n: u32) u32 {
     if (n < 2) return n;
@@ -347,21 +222,10 @@ fn fibonacci(comptime n: u32) u32 {
 }
 
 const fib_10 = comptime fibonacci(10);  // Computed at compile time
-
-// Compile-time string formatting
-fn typeName(comptime T: type) []const u8 {
-    return @typeName(T);
-}
-
-// Compile-time validation
-fn validateConfig(comptime config: Config) void {
-    if (config.max_size > 1024 * 1024) {
-        @compileError("max_size too large");
-    }
-}
 ```
 
 ### Type Reflection
+
 ```zig
 fn printFields(comptime T: type) void {
     const info = @typeInfo(T);
@@ -379,46 +243,10 @@ fn printFields(comptime T: type) void {
 }
 ```
 
-## Testing
-
-```zig
-const std = @import("std");
-const expect = std.testing.expect;
-const expectEqual = std.testing.expectEqual;
-const expectError = std.testing.expectError;
-
-test "basic arithmetic" {
-    const result = 2 + 2;
-    try expectEqual(@as(i32, 4), result);
-}
-
-test "memory allocation" {
-    const allocator = std.testing.allocator;  // Detects leaks
-
-    const buffer = try allocator.alloc(u8, 10);
-    defer allocator.free(buffer);
-
-    try expect(buffer.len == 10);
-}
-
-test "expected error" {
-    const result = failingFunction();
-    try expectError(error.SomeError, result);
-}
-
-test "skip test" {
-    if (builtin.os.tag == .windows) {
-        return error.SkipZigTest;
-    }
-    // ... rest of test
-}
-```
-
-Run tests: `zig build test` or `zig test src/main.zig`
-
 ## Common Patterns
 
 ### Iterator Pattern
+
 ```zig
 fn tokenize(input: []const u8, delimiter: u8) TokenIterator {
     return .{ .buffer = input, .delimiter = delimiter, .index = 0 };
@@ -451,7 +279,8 @@ while (iter.next()) |token| {
 }
 ```
 
-### Builder Pattern with Chaining
+### Builder Pattern
+
 ```zig
 const RequestBuilder = struct {
     method: []const u8 = "GET",
@@ -480,6 +309,7 @@ const RequestBuilder = struct {
 ```
 
 ### State Machine
+
 ```zig
 const State = enum { idle, running, paused, stopped };
 
@@ -500,44 +330,6 @@ const Machine = struct {
     }
 };
 ```
-
-## C Interop
-
-```zig
-const c = @cImport({
-    @cInclude("stdio.h");
-    @cInclude("stdlib.h");
-});
-
-pub fn main() void {
-    _ = c.printf("Hello from C!\n");
-
-    const ptr = c.malloc(100) orelse return;
-    defer c.free(ptr);
-}
-```
-
-In build.zig:
-```zig
-exe.linkLibC();
-exe.addIncludePath(b.path("include"));
-exe.addCSourceFiles(.{
-    .files = &.{"src/legacy.c"},
-    .flags = &.{"-Wall", "-O2"},
-});
-```
-
-## Common Pitfalls
-
-| Issue | Solution |
-|-------|----------|
-| Dangling pointer from slice | Copy data or ensure lifetime |
-| Memory leak | Use `defer allocator.free()` immediately after alloc |
-| Use after free | Careful with `errdefer` vs `defer` |
-| Undefined behavior with `undefined` | Initialize before use; debug builds write 0xAA |
-| Overflow | Use `@addWithOverflow` or `std.math.add` for checked arithmetic |
-| Forgetting `try` | Compiler error: "error is ignored" |
-| Wrong slice bounds | Runtime panic in safe modes |
 
 ## Standard Library Highlights
 
@@ -573,30 +365,34 @@ const thread = try std.Thread.spawn(.{}, workerFn, .{arg});
 thread.join();
 ```
 
-## Build Commands
+## Testing Extended
 
-```bash
-zig init                    # Initialize new project
-zig build                   # Build project
-zig build run               # Build and run
-zig build test              # Run tests
-zig build -Doptimize=ReleaseFast  # Release build
-zig build -Dtarget=x86_64-linux-gnu  # Cross-compile
+```zig
+const std = @import("std");
+const expect = std.testing.expect;
+const expectEqual = std.testing.expectEqual;
+const expectError = std.testing.expectError;
 
-# Direct compilation
-zig run src/main.zig        # Compile and run
-zig test src/main.zig       # Run tests in file
-zig build-exe src/main.zig -O ReleaseFast  # Optimized executable
+test "basic arithmetic" {
+    const result = 2 + 2;
+    try expectEqual(@as(i32, 4), result);
+}
+
+test "memory allocation" {
+    const allocator = std.testing.allocator;
+    const buffer = try allocator.alloc(u8, 10);
+    defer allocator.free(buffer);
+    try expect(buffer.len == 10);
+}
+
+test "expected error" {
+    const result = failingFunction();
+    try expectError(error.SomeError, result);
+}
+
+test "skip test" {
+    if (builtin.os.tag == .windows) {
+        return error.SkipZigTest;
+    }
+}
 ```
-
-## Cross-Compilation
-
-Zig supports cross-compilation out of the box:
-
-```bash
-zig build -Dtarget=x86_64-linux-gnu
-zig build -Dtarget=aarch64-macos
-zig build -Dtarget=x86_64-windows-gnu
-```
-
-In build.zig, use `b.standardTargetOptions(.{})` to accept target from command line.
