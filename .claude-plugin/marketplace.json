@@ -1,0 +1,69 @@
+{
+  "name": "dmaynor-skills-marketplace",
+  "description": "Security skills marketplace",
+  "owner": {
+    "name": "David Maynor"
+  },
+  "plugins": [
+    {
+      "name": "cyber-range-design",
+      "source": "./plugins/cyber-range-design",
+      "description": "Design, architect, and implement high-fidelity cyber ranges for training and exercises.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "gits-dual-plane-isometric-assets",
+      "source": "./plugins/gits-dual-plane-isometric-assets",
+      "description": "Generate isometric sprite sheet images for Ghost-in-the-Shell-inspired dual-plane city simulation.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "godot",
+      "source": "./plugins/godot",
+      "description": "Godot Engine 4.x game development skill for GDScript, scene architecture, physics, UI, shaders, and project structure.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "purple-teaming",
+      "source": "./plugins/purple-teaming",
+      "description": "Plan and execute purple team exercises for detection validation.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "sat-analysis",
+      "source": "./plugins/sat-analysis",
+      "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "simulation-components",
+      "source": "./plugins/simulation-components",
+      "description": "Create modular, composable virtualized roles and services for cyber range simulations.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "strategic-advisor",
+      "source": "./plugins/strategic-advisor",
+      "description": "Brutally honest strategic advisor for evaluating ideas, plans, decisions, and proposals.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "swarm-orchestration",
+      "source": "./plugins/swarm-orchestration",
+      "description": "Multi-agent swarm orchestration for complex tasks with TD coordination.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "zero-analysis",
+      "source": "./plugins/zero-analysis",
+      "description": "Viktor \"Zero\" Kozlov critical analysis persona for evaluating security projects and technical proposals.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "zig",
+      "source": "./plugins/zig",
+      "description": "Zig systems programming language skill for memory-safe, high-performance code.",
+      "version": "1.0.0"
+    }
+  ]
+}
