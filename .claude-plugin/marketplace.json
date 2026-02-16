@@ -6,6 +6,12 @@
   },
   "plugins": [
     {
+      "name": "design-philosophy",
+      "source": "./plugins/design-philosophy",
+      "description": "Rigorous design philosophy for simplicity, user experience, and uncompromising quality.",
+      "version": "1.0.0"
+    },
+    {
       "name": "cyber-range-design",
       "source": "./plugins/cyber-range-design",
       "description": "Design, architect, and implement high-fidelity cyber ranges for training and exercises.",
