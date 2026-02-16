@@ -7,6 +7,7 @@ Private plugin marketplace for Claude Code.
 | Plugin | Description |
 |--------|-------------|
 | `cyber-range-design` | Design and implement high-fidelity cyber ranges |
+| `design-philosophy` | Rigorous design philosophy for simplicity, UX, and quality |
 | `gits-dual-plane-isometric-assets` | Isometric sprite sheets for dual-plane city simulation |
 | `godot` | Godot Engine 4.x game development |
 | `purple-teaming` | Purple team exercises and detection validation |
