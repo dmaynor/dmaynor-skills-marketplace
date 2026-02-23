@@ -1,20 +1,15 @@
 ---
 name: sat-analysis
-description: |
-  Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data.
-  Applies intelligence community cognitive discipline to technical problems.
-  
-  TRIGGERS - Use this skill when user:
-  - Provides logs asking about breach/anomaly/incident/compromise
-  - Provides crash dump/stack trace asking about cause
-  - Provides code diff asking if fix is correct/complete
-  - Provides claim/statement asking for validity assessment
-  - Asks "why did X happen" with ambiguous causation
-  - Asks "is this suspicious/malicious/correct/valid"
-  - Requests hypothesis generation or ACH analysis
-  - Says "apply SAT", "structured analysis", "generate hypotheses"
-  
-  MODES: BREACH_DETECTION, CRASH_ANALYSIS, FIX_VERIFICATION, STATEMENT_ANALYSIS, GENERAL_HYPOTHESIS
+description: >-
+  Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied
+  data. Applies intelligence community cognitive discipline to technical
+  problems. Use when user provides logs asking about
+  breach/anomaly/incident/compromise, crash dump/stack trace asking about cause,
+  code diff asking if fix is correct/complete, or claim/statement asking for
+  validity assessment. Triggers on "apply SAT", "structured analysis", "generate
+  hypotheses", or "why did X happen" with ambiguous causation. Modes:
+  BREACH_DETECTION, CRASH_ANALYSIS, FIX_VERIFICATION, STATEMENT_ANALYSIS,
+  GENERAL_HYPOTHESIS.
 ---
 
 # Structured Analytic Techniques (SAT) Analysis

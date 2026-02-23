@@ -1,22 +1,13 @@
 ---
 name: cyber-range-design
-description: |
-  Design, architect, and implement high-fidelity cyber ranges for training and exercises.
-  Based on SEI/CERT methodology with modern extensions for cloud, zero-trust, and AI-driven simulation.
-
-  TRIGGERS - Use this skill when user:
-  - Wants to design or build a cyber range
-  - Needs architecture for cyber warfare exercises
-  - Asks about range zones (red/blue/grey/white)
-  - Wants to plan team-based cyber exercises
-  - Needs NPC traffic generation strategies
-  - Asks about range infrastructure (compute, storage, network)
-  - Says "cyber range", "exercise environment", "training range", "simulation environment"
-  - Wants to integrate ICS/SCADA/OT into a range
-  - Needs to plan range resets or snapshot strategies
-  - Asks about range fidelity or realism
-
-  MODES: DESIGN (architecture), IMPLEMENT (build guidance), EXERCISE (execution planning)
+description: >-
+  Design, architect, and implement high-fidelity cyber ranges for training and
+  exercises. Based on SEI/CERT methodology with modern extensions for cloud,
+  zero-trust, and AI-driven simulation. Triggers on "cyber range", "exercise
+  environment", "training range", "simulation environment", or requests for
+  range zones, NPC traffic, ICS/SCADA/OT integration, range resets, or fidelity
+  assessment. Modes: DESIGN (architecture), IMPLEMENT (build guidance), EXERCISE
+  (execution planning).
 ---
 
 # Cyber Range Design and Implementation

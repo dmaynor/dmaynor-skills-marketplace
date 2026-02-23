@@ -22,8 +22,8 @@ Private plugin marketplace for Claude Code.
 
 ```bash
 # Add this marketplace
-/plugins install-marketplace dmaynor/dmaynor-skills-marketplace
+/plugin marketplace add dmaynor/dmaynor-skills-marketplace
 
 # Install a plugin
-/plugins install cyber-range-design@dmaynor-skills-marketplace
+/plugin install cyber-range-design@dmaynor-skills-marketplace
 ```

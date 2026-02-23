@@ -1,21 +1,13 @@
 ---
 name: simulation-components
-description: |
-  Create modular, composable virtualized roles and services for cyber range simulations.
-  Generates complete, deployable components that combine into larger exercise environments.
-
-  TRIGGERS - Use this skill when user:
-  - Wants to create a simulated organization for a range
-  - Needs DNS infrastructure (root, TLD, org zones)
-  - Wants to generate realistic web content for a fictional company
-  - Asks for "a bank" or "a hospital" or "a defense contractor" simulation
-  - Needs email infrastructure for an exercise
-  - Wants Active Directory population for a scenario
-  - Says "create a simulated X", "build me a fake Y", "generate org content"
-  - Needs NPC personas and traffic patterns for a scenario
-  - Wants to combine multiple services into a coherent simulation
-
-  OUTPUTS: Docker containers, zone files, web content, AD population scripts, NPC configs
+description: >-
+  Create modular, composable virtualized roles and services for cyber range
+  simulations. Generates complete, deployable components that combine into
+  larger exercise environments. Triggers on "create a simulated X", "build me a
+  fake Y", "generate org content", or requests for DNS infrastructure, realistic
+  web content, email infrastructure, Active Directory population, NPC personas,
+  or combining services into coherent simulations. Outputs: Docker containers,
+  zone files, web content, AD population scripts, NPC configs.
 ---
 
 # Simulation Components

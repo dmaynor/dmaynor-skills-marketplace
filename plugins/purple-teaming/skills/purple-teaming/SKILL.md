@@ -1,20 +1,12 @@
 ---
 name: purple-teaming
-description: |
-  Plan and execute purple team exercises for detection validation.
-  Collaborative offensive/defensive testing using atomic or scenario-based methodologies.
-
-  TRIGGERS - Use this skill when user:
-  - Wants to plan a purple team exercise or detection validation
-  - Needs atomic test cases for specific ATT&CK techniques
-  - Asks about detection engineering for offensive techniques
-  - Wants Splunk/Sigma queries for threat detection
-  - Needs to track exercise results or coverage metrics
-  - Asks about ATT&CK, Kill Chain, Diamond Model, or Pyramid of Pain
-  - Says "purple team", "detection validation", "atomic test", "adversary emulation"
-  - Wants to assess detection coverage gaps
-
-  METHODOLOGIES: ATOMIC (isolated techniques), SCENARIO (attack chains)
+description: >-
+  Plan and execute purple team exercises for detection validation. Collaborative
+  offensive/defensive testing using atomic or scenario-based methodologies.
+  Triggers on "purple team", "detection validation", "atomic test", "adversary
+  emulation", or requests for ATT&CK technique test cases, Splunk/Sigma queries,
+  detection coverage gaps, or Kill Chain/Diamond Model/Pyramid of Pain analysis.
+  Methodologies: ATOMIC (isolated techniques), SCENARIO (attack chains).
 ---
 
 # Purple Teaming
