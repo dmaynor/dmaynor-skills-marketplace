@@ -1,5 +1,5 @@
 ---
-name: windows-recovery
+name: windows-boot-recovery
 description: >
   Diagnose and recover non-booting Windows machines from a Linux recovery environment
   (e.g., SystemRescue USB). Use this skill whenever a user or agent mentions: a Windows
