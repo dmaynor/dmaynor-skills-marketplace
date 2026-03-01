@@ -1,0 +1,10 @@
+{
+  "name": "windows-boot-recovery",
+  "version": "1.0.0",
+  "description": "Diagnose and recover non-booting Windows machines from a Linux recovery environment. Covers NTFS repair, hibernation clearing, GPU driver crash recovery, data backup, and BCD repair.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
