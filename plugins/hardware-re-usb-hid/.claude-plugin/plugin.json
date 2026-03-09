@@ -1,0 +1,10 @@
+{
+  "name": "hardware-re-usb-hid",
+  "version": "1.0.0",
+  "description": "Reverse engineer USB HID peripherals via Linux hidraw — protocol capture, decoding, firmware analysis, and replication.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
