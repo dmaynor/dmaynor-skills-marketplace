@@ -70,6 +70,12 @@
       "source": "./plugins/zig",
       "description": "Zig systems programming language skill for memory-safe, high-performance code.",
       "version": "1.0.0"
+    },
+    {
+      "name": "autonomous-loop-safety-constraints",
+      "source": "./plugins/autonomous-loop-safety-constraints",
+      "description": "Harden autonomous research loop safety blocks against LLM rationalization.",
+      "version": "1.0.0"
     }
   ]
 }

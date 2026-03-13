@@ -1,0 +1,10 @@
+{
+  "name": "autonomous-loop-safety-constraints",
+  "version": "1.0.0",
+  "description": "Harden autonomous research loop safety blocks against LLM rationalization.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
