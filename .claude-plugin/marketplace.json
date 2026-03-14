@@ -88,6 +88,36 @@
       "source": "./plugins/apple-vuln-research-txm-sptm-firmware-extraction",
       "description": "Extract and analyze TXM/SPTM firmware from IM4P containers on Apple Silicon.",
       "version": "1.0.0"
+    },
+    {
+      "name": "apple-silicon-attack-surface-enumeration",
+      "source": "./plugins/apple-silicon-attack-surface-enumeration",
+      "description": "Systematic attack surface enumeration for Apple Silicon devices (A-series, M-series).",
+      "version": "1.0.0"
+    },
+    {
+      "name": "autonomous-research-loop",
+      "source": "./plugins/autonomous-research-loop",
+      "description": "Run Claude Code as an autonomous research agent with restart-with-state loops.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "claude-code-hook-debugging",
+      "source": "./plugins/claude-code-hook-debugging",
+      "description": "Debug Claude Code hook errors (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse).",
+      "version": "1.0.0"
+    },
+    {
+      "name": "hardware-re-usb-hid",
+      "source": "./plugins/hardware-re-usb-hid",
+      "description": "Reverse engineer USB HID peripherals via Linux hidraw.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "windows-boot-recovery",
+      "source": "./plugins/windows-boot-recovery",
+      "description": "Diagnose and recover non-booting Windows machines from a Linux recovery environment.",
+      "version": "1.0.0"
     }
   ]
 }
