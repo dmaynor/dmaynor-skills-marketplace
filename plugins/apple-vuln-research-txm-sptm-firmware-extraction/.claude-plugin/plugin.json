@@ -1,0 +1,8 @@
+{
+  "name": "apple-vuln-research-txm-sptm-firmware-extraction",
+  "version": "1.0.0",
+  "description": "",
+  "author": {"name": "dmaynor"},
+  "license": "MIT",
+  "skills": "./skills/"
+}

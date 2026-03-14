@@ -76,6 +76,18 @@
       "source": "./plugins/autonomous-loop-safety-constraints",
       "description": "Harden autonomous research loop safety blocks against LLM rationalization.",
       "version": "1.0.0"
+    },
+    {
+      "name": "apple-vuln-research-security-report-submission",
+      "source": "./plugins/apple-vuln-research-security-report-submission",
+      "description": "Submit vulnerability reports to Apple Security Research bounty program.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "apple-vuln-research-txm-sptm-firmware-extraction",
+      "source": "./plugins/apple-vuln-research-txm-sptm-firmware-extraction",
+      "description": "Extract and analyze TXM/SPTM firmware from IM4P containers on Apple Silicon.",
+      "version": "1.0.0"
     }
   ]
 }
