@@ -1,0 +1,10 @@
+{
+  "name": "autonomous-research-loop",
+  "version": "1.0.0",
+  "description": "Pattern for running Claude Code as an autonomous research agent with restart-with-state loops. Use when: (1) long-runnin",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
