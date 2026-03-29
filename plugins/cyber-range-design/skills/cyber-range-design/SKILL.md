@@ -42,56 +42,44 @@ Designing realistic cyber range exercises from scratch is a complex, multi-disci
 
 ## Core Concept
 
-A cyber range is a fully interactive virtual instance of enterprise IT infrastructure dedicated to cyberwarfare training. Realism is the primary driver of training value—ranges must support "train as you fight" principles.
+A cyber range is a fully interactive virtual instance of enterprise IT infrastructure dedicated to cyberwarfare training. Realism is the primary driver of training value -- ranges must support "train as you fight" principles.
 
 | Fidelity Level | Characteristics | Training Value |
 |----------------|-----------------|----------------|
-| Low | Basic networking, minimal services, no traffic | Limited—trivial to detect adversary |
-| Medium | Core services, basic policies, scripted traffic | Moderate—builds tool familiarity |
-| High | Production-replica configs, realistic NPCs, proper noise | High—develops operational intuition |
-| Ultra | Threat intel-driven TTPs, adaptive adversary AI, full telemetry | Elite—nation-state operator development |
+| Low | Basic networking, minimal services, no traffic | Limited -- trivial to detect adversary |
+| Medium | Core services, basic policies, scripted traffic | Moderate -- builds tool familiarity |
+| High | Production-replica configs, realistic NPCs, proper noise | High -- develops operational intuition |
+| Ultra | Threat intel-driven TTPs, adaptive adversary AI, full telemetry | Elite -- nation-state operator development |
 
 ## Zone Architecture Model
 
-### Zone Taxonomy
-
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     OUT OF GAME                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐             │
-│  │    CORE     │  │    WHITE    │  │   ACCESS    │             │
-│  │ INFRA ZONE  │  │    ZONE     │  │    ZONE     │             │
-│  │             │  │  (Exercise  │  │ (Participant│             │
-│  │ Hypervisor  │  │   Admin)    │  │  Interface) │             │
-│  │ Storage     │  │             │  │             │             │
-│  │ Network     │  │ Automation  │  │ Web Portal  │             │
-│  └─────────────┘  │ Timeline    │  │ VM Access   │             │
-│                   │ Inject Ctrl │  │ Comms       │             │
-│  ┌─────────────┐  └─────────────┘  └─────────────┘             │
-│  │  METRICS    │                                               │
-│  │    ZONE     │                                               │
-│  │             │                                               │
-│  │ Scoring     │                                               │
-│  │ Evaluation  │                                               │
-│  │ Analytics   │                                               │
-│  └─────────────┘                                               │
-└─────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------+
+|                     OUT OF GAME                                |
+|  +-------------+  +-------------+  +-------------+            |
+|  |    CORE     |  |    WHITE    |  |   ACCESS    |            |
+|  | INFRA ZONE  |  |    ZONE     |  |    ZONE     |            |
+|  | Hypervisor  |  | (Exercise   |  | (Participant|            |
+|  | Storage     |  |  Admin)     |  |  Interface) |            |
+|  | Network     |  | Automation  |  | Web Portal  |            |
+|  +-------------+  | Timeline    |  | VM Access   |            |
+|                   +-------------+  +-------------+            |
+|  +-------------+                                              |
+|  |  METRICS    |                                              |
+|  | Scoring     |                                              |
+|  | Analytics   |                                              |
+|  +-------------+                                              |
++---------------------------------------------------------------+
 
-┌─────────────────────────────────────────────────────────────────┐
-│                      IN GAME                                    │
-│                                                                 │
-│  ┌─────────────┐      ┌─────────────┐      ┌─────────────┐     │
-│  │    RED      │      │    GREY     │      │    BLUE     │     │
-│  │    ZONE     │◄────►│    ZONE     │◄────►│    ZONE     │     │
-│  │             │      │             │      │             │     │
-│  │ Attack Infra│      │ Simulated   │      │ Defender    │     │
-│  │ C2 Servers  │      │ Internet    │      │ Enterprise  │     │
-│  │ Tooling     │      │ DNS Roots   │      │ AD/LDAP     │     │
-│  │ IP Diversity│      │ ISP Sim     │      │ Workstations│     │
-│  └─────────────┘      │ Routing     │      │ Servers     │     │
-│                       └─────────────┘      │ Security    │     │
-│                                            └─────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------+
+|                      IN GAME                                   |
+|  +--------+       +---------+       +--------+                |
+|  |  RED   |<----->|  GREY   |<----->|  BLUE  |                |
+|  | Attack |       | Sim     |       | Defend |                |
+|  | Infra  |       | Internet|       | Enter- |                |
+|  | C2     |       | DNS/ISP |       | prise  |                |
+|  +--------+       +---------+       +--------+                |
++---------------------------------------------------------------+
 ```
 
 ### Zone Definitions
@@ -108,14 +96,7 @@ A cyber range is a fully interactive virtual instance of enterprise IT infrastru
 
 ### Modern Extension: Identity Zone
 
-Add explicit Identity Zone for zero-trust environments:
-
-| Component | Purpose |
-|-----------|---------|
-| Identity Provider (IdP) | SAML/OIDC simulation (Okta/Azure AD replica) |
-| Certificate Authority | PKI hierarchy for TLS, code signing |
-| Federation Services | Cross-domain trust simulation |
-| MFA Infrastructure | TOTP/FIDO2 simulation |
+For zero-trust environments, add an explicit Identity Zone: IdP (SAML/OIDC), Certificate Authority (PKI), Federation Services, MFA Infrastructure (TOTP/FIDO2).
 
 ## Implementation Sequence
 
@@ -123,118 +104,40 @@ Critical dependency ordering for range deployment:
 
 ```
 Phase 1: Foundation
-├── 1.1 Core Infrastructure Zone
-│   ├── Hypervisor cluster deployment
-│   ├── Storage provisioning
-│   └── Physical network configuration
-└── 1.2 Exercise Admin (White) Zone
-    ├── Automation platform deployment
-    └── IaC tooling setup
+  1.1 Core Infrastructure Zone (hypervisor, storage, network)
+  1.2 Exercise Admin (White) Zone (automation, IaC)
 
 Phase 2: Identity & Network Core
-├── 2.1 Blue Zone - Phase 1
-│   ├── L3 routing (no ACLs yet)
-│   ├── DNS infrastructure
-│   └── Directory Services (AD/LDAP)
-└── 2.2 Identity Zone (if applicable)
-    ├── IdP deployment
-    └── CA hierarchy
+  2.1 Blue Zone Phase 1 (L3 routing, DNS, AD/LDAP)
+  2.2 Identity Zone if applicable (IdP, CA)
 
 Phase 3: Internet Simulation
-└── 3.1 Grey Zone
-    ├── Root DNS servers
-    ├── TLD authoritative servers
-    ├── ISP routing simulation
-    └── Web content farms
+  3.1 Grey Zone (root DNS, TLD servers, ISP routing, web content)
 
 Phase 4: Enterprise Services
-└── 4.1 Blue Zone - Phase 2
-    ├── Connect to Grey Zone
-    ├── Application servers (web, DB, file)
-    ├── Security stack (SIEM, EDR, IDS)
-    ├── End-user workstations (NPCs)
-    └── Firewall lockdown (production ACLs)
+  4.1 Blue Zone Phase 2 (apps, security stack, workstations, firewall lockdown)
 
 Phase 5: Adversary Infrastructure
-└── 5.1 Red Zone
-    ├── C2 server deployment
-    ├── Exploitation tooling
-    └── IP diversity mechanisms
+  5.1 Red Zone (C2, exploitation tooling, IP diversity)
 
 Phase 6: Participant Interface
-├── 6.1 Access Zone
-│   ├── Web portal deployment
-│   ├── VM access (Guacamole/SPICE)
-│   └── Communication channels
-└── 6.2 Metrics Zone
-    ├── Scoring engine
-    └── Analytics dashboards
+  6.1 Access Zone (portal, VM access, comms)
+  6.2 Metrics Zone (scoring, dashboards)
 ```
 
-## Infrastructure Requirements
+## Key Decision Points
 
-### Compute Sizing
+### Cloud vs. On-Premise
 
-| Scale | VMs | vCPU | RAM | Notes |
-|-------|-----|------|-----|-------|
-| Small (training) | 50-100 | 200-400 | 256-512 GB | Single team exercises |
-| Medium (exercise) | 100-500 | 500-2000 | 1-4 TB | Multi-team force-on-force |
-| Large (enterprise) | 500-2000 | 2000-8000 | 4-16 TB | Full enterprise simulation |
-| Massive (national) | 2000+ | 8000+ | 16+ TB | Nation-state level exercises |
+| Factor | On-Premise | Cloud |
+|--------|------------|-------|
+| Initial cost | High (hardware) | Low (pay-as-you-go) |
+| Setup time | Weeks-months | Hours-days |
+| Isolation | Physical air-gap possible | Logical isolation only |
+| Scalability | Limited by hardware | Effectively unlimited |
+| Compliance | Easier for classified | May require GovCloud |
 
-### Storage Architecture
-
-| Tier | Technology | Purpose | IOPS Target |
-|------|------------|---------|-------------|
-| Hot | NVMe/SSD | Active VMs, snapshots | 100K+ |
-| Warm | SSD/HDD Hybrid | Golden images, recent backups | 10K-50K |
-| Cold | HDD/Object | Archives, long-term retention | 1K-5K |
-
-**Critical**: Storage must support instant snapshot and rapid clone operations for range resets.
-
-### Network Requirements
-
-| Requirement | Specification |
-|-------------|---------------|
-| Core bandwidth | 10+ Gbps between hypervisors |
-| VLAN capacity | 1000+ VLANs for team isolation |
-| Isolation | Air-gap or strict firewall from production |
-| Monitoring | SPAN/TAP ports for packet capture |
-
-## Machine Image Strategy
-
-### Image Count Minimization
-
-Keep total unique images low to reduce maintenance burden:
-
-| Category | Recommended Images | Notes |
-|----------|-------------------|-------|
-| Windows Server | 2-3 | 2019/2022, DC vs. member |
-| Windows Workstation | 2 | Win10/11 variants |
-| Linux Server | 3-4 | Ubuntu, CentOS/Rocky, Debian, specialty |
-| Network Appliances | Per-vendor | Often require manual config |
-| Security Tools | As needed | SIEM, EDR, IDS/IPS |
-
-### Image Design Principles
-
-1. **Generic base images** accepting IaC configuration
-2. **Parameterized deployment** (hostname, IP, domain join via cloud-init/Sysprep)
-3. **No sensitive data** in images (production clones require sanitization)
-4. **Patch synchronization process** for ongoing maintenance
-
-### Automation Trade-offs
-
-| Component | Automation Feasibility | Notes |
-|-----------|----------------------|-------|
-| Windows/Linux VMs | High | Terraform, Ansible, cloud-init |
-| AD/LDAP population | High | PowerShell, Python scripts |
-| Network topology | Medium | Depends on hypervisor API |
-| Vendor appliances | Low-Medium | Often require manual licensing |
-| Security tool configs | Low-Medium | Vendor-specific APIs vary |
-
-## Realism Drivers
-
-### Traffic Generation (NPC Simulation)
+### NPC Traffic Generation
 
 Without background traffic, adversary activity is trivially detectable.
 
@@ -246,198 +149,26 @@ Without background traffic, adversary activity is trivially detectable.
 | Application use | Protocol-specific generators | High |
 | **LLM-driven NPCs** | Behavioral AI simulation | Ultra-high |
 
-### Configuration Depth
-
-| Layer | Low Fidelity | High Fidelity |
-|-------|--------------|---------------|
-| Firewall | Allow all | Production ACLs |
-| AD | Default policies | GPOs matching production |
-| SIEM | Basic collection | Full correlation rules |
-| EDR | Passive mode | Active blocking |
-| DNS | Basic resolution | Split-horizon, internal zones |
-
-### Adversary Realism
-
-| Level | Characteristics |
-|-------|-----------------|
-| Script kiddie | Public exploits, noisy, single-stage |
-| Criminal | Commodity malware, basic evasion, financial motive |
-| APT | Custom tooling, living-off-the-land, multi-stage |
-| Nation-state | Zero-days, supply chain, long-term persistence |
-
-## Cloud vs. On-Premise Decision Matrix
-
-| Factor | On-Premise | Cloud |
-|--------|------------|-------|
-| **Initial cost** | High (hardware) | Low (pay-as-you-go) |
-| **Operating cost** | Lower long-term | Higher (egress, sustained use) |
-| **Setup time** | Weeks-months | Hours-days |
-| **Image library** | Build yourself | Vendor-provided |
-| **Isolation** | Physical air-gap possible | Logical isolation only |
-| **Scalability** | Limited by hardware | Effectively unlimited |
-| **Control** | Full | Constrained by provider |
-| **Compliance** | Easier for classified | May require GovCloud |
-
-### Cloud Cost Model
-
-```
-Monthly Cost = (Compute Hours × Rate) + (Storage GB × Rate) + (Egress GB × Rate)
-
-Example (AWS, 100-VM range, 8 hours/day, 20 days/month):
-- Compute: 100 VMs × 8h × 20d × $0.10/h = $1,600
-- Storage: 5 TB × $0.10/GB = $500
-- Egress: 500 GB × $0.09/GB = $45
-- Total: ~$2,145/month
-```
-
-## Reset and Snapshot Strategy
-
-### Reset Levels
+### Reset Strategy
 
 | Level | Scope | Time | Use Case |
 |-------|-------|------|----------|
 | VM snapshot revert | Single VM | Seconds | Quick undo |
-| Team enclave reset | All VMs in team | Minutes | Between exercise rounds |
+| Team enclave reset | All VMs in team | Minutes | Between rounds |
 | Full range reset | Entire range | 30-60 min | Exercise restart |
 | Golden image redeploy | Full rebuild | Hours | Major changes |
 
-### Implementation Approaches
+## Verification
 
-1. **Snapshot trees**: Pre-exercise snapshots at known-good state
-2. **Linked clones**: Storage-efficient copies from golden images
-3. **IaC redeploy**: Terraform destroy/apply for full rebuild
-4. **Differential restore**: Restore only modified VMs
+1. Range deploys successfully: all VMs in every zone (Core, White, Access, Metrics, Red, Grey, Blue) boot and pass health checks
+2. Zone connectivity verified: inter-zone routing works per design (Red <-> Grey <-> Blue), and isolation holds (no unintended cross-zone leakage)
+3. NPC traffic generation active: background traffic visible in SIEM/packet captures, adversary actions are not trivially distinguishable from noise
+4. Exercise scenarios execute end-to-end: at least one inject fires, blue team receives telemetry, and scoring engine records results
+5. Range reset completes within target time: full range revert to golden snapshot finishes within the documented SLA (e.g., 30-60 minutes for full reset)
 
-## ICS/SCADA/OT Integration
+## Notes
 
-### Integration Methods
-
-| Method | Complexity | Fidelity |
-|--------|------------|----------|
-| Software simulation | Low | Low-Medium |
-| Hardware-in-the-loop | Medium | High |
-| Full physical testbed | High | Ultra |
-
-### Connectivity Options
-
-| Physical Device Type | Integration Method |
-|---------------------|-------------------|
-| TCP/IP managed | Direct VLAN connection |
-| Serial-only | Serial-to-IP converter |
-| Air-gapped | KVM-over-IP |
-| Proprietary protocol | Protocol gateway |
-
-## Exercise Execution Checklist
-
-### Pre-Exercise (T-30 days to T-1 day)
-
-- [ ] Range architecture validated
-- [ ] All VMs deployed and accessible
-- [ ] Network connectivity verified (all zones)
-- [ ] NPC traffic generation active
-- [ ] Security tools collecting telemetry
-- [ ] Adversary infrastructure prepared
-- [ ] Participant accounts provisioned
-- [ ] Access portal tested
-- [ ] Scoring system calibrated
-- [ ] Snapshot baseline captured
-- [ ] Communication channels established
-- [ ] Rules of engagement documented
-
-### Exercise Day (T-0)
-
-- [ ] Range health check (all VMs responsive)
-- [ ] NPC activity confirmed
-- [ ] White team stations manned
-- [ ] Timeline inject schedule loaded
-- [ ] Scoring dashboard live
-- [ ] Participant check-in complete
-- [ ] Exercise start time synchronized
-
-### Post-Exercise
-
-- [ ] Final scores captured
-- [ ] Telemetry exported for analysis
-- [ ] Participant feedback collected
-- [ ] Range reset (if re-use planned)
-- [ ] Lessons learned documented
-- [ ] Artifact preservation (if required)
-
-## Skill Set Requirements
-
-| Role | Zones | Key Skills |
-|------|-------|------------|
-| Enterprise Architect | All | System design, capacity planning |
-| Virtualization Engineer | Core, Blue, Grey, Red | ESXi/Proxmox, storage, networking |
-| Network Engineer | Core, Blue, Grey | Routing, switching, VLANs, firewalls |
-| Windows Admin | Blue, Grey | AD, GPO, Windows Server |
-| Linux Admin | Blue, Grey, Red | Multiple distros, scripting |
-| Security SME | Blue | SIEM, EDR, IDS configuration |
-| Offensive Operator | Red | C2, exploitation, tradecraft |
-| Automation Engineer | White, Core | Terraform, Ansible, Python |
-| Software Developer | White, Access | Portal development, API integration |
-| NPC/Traffic SME | Blue, Grey | Traffic generation, behavioral modeling |
-
-## Tools and References
-
-### SEI/CERT Open Source Tools
-
-- **Crucible**: Exercise management and scenario orchestration
-- **GHOSTS**: NPC simulation framework for realistic user activity
-- **TopoMojo**: Dynamic topology management
-
-### Infrastructure as Code
-
-| Tool | Purpose | Range Application |
-|------|---------|-------------------|
-| Terraform | Infrastructure provisioning | VM deployment, networking |
-| Ansible | Configuration management | Post-deploy config, hardening |
-| Packer | Image building | Golden image creation |
-| cloud-init | First-boot configuration | Hostname, IP, domain join |
-
-### Virtualization Platforms
-
-| Platform | License | Best For |
-|----------|---------|----------|
-| VMware vSphere | Commercial | Enterprise ranges, full features |
-| Proxmox VE | Open source | Cost-sensitive, Linux-centric |
-| OpenStack | Open source | Large scale, cloud-like |
-| AWS/Azure/GCP | Commercial | Rapid deployment, scalability |
-| **Docker/Podman** | Open source | Lightweight ranges, rapid iteration, CI/CD integration |
-
-### Docker-Based Ranges
-
-Docker provides a lightweight alternative for specific range use cases:
-
-**Advantages:**
-- Sub-second container startup vs. minutes for VMs
-- Minimal resource overhead (no hypervisor layer)
-- Version-controlled infrastructure (Dockerfiles as IaC)
-- Native CI/CD integration for automated testing
-- Easy distribution via container registries
-
-**Limitations:**
-- Shared kernel limits OS diversity (Linux-only without nested VMs)
-- No true Windows workstation simulation
-- Network isolation less robust than VLANs
-- Some security tools expect full OS environment
-
-**Best Use Cases:**
-- Grey zone services (DNS, web, mail)
-- Red team infrastructure (C2, redirectors)
-- NPC traffic generators
-- Security tool evaluation
-- Training environments for Linux-focused exercises
-- Rapid prototyping before VM deployment
-
-**Hybrid Approach:**
-Combine Docker for lightweight services with VMs for full-fidelity endpoints:
-```
-Blue Zone: VMs (Windows AD, workstations, SIEM)
-Grey Zone: Docker (DNS hierarchy, web farms, mail)
-Red Zone: Docker (C2 servers, attack tools)
-White Zone: Docker (automation, APIs)
-```
+See `reference.md` for complete sizing tables, cost models, tool catalogs, ICS/SCADA integration details, image strategy, exercise checklists, skill set requirements, and platform configurations.
 
 ## Resources
 
@@ -445,7 +176,7 @@ See `resources/` directory:
 - `architecture/zone-templates.md` - Zone architecture templates and diagrams
 - `infrastructure/sizing-calculator.md` - Compute/storage/network sizing guidance
 - `implementation/iac-examples.md` - Terraform/Ansible examples for range deployment
-- `implementation/docker-deployment.md` - **Docker-based range deployment with working examples**
+- `implementation/docker-deployment.md` - Docker-based range deployment with working examples
 - `traffic-generation/npc-strategies.md` - NPC simulation approaches and tooling
 - `exercises/planning-templates.md` - Exercise planning and execution templates
 
@@ -457,11 +188,3 @@ See `templates/` directory:
 See `scripts/` directory:
 - `health-check.py` - Range health verification script
 - `reset-orchestrator.py` - Automated range reset coordination
-
-## Verification
-
-1. Range deploys successfully: all VMs in every zone (Core, White, Access, Metrics, Red, Grey, Blue) boot and pass health checks
-2. Zone connectivity verified: inter-zone routing works per design (Red <-> Grey <-> Blue), and isolation holds (no unintended cross-zone leakage)
-3. NPC traffic generation active: background traffic visible in SIEM/packet captures, adversary actions are not trivially distinguishable from noise
-4. Exercise scenarios execute end-to-end: at least one inject fires, blue team receives telemetry, and scoring engine records results
-5. Range reset completes within target time: full range revert to golden snapshot finishes within the documented SLA (e.g., 30-60 minutes for full reset)
