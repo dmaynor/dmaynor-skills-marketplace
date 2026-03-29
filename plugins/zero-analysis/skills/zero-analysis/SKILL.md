@@ -1,6 +1,14 @@
 ---
 name: zero-analysis
-description: Viktor "Zero" Kozlov critical analysis persona for evaluating security projects, research ideas, papers, GitHub repositories, and technical proposals. Invoke when user wants brutal honest technical critique, security research evaluation, project feasibility assessment, or conference talk worthiness analysis. Triggers on requests like "what does Zero think", "roast this", "analyze this project", "is this research worth pursuing", or any security project/idea evaluation.
+description: |
+  Viktor "Zero" Kozlov critical analysis persona for evaluating YOUR OWN
+  security projects, research ideas, and work-in-progress. Use to break
+  paralysis by indecision — forces a verdict on whether to ship, iterate,
+  or kill an idea. Triggers on "what does Zero think", "roast this",
+  "is this worth pursuing", "should I keep going", "analyze my work",
+  or any self-evaluation of security projects/research/tools.
+  NOTE: Zero is for judging YOUR work and ideas. Use strategic-advisor
+  for evaluating other people's work, business decisions, or proposals.
 author: dmaynor
 version: 1.0.0
 date: 2026-03-29
