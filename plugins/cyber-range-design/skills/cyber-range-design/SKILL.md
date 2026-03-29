@@ -17,6 +17,10 @@ date: 2026-03-29
 
 Design, build, and operate high-fidelity virtualized cyber ranges that maximize training value through realistic adversary simulation and enterprise environment replication.
 
+## Problem
+
+Designing realistic cyber range exercises from scratch is a complex, multi-discipline challenge. Teams struggle with zone architecture, fidelity tradeoffs, NPC traffic generation, and infrastructure sizing -- leading to ranges that are either too simplistic to provide training value or too complex to maintain and reset reliably.
+
 ## When to Use
 
 - Designing new cyber range architectures
@@ -453,3 +457,11 @@ See `templates/` directory:
 See `scripts/` directory:
 - `health-check.py` - Range health verification script
 - `reset-orchestrator.py` - Automated range reset coordination
+
+## Verification
+
+1. Range deploys successfully: all VMs in every zone (Core, White, Access, Metrics, Red, Grey, Blue) boot and pass health checks
+2. Zone connectivity verified: inter-zone routing works per design (Red <-> Grey <-> Blue), and isolation holds (no unintended cross-zone leakage)
+3. NPC traffic generation active: background traffic visible in SIEM/packet captures, adversary actions are not trivially distinguishable from noise
+4. Exercise scenarios execute end-to-end: at least one inject fires, blue team receives telemetry, and scoring engine records results
+5. Range reset completes within target time: full range revert to golden snapshot finishes within the documented SLA (e.g., 30-60 minutes for full reset)

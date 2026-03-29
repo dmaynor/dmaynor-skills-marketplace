@@ -17,6 +17,10 @@ date: 2026-03-29
 
 Create modular, deployable virtualized services that combine into coherent cyber range simulations.
 
+## Problem
+
+Cyber range exercises require realistic organizational infrastructure -- DNS, web services, email, Active Directory -- but building these from scratch for every exercise is time-consuming and produces inconsistent, low-fidelity environments. Without parameterized, composable building blocks that generate contextually appropriate content for a given industry and organization, exercise environments feel artificial and fail to train defenders on realistic scenarios.
+
 ## Core Concept
 
 Simulation components are **self-contained, parameterized building blocks** that:
@@ -347,3 +351,11 @@ See `templates/` directory:
 See `examples/` directory:
 - `complete-simulation/` - Full multi-component example
 - `grey-zone-internet/` - Internet simulation example
+
+## Verification
+
+1. Confirm all generated Docker containers start successfully: `docker compose up -d` completes with exit code 0 and all services show "running" in `docker compose ps`.
+2. Verify DNS resolution works end-to-end: `dig @<dns-container-ip> www.<domain>` returns the expected A record from the generated zone file.
+3. Confirm the web component serves pages: `curl http://<web-container-ip>/` returns HTML with the organization name and branding colors from the context file.
+4. Validate AD population script runs without errors on a domain controller: `Populate-AD.ps1` creates the expected number of users, groups, and OUs matching the organization context headcounts.
+5. Verify inter-component connectivity: the web component's DNS name resolves via the DNS component, and email MX records point to the email component's IP.

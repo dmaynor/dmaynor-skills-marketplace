@@ -10,6 +10,10 @@ date: 2026-03-29
 
 Comprehensive skill for Godot 4.x game development. Covers GDScript, scene/node architecture, physics, UI, shaders, and deployment.
 
+## Problem
+
+Building Godot 4.x games requires juggling scattered documentation across GDScript syntax, node architecture, physics, UI, shaders, and deployment. Developers waste time hunting through docs, forums, and examples instead of building their game. The GDScript 2.0 syntax changes from Godot 3.x add further confusion.
+
 ## Version
 
 Target: **Godot 4.2+** (GDScript 2.0 syntax). For Godot 3.x, adapt syntax (e.g., `@export` → `export`, `@onready` → `onready`).
@@ -611,6 +615,14 @@ project/
 | Exported variable not showing | Re-save script. Check `@export` syntax. |
 | Animation not playing | Verify animation name. Check `AnimationPlayer` node path. |
 | Scene change crashes | Use `call_deferred("change_scene_to_file", path)`. |
+
+## Verification
+
+1. Project runs without errors: launch with `godot --path . --debug` and confirm no GDScript errors in the output console
+2. Main scene loads and renders correctly (no missing nodes, no null reference errors)
+3. All `@export` variables appear in the Inspector with correct types and ranges
+4. Signal connections fire as expected: test each `signal.emit()` path and verify connected handlers execute
+5. No orphaned nodes: check `Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT)` returns 0 during gameplay
 
 ## References
 

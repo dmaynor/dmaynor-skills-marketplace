@@ -10,6 +10,10 @@ date: 2026-03-29
 
 Multi-agent orchestration with TD (Technical Director) coordinating specialized agents through shared channel communication.
 
+## Problem
+
+Coordinating multiple AI agents on complex decomposed tasks is error-prone without structured orchestration. Without a clear protocol for task decomposition, agent spawning, inter-agent communication, and result merging, swarm-based workflows produce fragmented outputs, deadlocked dependencies, and lost context between sessions.
+
 ## Architecture
 
 ```
@@ -329,6 +333,14 @@ The persistence system auto-detects file types:
 | Load state | `python3 scripts/notion_persistence.py restore --team X --file state.md` |
 
 ---
+
+## Verification
+
+1. TD decomposes the user request into a valid task list: `tasks.json` contains discrete tasks with clear ownership and dependency ordering
+2. Agents spawn and communicate: channel.jsonl shows messages from each spawned agent with proper `--from` attribution
+3. Blocked tasks respect dependencies: no agent begins work on a task whose `addBlockedBy` predecessors are incomplete
+4. Results merge correctly: final output incorporates deliverables from all agents, with no missing or duplicated work
+5. Persistence round-trips: `swarm_persistence.py export-full` produces a complete session export, and `notion_sync.py sync` generates valid sync instructions
 
 ## File Structure
 

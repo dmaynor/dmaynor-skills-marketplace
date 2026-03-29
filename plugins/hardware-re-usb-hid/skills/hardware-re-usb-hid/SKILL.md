@@ -21,6 +21,10 @@ date: 2026-03-29
 
 Reverse engineer USB HID peripherals from unknown protocol to working Linux control code via hidraw. Follow the RE loop: Enumerate → Capture → Decode → Replicate → Document.
 
+## Problem
+
+A USB HID peripheral has vendor-specific features (lighting, macros, profiles, display control) that only work through proprietary Windows software with no published protocol documentation. Linux users have no way to control these features, and the only path forward is reverse engineering the HID protocol from raw packet captures and report descriptors.
+
 ## When to Use
 
 - Reverse engineering USB HID device protocols (vendor-specific features behind hidraw)
@@ -237,6 +241,13 @@ Produce these deliverables:
 - **Watch for bricking patterns** — if a command causes USB disconnect, DO NOT retry
 - **Test on one device first** — never batch-apply to multiple devices
 - **Log everything** — every packet sent and received, with timestamps
+
+## Verification
+
+1. Confirm captured packets decode correctly: at least one vendor-specific command/response pair is fully parsed with identified fields (command ID, payload, status byte).
+2. Verify replay succeeds: sending a previously captured command packet from Python via hidraw produces the same device response as the original vendor software capture.
+3. Confirm the protocol spec documents packet framing, at least 3 decoded commands, and all observed error codes.
+4. Validate the working Python reproducer controls at least one vendor-specific feature end-to-end (e.g., setting an LED color or reading device status) without vendor software running.
 
 ## Resources
 

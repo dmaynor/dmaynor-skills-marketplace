@@ -16,6 +16,10 @@ date: 2026-03-29
 
 Plan, execute, and track collaborative offensive/defensive exercises that validate detection capabilities against adversary techniques.
 
+## Problem
+
+Organizations deploy detection rules and security controls but have no systematic way to validate whether those detections actually fire against real adversary techniques. Without collaborative offensive/defensive exercises, detection coverage gaps remain invisible until a real breach exposes them, and defenders cannot distinguish between "no attacks seen" and "attacks not detected."
+
 ## When to Use
 
 - Designing detection validation exercises
@@ -211,6 +215,14 @@ Invoke-AtomicTest T1087.002 -LoggingModule "Attire-ExecutionLogger"
 | No baseline comparison | Capture detection state before exercise |
 | Skipping cleanup | Always run cleanup, validate no persistence |
 | Production without safeguards | Lab first; if prod required: off-hours, rollback ready |
+
+## Verification
+
+1. Confirm each test case in scope executes successfully on the target platform: command runs without errors and produces expected telemetry artifacts (e.g., Sysmon Event ID 1 logged).
+2. Verify detection outcomes are classified for every tested technique: each has a status of Logged, Alerted, Blocked, or Missed with supporting evidence (SIEM screenshot or query result).
+3. Confirm missed techniques have documented root-cause analysis: explain whether the gap is missing telemetry, missing detection rule, or misconfigured collection.
+4. Validate cleanup completed: no test persistence mechanisms, scheduled tasks, or user accounts remain on target systems after the exercise.
+5. Verify coverage metrics are calculated and recorded: detection rate (techniques_detected / techniques_tested) and any delta from the previous exercise baseline.
 
 ## Resources
 

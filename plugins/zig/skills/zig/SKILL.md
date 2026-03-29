@@ -10,6 +10,10 @@ date: 2026-03-29
 
 Systems programming language emphasizing explicit behavior, manual memory management, and compile-time metaprogramming. Target version: **0.13+** (adapt for older versions as needed).
 
+## Problem
+
+Writing correct Zig code is difficult without comprehensive, consolidated references. The language's explicit memory management, comptime metaprogramming, and rapidly evolving build system (with breaking API changes across versions) mean that developers frequently hit pitfalls that scattered documentation fails to address.
+
 ## Additional Resources
 
 This skill includes supplementary materials:
@@ -236,6 +240,14 @@ zig build -Dtarget=x86_64-windows-gnu # Cross-compile Windows
 | Build API changed (0.15+) | Use `b.createModule()` → `b.addExecutable(.{ .root_module = mod })` |
 
 ## Additional Resources
+
+## Verification
+
+1. Code compiles cleanly with `zig build` -- no warnings, no errors
+2. All tests pass with `zig build test` (including leak detection via `std.testing.allocator`)
+3. No undefined behavior detected: run with `zig build -Doptimize=Debug` (safety checks enabled) and confirm no runtime panics
+4. Cross-compilation targets build successfully (e.g., `zig build -Dtarget=x86_64-linux-gnu`)
+5. C interop compiles and links without unresolved symbols when `linkLibC()` is used
 
 ### Reference Files
 

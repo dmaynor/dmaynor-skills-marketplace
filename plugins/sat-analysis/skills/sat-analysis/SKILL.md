@@ -18,8 +18,12 @@ date: 2026-03-29
 # Structured Analytic Techniques (SAT) Analysis
 
 Apply intelligence community analytic tradecraft to technical analysis problems.
-Enforces cognitive discipline, generates comprehensive hypotheses, evaluates 
+Enforces cognitive discipline, generates comprehensive hypotheses, evaluates
 competing explanations, and produces calibrated assessments.
+
+## Problem
+
+Technical analysis often suffers from confirmation bias, anchoring on the first plausible explanation, and failure to consider alternative hypotheses. Without structured cognitive discipline, analysts jump from observation to conclusion, skipping rigorous evaluation of competing explanations and producing overconfident, unfalsifiable assessments.
 
 ## Mode Selection
 
@@ -241,6 +245,14 @@ For detailed guidance, see:
 - `references/crash_patterns.md` - Crash/failure patterns
 - `references/fix_patterns.md` - Fix verification patterns
 - `references/cognitive_biases.md` - Bias detection
+
+## Verification
+
+1. Confirm the analysis produces at least 5 hypotheses, including a null hypothesis and at least one uncomfortable hypothesis that challenges assumptions.
+2. Verify every confidence assessment includes both a verbal term and a numeric probability range (e.g., "Likely (65-79%)").
+3. Check that every hypothesis in the ACH matrix has a falsification criterion: specific evidence that, if found, would disprove it.
+4. Confirm observations and interpretations are cleanly separated -- no interpretive language appears in the Observations table.
+5. Validate that the Limitations section identifies at least one concrete gap or caveat in the available evidence.
 
 ## Scripts
 

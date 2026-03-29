@@ -20,6 +20,10 @@ Diagnose and recover non-booting Windows systems using a Linux recovery environm
 Covers: NTFS filesystem repair, hibernation state clearing, GPU driver crash recovery,
 data backup via rsync, and BCD/boot configuration repair.
 
+## Problem
+
+A Windows machine will not boot -- stuck in BSOD loops, hung on startup, or reporting NTFS filesystem errors -- and the only available recovery environment is a Linux live USB (e.g., SystemRescue). The user needs to diagnose the root cause, back up critical data before it is lost, and repair the system to a bootable state, all without access to Windows itself.
+
 ---
 
 ## Operator Modes
@@ -263,6 +267,16 @@ ntfsfix + WinRE both fail → Step 8 (System Restore / reinstall)
 [ ] Install HWiNFO64, monitor GPU temps under load (>90C sustained = thermal issue)
 [ ] Verify backup integrity on external drive
 ```
+
+---
+
+## Verification
+
+1. After ntfsfix, confirm the NTFS volume mounts read-write: `mount -t ntfs-3g /dev/nvme0n1p4 /mnt/win && mount | grep nvme` shows `rw` (not `ro`).
+2. Reboot the machine and confirm Windows reaches the login screen or desktop without BSOD or boot loop.
+3. Run `chkdsk C: /f` from within Windows and verify it reports a clean filesystem with no errors.
+4. Verify backed-up user data on the external drive is intact: spot-check file counts and open representative files.
+5. Confirm Fast Startup is disabled: `powercfg /a` should not list "Fast Startup" as available, or `powercfg /h` confirms hibernation is off.
 
 ---
 
