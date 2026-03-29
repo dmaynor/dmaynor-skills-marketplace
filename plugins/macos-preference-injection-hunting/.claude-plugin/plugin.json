@@ -1,0 +1,10 @@
+{
+  "name": "macos-preference-injection-hunting",
+  "version": "1.0.0",
+  "description": "Systematic methodology for finding NSUserDefaults preference injection vulnerabilities in macOS daemons.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
