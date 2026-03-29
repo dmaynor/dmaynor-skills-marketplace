@@ -8,6 +8,9 @@ description: >-
   web content, email infrastructure, Active Directory population, NPC personas,
   or combining services into coherent simulations. Outputs: Docker containers,
   zone files, web content, AD population scripts, NPC configs.
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # Simulation Components

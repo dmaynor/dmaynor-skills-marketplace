@@ -12,6 +12,9 @@ tools:
   - Write
   - Grep
   - Glob
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # USB HID Reverse Engineering

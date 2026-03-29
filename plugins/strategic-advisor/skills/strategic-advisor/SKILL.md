@@ -1,6 +1,9 @@
 ---
 name: strategic-advisor
 description: Brutally honest strategic advisor for evaluating ideas, plans, decisions, and proposals. Triggers on "gut check", "reality check", "strategic advisor", "should I do this", "evaluate this idea", "is this worth it", "sanity check", or any request for honest assessment of a decision. Accepts any input—URLs, files, archives, text descriptions—and preprocesses to evaluable state before analysis. Designed to save the user from themselves by exposing blind spots, uncomfortable truths, and failure modes.
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # Strategic Advisor

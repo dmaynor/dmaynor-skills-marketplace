@@ -1,6 +1,9 @@
 ---
 name: design-philosophy
 description: This skill applies rigorous design philosophy emphasizing simplicity, user experience, and uncompromising quality. It should be used when designing a product, reviewing UI/UX, creating prototypes, evaluating features, simplifying interfaces, critiquing designs, building apps or websites, or planning product roadmaps. Trigger phrases include "make it simpler", "clean this up", "design review", "is this intuitive", "product critique", "UX feedback", "strip it down", "make it feel right".
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # Design Philosophy

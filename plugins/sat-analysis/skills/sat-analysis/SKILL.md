@@ -10,6 +10,9 @@ description: >-
   hypotheses", or "why did X happen" with ambiguous causation. Modes:
   BREACH_DETECTION, CRASH_ANALYSIS, FIX_VERIFICATION, STATEMENT_ANALYSIS,
   GENERAL_HYPOTHESIS.
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # Structured Analytic Techniques (SAT) Analysis

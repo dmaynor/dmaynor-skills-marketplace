@@ -1,6 +1,9 @@
 ---
 name: godot
 description: "Godot Engine 4.x game development skill for GDScript, scene architecture, physics, UI, shaders, and project structure. Use when creating games, prototypes, or interactive applications in Godot. Triggers on requests involving GDScript code, .tscn/.tres files, node hierarchies, signals, tweens, animations, tilemaps, collision layers, export variables, autoloads, or any Godot-specific development task."
+author: dmaynor
+version: 1.0.0
+date: 2026-03-29
 ---
 
 # Godot Engine Development

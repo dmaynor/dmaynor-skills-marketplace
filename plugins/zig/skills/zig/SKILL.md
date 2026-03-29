@@ -2,6 +2,8 @@
 name: zig
 description: "This skill should be used when the user asks to write Zig code, configure build.zig, create build.zig.zon package manifests, or work with .zig files. Triggers on: Zig syntax, allocators, comptime, error unions, defer/errdefer, slices, optionals, cross-compilation, C interop, or any request mentioning Zig explicitly. Covers build system, testing, memory management, generics via comptime, and idiomatic patterns."
 version: 0.1.0
+author: dmaynor
+date: 2026-03-29
 ---
 
 # Zig Programming
