@@ -64,7 +64,9 @@ Before ANY analysis, build the timeline. What happened, when, in what order.
 ```
 
 **Rules:**
-- Use absolute timestamps, not relative ("23:08" not "after the commit")
+- Use absolute timestamps when available from logs, git, or system records
+- When exact timestamps are not available, use relative sequencing anchored to known events ("after commit abc1234", "before the user checked in", "between the agent launch and the timeout")
+- **Never fabricate timestamps.** Fake precision is worse than honest imprecision — it presents inferences as observations
 - Include non-events that matter ("Air was unreachable entire session")
 - Source every event (log, git, observation, inference — label which)
 - Assign a provisional layer to each event

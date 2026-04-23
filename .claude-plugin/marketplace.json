@@ -124,6 +124,30 @@
       "source": "./plugins/rca-investigation",
       "description": "Root Cause Analysis investigation — systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
       "version": "1.0.0"
+    },
+    {
+      "name": "apple-vuln-research-cve-to-binary-regression",
+      "source": "./plugins/apple-vuln-research-cve-to-binary-regression",
+      "description": "Validate whether a seed CVE maps to a specific Apple macOS/iOS binary before porting its PoC.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "apple-vuln-research-daemon-enum-recovery",
+      "source": "./plugins/apple-vuln-research-daemon-enum-recovery",
+      "description": "Recover message-type/frame-type/command-type enums and dispatch tables from stripped Apple daemon binaries.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "macos-dyld-shared-cache-analysis",
+      "source": "./plugins/macos-dyld-shared-cache-analysis",
+      "description": "Analyze macOS framework binaries in the dyld shared cache using dyld_info.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "macos-preference-injection-hunting",
+      "source": "./plugins/macos-preference-injection-hunting",
+      "description": "Systematic methodology for finding NSUserDefaults preference injection vulnerabilities in macOS daemons.",
+      "version": "1.0.0"
     }
   ]
 }
