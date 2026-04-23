@@ -118,6 +118,12 @@
       "source": "./plugins/windows-boot-recovery",
       "description": "Diagnose and recover non-booting Windows machines from a Linux recovery environment.",
       "version": "1.0.0"
+    },
+    {
+      "name": "rca-investigation",
+      "source": "./plugins/rca-investigation",
+      "description": "Root Cause Analysis investigation — systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
+      "version": "1.0.0"
     }
   ]
 }
