@@ -50,7 +50,40 @@ build_report(
 )
 ```
 
-**Pairing recommendations for the cyber theme**: `cover_page=False`, `table_of_contents=False`, `numbered_sections=False`. These match the strix-halo aesthetic the theme is modeled after. The defaults (cover page + TOC + numbered) still work but produce a more "formal" look that's slightly at odds with the tactical visual language.
+## Layouts
+
+A `Layout` bundles the structural-element choices (cover page, TOC, section numbering) into a named preset, so you don't have to remember the right combination of three flags every time.
+
+Three presets ship registered in `LAYOUTS`:
+
+| Layout | cover | TOC | numbered | Use for |
+|--------|-------|-----|----------|---------|
+| `formal` (default) | yes | yes | yes | Analytical deliverables, audit reports, white papers, long-form documents going to outside parties |
+| `tactical` | no | no | no | Briefing-style content; section titles read as standalone callouts. The strix-halo "tactical brief" pattern. Pair with `theme="cyber"` |
+| `navigable_tactical` | no | yes | no | Cyber-themed analyses long enough (>6 pages) that readers benefit from a TOC, but you still want the strix-halo aesthetic |
+
+Pass `layout="<name>"` or `layout=Layout(...)` for custom. **Individual parameters override the layout** if explicitly set — so `layout="tactical", table_of_contents=True` gives you a tactical look but keeps the TOC. This is exactly how `navigable_tactical` is built internally.
+
+**Theme/Layout pairing recommendations**:
+
+| Theme | Layout | Result |
+|-------|--------|--------|
+| `light` | `formal` | Default for serious deliverables: white background, black title, cover + TOC + numbered sections |
+| `cyber` | `tactical` | Canonical strix-halo briefing: dark navy, cyan/magenta accents, inline title, no TOC, no numbering |
+| `cyber` | `navigable_tactical` | Strix-halo style for long documents — keeps the tactical aesthetic but adds TOC navigation |
+| `cyber` | `formal` | Cyber-themed cover + TOC: works fine, but the formal structure slightly fights the tactical visual language |
+
+```python
+build_report(
+    output_path="briefing.pdf",
+    title="Threat Brief — Q1 2026",
+    subtitle="Adversary capability assessment",
+    metadata={"Classification": "INTERNAL", "Date": "2026-05-07"},
+    sections=[...],
+    theme="cyber",
+    layout="tactical",   # the original strix-halo briefing layout
+)
+```
 
 **Custom theme**:
 
@@ -115,6 +148,7 @@ build_report(..., theme=amber_terminal)
 | Section numbering | "1.", "2.", ... auto-prefixed to section titles | `numbered_sections=False` |
 | Section packing | Two rules combine into one threshold per section: (a) if the previous section consumed more than half a page, the next section starts on a fresh page; (b) if the next section's natural height exceeds the remaining space, it starts on a fresh page. Threshold is `min(body_height, max(half_body, predicted_next_height))`. Each upcoming section's height is pre-measured via `flowable.wrap()` to compute the threshold. | `pack_sections=False` |
 | Theme | `light` (default) — black-on-white, gray rules, light callout tints. Print-first. **Or** `cyber` — dark navy (`#0B0B1A`) with cyan (`#00D4D4`) primary + magenta (`#CC44CC`) secondary accent, ALL-CAPS section headings, L-shaped tactical corner brackets, cyan footer divider. Screen-first / "tactical" aesthetic. | `theme="cyber"` (or `theme=Theme(...)` for custom) |
+| Layout | `formal` (default) — cover page + TOC + numbered sections. **Or** `tactical` — no cover, no TOC, no numbering; inline title at top of page 1. **Or** `navigable_tactical` — tactical look with TOC retained. | `layout="tactical"` (or `layout=Layout(...)` for custom) |
 
 ## Page geometry
 

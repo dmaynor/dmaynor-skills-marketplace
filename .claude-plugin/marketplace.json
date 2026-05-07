@@ -170,8 +170,8 @@
     {
       "name": "pdf-report-formatting",
       "source": "./plugins/pdf-report-formatting",
-      "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor) to convert structured output into a polished deliverable PDF.",
-      "version": "1.1.0"
+      "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber) and structural layouts (formal/tactical/navigable_tactical), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Tactical layout drops cover/TOC/numbering for the strix-halo briefing pattern. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor).",
+      "version": "1.2.0"
     }
   ]
 }

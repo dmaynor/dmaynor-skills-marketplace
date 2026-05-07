@@ -218,6 +218,90 @@ THEMES: dict[str, Theme] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Layout presets — bundle structural choices into named options.
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Layout:
+    """Structural-element preset for a document.
+
+    Pairs orthogonally with Theme: a Theme controls visual style,
+    a Layout controls which structural elements (cover page, TOC,
+    section numbering) are present.
+    """
+
+    name: str
+    cover_page: bool = True
+    table_of_contents: bool = True
+    numbered_sections: bool = True
+
+
+# Formal: long-form analytical document with proper navigation.
+# Cover page, TOC, numbered sections. The default for analytical
+# deliverables, audit reports, white papers.
+FORMAL_LAYOUT = Layout(
+    name="formal",
+    cover_page=True,
+    table_of_contents=True,
+    numbered_sections=True,
+)
+
+# Tactical: briefing-style, get-to-the-point. Inline title at the
+# top of page 1, no TOC, no auto-numbered sections — section titles
+# read as standalone callouts. Pair with the cyber theme for the
+# canonical strix-halo "tactical brief" aesthetic.
+TACTICAL_LAYOUT = Layout(
+    name="tactical",
+    cover_page=False,
+    table_of_contents=False,
+    numbered_sections=False,
+)
+
+# Navigable-Tactical: the strix-halo top-of-page title, but with a
+# TOC retained because the document is long enough that readers
+# benefit from navigation. Use this for cyber-themed analyses
+# longer than ~6 pages where structural scannability still matters.
+NAVIGABLE_TACTICAL_LAYOUT = Layout(
+    name="navigable_tactical",
+    cover_page=False,
+    table_of_contents=True,
+    numbered_sections=False,
+)
+
+
+LAYOUTS: dict[str, Layout] = {
+    "default": FORMAL_LAYOUT,
+    "formal": FORMAL_LAYOUT,
+    "tactical": TACTICAL_LAYOUT,
+    "navigable_tactical": NAVIGABLE_TACTICAL_LAYOUT,
+}
+
+
+def _resolve_layout(layout: Layout | str | None) -> Layout:
+    """Accept a Layout instance, a registered name, or None (=formal)."""
+    if layout is None:
+        return FORMAL_LAYOUT
+    if isinstance(layout, Layout):
+        return layout
+    if isinstance(layout, str):
+        try:
+            return LAYOUTS[layout.lower()]
+        except KeyError:
+            known = ", ".join(sorted(LAYOUTS.keys()))
+            raise ValueError(
+                f"Unknown layout {layout!r}. Known layouts: {known}. "
+                f"Pass a Layout instance for a custom preset."
+            )
+    raise TypeError(f"layout must be Layout, str, or None; got {type(layout).__name__}")
+
+
+# Sentinel for parameters that the user did not explicitly pass.
+# Used so an explicit cover_page=True can override layout="tactical".
+_UNSET: object = object()
+
+
 def _resolve_theme(theme: Theme | str | None) -> Theme:
     """Accept a Theme instance, a registered name, or None (=light)."""
     if theme is None:
@@ -1043,12 +1127,13 @@ def build_report(
     metadata: dict[str, str] | None = None,
     sections: Sequence[Section] | None = None,
     page_size: tuple[float, float] = letter,
-    cover_page: bool = True,
-    table_of_contents: bool = True,
+    cover_page: bool | object = _UNSET,
+    table_of_contents: bool | object = _UNSET,
     show_header: bool = True,
-    numbered_sections: bool = True,
+    numbered_sections: bool | object = _UNSET,
     pack_sections: bool = True,
     theme: Theme | str | None = "default",
+    layout: Layout | str | None = None,
 ) -> None:
     """Build a branded PDF report and write it to output_path.
 
@@ -1059,25 +1144,53 @@ def build_report(
         metadata: Optional dict of label->value rendered as a meta block.
         sections: Ordered sections rendered after the cover/TOC.
         page_size: reportlab page-size tuple.
-        cover_page: When True (default), title and metadata get their
-            own page with vertical centering. When False, the title
-            runs inline at the top of the first content page.
-        table_of_contents: When True (default), TOC on page after cover.
+        cover_page: When True, title and metadata get their own page with
+            vertical centering. When False, the title runs inline at the
+            top of the first content page. If unset, falls back to the
+            layout's default.
+        table_of_contents: When True, TOC on page after cover. Falls back
+            to the layout's default when unset.
         show_header: When True (default), running header on body pages.
-        numbered_sections: When True (default), titles auto-prefixed with index.
+        numbered_sections: When True, titles auto-prefixed with index.
+            Falls back to the layout's default when unset.
         pack_sections: When True (default), CondPageBreak heuristic
             inserted between sections to avoid cramped transitions.
         theme: Visual theme. Pass a registered name ("light", "cyber") or
             a Theme instance for full control. Default "light".
+        layout: Structural-element preset bundling cover_page,
+            table_of_contents, and numbered_sections into a single
+            named option. Registered presets:
+
+            - "formal" (default): cover + TOC + numbered sections.
+              For analytical deliverables, audit reports, white papers.
+            - "tactical": no cover, no TOC, no numbering. Inline title
+              at top of page 1, section titles read as standalone
+              callouts. Pair with theme="cyber" for the strix-halo
+              tactical-briefing aesthetic.
+            - "navigable_tactical": tactical look but TOC retained for
+              navigation. Use for cyber-themed analyses > 6 pages.
+
+            Pass a Layout instance for a custom preset. Individual
+            parameters (cover_page, table_of_contents, numbered_sections)
+            override the layout's defaults if explicitly set, so you can
+            mix layout="tactical" with table_of_contents=True etc.
 
     Raises:
-        ValueError: a section is malformed or theme name is unknown.
+        ValueError: a section is malformed, theme/layout name is unknown.
         TypeError: a block is of an unrecognised type.
         OSError: output_path is not writable.
     """
     sections = list(sections or [])
     metadata = metadata or {}
     resolved_theme = _resolve_theme(theme)
+    resolved_layout = _resolve_layout(layout)
+    # Layout defaults; explicit kwargs override.
+    if cover_page is _UNSET:
+        cover_page = resolved_layout.cover_page
+    if table_of_contents is _UNSET:
+        table_of_contents = resolved_layout.table_of_contents
+    if numbered_sections is _UNSET:
+        numbered_sections = resolved_layout.numbered_sections
     styles = _build_styles(resolved_theme)
 
     def make_doc() -> _ReportDocTemplate:
@@ -1150,4 +1263,9 @@ __all__ = [
     "LIGHT_THEME",
     "CYBER_THEME",
     "THEMES",
+    "Layout",
+    "FORMAL_LAYOUT",
+    "TACTICAL_LAYOUT",
+    "NAVIGABLE_TACTICAL_LAYOUT",
+    "LAYOUTS",
 ]
