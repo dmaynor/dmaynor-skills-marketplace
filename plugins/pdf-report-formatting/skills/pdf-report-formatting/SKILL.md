@@ -1,6 +1,6 @@
 ---
 name: pdf-report-formatting
-description: Produce branded, professionally formatted PDF reports with cover page, table of contents, running header, page-N-of-M footer, consistent typography, modern tables, callouts, and ordered/unordered lists. Use whenever the user asks for a PDF report, briefing, white paper, audit deliverable, technical memo, or wants existing markdown/text/HTML content turned into a polished PDF — even if they don't explicitly say "PDF formatting". Also use when the user asks to convert a long structured response into a PDF, or mentions ".pdf" output for any document longer than one page. Prefer this skill over generic PDF tools when output style/branding matters.
+description: Produce branded, professionally formatted PDF reports with selectable themes (light/cyber), cover page, table of contents, running header, page-N-of-M footer, consistent typography, modern tables, callouts, and ordered/unordered lists. Use whenever the user asks for a PDF report, briefing, white paper, audit deliverable, technical memo, or wants existing markdown/text/HTML content turned into a polished PDF — even if they don't explicitly say "PDF formatting". Also use when the user asks for a "tactical", "terminal", "cyber", or "dark mode" PDF, or wants the report to match a specific brand palette. Prefer this skill over generic PDF tools when output style/branding matters.
 ---
 
 # PDF Report Formatting
@@ -25,6 +25,85 @@ The styling lives in the builder. Resist the urge to inline custom `Paragraph` s
 
 `reportlab` Platypus is the default. Two-pass `multiBuild` for TOC + page-N-of-M. Install with `pip install reportlab --break-system-packages`.
 
+## Themes
+
+A `Theme` is a frozen dataclass holding every visual parameter the builder uses: page background, text colors, accent colors, table styling, callout tints, heading behavior, and optional decorations (corner brackets, footer divider).
+
+Two presets ship with the skill, both registered in `THEMES`:
+
+| Theme | When to use |
+|-------|-------------|
+| `light` (default) | Print-first deliverables, audit reports, formal documents going to outside parties. Black-on-white with gray rules and pastel callouts. |
+| `cyber` | Screen-first technical briefings, security analyses, "tactical" or "terminal" aesthetic. Dark navy background, cyan primary accent, magenta secondary accent, ALL-CAPS section headings, L-shaped corner brackets at top-left + bottom-right, cyan footer divider. |
+
+Pass via `theme="<name>"` or `theme=Theme(...)` for custom. Defaults to `"light"`.
+
+```python
+build_report(
+    output_path="report.pdf",
+    title="Quarterly Risk Review",
+    theme="cyber",                    # registered preset
+    cover_page=False,                 # cyber looks best with inline title
+    table_of_contents=False,          # tactical briefings rarely need TOC
+    numbered_sections=False,          # cyber section titles are usually un-numbered
+    sections=[...],
+)
+```
+
+**Pairing recommendations for the cyber theme**: `cover_page=False`, `table_of_contents=False`, `numbered_sections=False`. These match the strix-halo aesthetic the theme is modeled after. The defaults (cover page + TOC + numbered) still work but produce a more "formal" look that's slightly at odds with the tactical visual language.
+
+**Custom theme**:
+
+```python
+from build_pdf import Theme, build_report
+
+amber_terminal = Theme(
+    name="amber",
+    background="#1A0F00",
+    text_primary="#FFB000",
+    text_secondary="#FFCB47",
+    text_muted="#7A5A1F",
+    accent="#FFB000",
+    title_color="#FFB000",
+    subtitle_color="#FF8B00",
+    heading_color="#FFB000",
+    metadata_label_color="#FFB000",
+    metadata_value_color="#FFE5A8",
+    table_header_bg="#1A0F00",
+    table_header_fg="#FFB000",
+    table_header_rule="#FFB000",
+    table_body_rule="#3D2A0E",
+    table_emph_bg="#2A1B05",
+    table_cell_fg="#FFE5A8",
+    callout_note_bg="#2A1B05",
+    callout_warn_bg="#2A1410",
+    callout_border_note="#FFB000",
+    callout_border_warn="#FF6B35",
+    callout_text="#FFE5A8",
+    header_text_color="#7A5A1F",
+    header_rule_color="#FFB000",
+    footer_text_color="#7A5A1F",
+    footer_rule_color="#FFB000",
+    footer_rule=True,
+    caps_headings=True,
+    corner_brackets=True,
+    corner_bracket_color="#FFB000",
+    toc_heading_color="#FFB000",
+    toc_level1_color="#FFE5A8",
+    toc_level2_color="#FFCB47",
+)
+
+build_report(..., theme=amber_terminal)
+```
+
+**Theme caveats**:
+
+- Dark themes consume printer ink heavily. Document is screen-first.
+- Reportlab's built-in fonts (Helvetica family) ship with full Latin glyphs but no CJK / Cyrillic. If your content has those, embed a font (see `references/style_guide.md`).
+- Callouts use semantic colors (note=cool/blue, warn=warm/orange) regardless of theme. The cyber theme's `note` border is cyan; `warn` border is orange — picked for accessibility contrast on the dark background.
+- Corner brackets are a decorative element only; they don't enclose content (the body frame is unchanged from non-bracketed themes).
+- Themes are frozen dataclasses. To tweak a registered theme, use `dataclasses.replace`: `my_theme = replace(CYBER_THEME, accent="#00FF00")`.
+
 ## What the builder produces by default
 
 | Element | Default | Override parameter |
@@ -35,6 +114,7 @@ The styling lives in the builder. Resist the urge to inline custom `Paragraph` s
 | Footer | "Page N of M" centered | always on |
 | Section numbering | "1.", "2.", ... auto-prefixed to section titles | `numbered_sections=False` |
 | Section packing | Two rules combine into one threshold per section: (a) if the previous section consumed more than half a page, the next section starts on a fresh page; (b) if the next section's natural height exceeds the remaining space, it starts on a fresh page. Threshold is `min(body_height, max(half_body, predicted_next_height))`. Each upcoming section's height is pre-measured via `flowable.wrap()` to compute the threshold. | `pack_sections=False` |
+| Theme | `light` (default) — black-on-white, gray rules, light callout tints. Print-first. **Or** `cyber` — dark navy (`#0B0B1A`) with cyan (`#00D4D4`) primary + magenta (`#CC44CC`) secondary accent, ALL-CAPS section headings, L-shaped tactical corner brackets, cyan footer divider. Screen-first / "tactical" aesthetic. | `theme="cyber"` (or `theme=Theme(...)` for custom) |
 
 ## Page geometry
 

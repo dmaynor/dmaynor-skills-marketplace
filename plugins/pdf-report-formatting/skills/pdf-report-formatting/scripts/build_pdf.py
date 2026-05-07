@@ -1,26 +1,49 @@
-"""Reusable PDF report builder.
+"""Reusable PDF report builder with pluggable themes.
 
 Encodes the house style for branded PDF reports. Callers populate typed
 data structures (Section, *Block) and call build_report; styling is owned
 here, not at the call site.
 
-Security: any string passed into ParaBlock, HeadingBlock, OrderedListBlock,
-BulletsBlock, or TableBlock cells flows through reportlab's Paragraph
-parser, which interprets HTML markup. Untrusted input must be escaped via
-xml.sax.saxutils.escape() before reaching these blocks. The builder does
-NOT escape automatically because callers legitimately use markup like
-<b>, <sub>, <super>.
+Themes
+------
+A Theme bundles every visual parameter the builder uses: page background,
+text colors, accent colors, table styling, callout tints, heading
+behavior, and optional decorations (corner brackets, footer divider).
 
-Two-pass build: the document is built with multiBuild() to resolve the
-table of contents and Page N of M counters. Side effects in your driver
-should be idempotent.
+Two presets ship with the skill:
+
+    LIGHT  - default; black-on-white with light gray rules and tints.
+             Suitable for print-first deliverables.
+    CYBER  - dark navy background with cyan + magenta dual-accent,
+             ALL-CAPS section headings, L-shaped tactical corner
+             brackets. Suitable for screen-first technical briefings,
+             security analyses, "tactical" or "terminal" aesthetic.
+
+Pass theme="cyber" (or any registered name) or theme=Theme(...) to
+build_report. Defaults to "light".
+
+Security
+--------
+Strings passed into ParaBlock, HeadingBlock, OrderedListBlock,
+BulletsBlock, or TableBlock cells flow through reportlab's Paragraph
+parser, which interprets HTML markup. Untrusted input must be escaped
+via xml.sax.saxutils.escape() before reaching these blocks. The builder
+does NOT escape automatically because callers legitimately use markup
+like <b>, <sub>, <super>.
+
+Two-pass build
+--------------
+The document is built with multiBuild() to resolve the table of contents
+and Page N of M counters. Side effects in your driver should be
+idempotent.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Literal, Sequence
 
 from reportlab.lib import colors
+from reportlab.lib.colors import HexColor
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
@@ -41,8 +64,185 @@ from reportlab.platypus import (
 from reportlab.platypus.tableofcontents import TableOfContents
 
 
+# ---------------------------------------------------------------------------
+# Theme
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class Theme:
+    """Visual theme for PDF reports.
+
+    All color fields are hex strings (#RRGGBB). The builder converts them
+    to reportlab Color objects internally — keep the hex form so themes
+    can be serialized / diffed easily.
+
+    Frozen so themes can be shared and reused without accidental mutation.
+    """
+
+    name: str
+
+    # Page surface
+    background: str = "#FFFFFF"
+
+    # Body text
+    text_primary: str = "#1a1a1a"
+    text_secondary: str = "#333333"
+    text_muted: str = "#555555"
+
+    # Accents
+    accent: str = "#1a1a1a"
+    accent_secondary: str = "#555555"
+
+    # Title block on cover or first page
+    title_color: str = "#1a1a1a"
+    subtitle_color: str = "#333333"
+
+    # Section / subsection headings
+    heading_color: str = "#1a1a1a"
+    subheading_color: str = "#333333"
+    caps_headings: bool = False
+    heading_underline: bool = False  # cyan thin rule below H1
+
+    # Metadata block
+    metadata_label_color: str = "#555555"
+    metadata_value_color: str = "#1a1a1a"
+
+    # Tables
+    table_header_bg: str = "#f5f5f5"
+    table_header_fg: str = "#1a1a1a"
+    table_header_rule: str = "#1a1a1a"
+    table_body_rule: str = "#cccccc"
+    table_emph_bg: str = "#eef4f9"
+    table_cell_fg: str = "#1a1a1a"
+
+    # Callouts
+    callout_note_bg: str = "#f0f4f8"
+    callout_warn_bg: str = "#fdf3e6"
+    callout_border_note: str = "#cccccc"
+    callout_border_warn: str = "#cccccc"
+    callout_text: str = "#1a1a1a"
+
+    # Page chrome
+    header_text_color: str = "#555555"
+    header_rule_color: str = "#cccccc"
+    header_rule: bool = True
+    footer_text_color: str = "#555555"
+    footer_rule_color: str = "#cccccc"
+    footer_rule: bool = False
+
+    # Decorations
+    corner_brackets: bool = False
+    corner_bracket_color: str = "#1a1a1a"
+    corner_bracket_size_in: float = 0.35
+    corner_bracket_width_pt: float = 0.6
+
+    # TOC styling
+    toc_heading_color: str = "#1a1a1a"
+    toc_level1_color: str = "#1a1a1a"
+    toc_level2_color: str = "#333333"
+
+    @property
+    def is_dark(self) -> bool:
+        """Heuristic: background luminance below 0.5 means dark theme."""
+        try:
+            r = int(self.background[1:3], 16) / 255.0
+            g = int(self.background[3:5], 16) / 255.0
+            b = int(self.background[5:7], 16) / 255.0
+            return (0.299 * r + 0.587 * g + 0.114 * b) < 0.5
+        except (ValueError, IndexError):
+            return False
+
+
+LIGHT_THEME = Theme(name="light")
+
+
+CYBER_THEME = Theme(
+    name="cyber",
+    # Surface
+    background="#0B0B1A",
+    # Text
+    text_primary="#E8E8E8",
+    text_secondary="#B8C5D6",
+    text_muted="#7A8A9E",
+    # Accents
+    accent="#00D4D4",
+    accent_secondary="#CC44CC",
+    # Title
+    title_color="#00D4D4",
+    subtitle_color="#CC44CC",
+    # Headings
+    heading_color="#00D4D4",
+    subheading_color="#00D4D4",
+    caps_headings=True,
+    heading_underline=True,
+    # Metadata
+    metadata_label_color="#00D4D4",
+    metadata_value_color="#E8E8E8",
+    # Tables
+    table_header_bg="#0B0B1A",
+    table_header_fg="#00D4D4",
+    table_header_rule="#00D4D4",
+    table_body_rule="#1F2D44",
+    table_emph_bg="#162338",
+    table_cell_fg="#E0E0E0",
+    # Callouts
+    callout_note_bg="#0F1F36",
+    callout_warn_bg="#2A1815",
+    callout_border_note="#00D4D4",
+    callout_border_warn="#FF6B35",
+    callout_text="#E8E8E8",
+    # Header / footer
+    header_text_color="#7A8A9E",
+    header_rule_color="#00D4D4",
+    header_rule=True,
+    footer_text_color="#7A8A9E",
+    footer_rule_color="#00D4D4",
+    footer_rule=True,
+    # Decorations
+    corner_brackets=True,
+    corner_bracket_color="#00D4D4",
+    corner_bracket_size_in=0.35,
+    corner_bracket_width_pt=0.8,
+    # TOC
+    toc_heading_color="#00D4D4",
+    toc_level1_color="#E8E8E8",
+    toc_level2_color="#B8C5D6",
+)
+
+
+THEMES: dict[str, Theme] = {
+    "default": LIGHT_THEME,
+    "light": LIGHT_THEME,
+    "cyber": CYBER_THEME,
+}
+
+
+def _resolve_theme(theme: Theme | str | None) -> Theme:
+    """Accept a Theme instance, a registered name, or None (=light)."""
+    if theme is None:
+        return LIGHT_THEME
+    if isinstance(theme, Theme):
+        return theme
+    if isinstance(theme, str):
+        try:
+            return THEMES[theme.lower()]
+        except KeyError:
+            known = ", ".join(sorted(THEMES.keys()))
+            raise ValueError(
+                f"Unknown theme {theme!r}. Known themes: {known}. "
+                f"Pass a Theme instance for a custom palette."
+            )
+    raise TypeError(f"theme must be Theme, str, or None; got {type(theme).__name__}")
+
+
+# ---------------------------------------------------------------------------
+# TocParagraph
+# ---------------------------------------------------------------------------
+
+
 class TocParagraph(Paragraph):
-    """A Paragraph subclass that emits a TOC entry when it is laid out.
+    """A Paragraph subclass that emits a TOC entry when laid out.
 
     Plain Paragraphs styled as H1/H2 do NOT emit TOC entries — only
     TocParagraph instances do. This lets HeadingBlock(toc=False) opt out
@@ -52,22 +252,6 @@ class TocParagraph(Paragraph):
     def __init__(self, text: str, style: ParagraphStyle, toc_level: int):
         super().__init__(text, style)
         self._toc_level = toc_level
-
-
-# ---------------------------------------------------------------------------
-# Color tokens — fixed palette. Do not parameterize per call.
-# ---------------------------------------------------------------------------
-
-COLOR_TEXT_PRIMARY = colors.HexColor("#1a1a1a")
-COLOR_TEXT_SECONDARY = colors.HexColor("#333333")
-COLOR_TEXT_MUTED = colors.HexColor("#555555")
-COLOR_HEADER_RULE = colors.HexColor("#1a1a1a")
-COLOR_BODY_RULE = colors.HexColor("#cccccc")
-COLOR_HEADER_BG = colors.HexColor("#f5f5f5")
-COLOR_EMPH_BG = colors.HexColor("#eef4f9")
-COLOR_CALLOUT_NOTE_BG = colors.HexColor("#f0f4f8")
-COLOR_CALLOUT_WARN_BG = colors.HexColor("#fdf3e6")
-COLOR_CALLOUT_BORDER = colors.HexColor("#cccccc")
 
 
 # ---------------------------------------------------------------------------
@@ -159,13 +343,7 @@ Block = (
 
 @dataclass
 class Section:
-    """A top-level section. Renders as H1 followed by its blocks.
-
-    numbered: when True (default for build_report), the section index is
-    auto-prefixed onto the title (e.g., "1. Introduction"). The driver
-    should NOT include numbers in section.title — they will be added by
-    the builder.
-    """
+    """A top-level section. Renders as H1 followed by its blocks."""
 
     title: str
     blocks: list[Block] = field(default_factory=list)
@@ -173,74 +351,115 @@ class Section:
 
 
 # ---------------------------------------------------------------------------
-# Style construction.
+# Style construction (theme-driven).
 # ---------------------------------------------------------------------------
 
 
-def _build_styles() -> dict[str, ParagraphStyle]:
+def _build_styles(theme: Theme) -> dict[str, ParagraphStyle]:
     base = getSampleStyleSheet()
     out: dict[str, ParagraphStyle] = {}
 
     out["DocTitle"] = ParagraphStyle(
         name="DocTitle",
         parent=base["Title"],
+        fontName="Helvetica-Bold",
         fontSize=22,
         leading=26,
         alignment=TA_CENTER,
         spaceAfter=12,
-        textColor=COLOR_TEXT_PRIMARY,
+        textColor=HexColor(theme.title_color),
+    )
+    out["DocTitleLeft"] = ParagraphStyle(
+        name="DocTitleLeft",
+        parent=out["DocTitle"],
+        alignment=TA_LEFT,
+        spaceAfter=4,
     )
     out["DocSubtitle"] = ParagraphStyle(
         name="DocSubtitle",
         parent=base["Heading2"],
-        fontSize=14,
-        leading=18,
+        fontName="Helvetica",
+        fontSize=12,
+        leading=15,
         alignment=TA_CENTER,
         spaceAfter=20,
-        textColor=COLOR_TEXT_SECONDARY,
+        textColor=HexColor(theme.subtitle_color),
+    )
+    out["DocSubtitleLeft"] = ParagraphStyle(
+        name="DocSubtitleLeft",
+        parent=out["DocSubtitle"],
+        alignment=TA_LEFT,
+        spaceAfter=14,
     )
     out["CoverMeta"] = ParagraphStyle(
         name="CoverMeta",
         parent=base["BodyText"],
+        fontName="Helvetica",
         fontSize=10,
         leading=14,
         alignment=TA_CENTER,
-        textColor=COLOR_TEXT_MUTED,
+        textColor=HexColor(theme.text_muted),
         spaceAfter=4,
+    )
+    out["MetaLabel"] = ParagraphStyle(
+        name="MetaLabel",
+        parent=base["BodyText"],
+        fontName="Helvetica-Bold",
+        fontSize=8,
+        leading=11,
+        alignment=TA_LEFT,
+        textColor=HexColor(theme.metadata_label_color),
+        spaceAfter=1,
+    )
+    out["MetaValue"] = ParagraphStyle(
+        name="MetaValue",
+        parent=base["BodyText"],
+        fontName="Helvetica",
+        fontSize=10,
+        leading=13,
+        alignment=TA_LEFT,
+        textColor=HexColor(theme.metadata_value_color),
+        spaceAfter=8,
     )
     out["H1"] = ParagraphStyle(
         name="H1",
         parent=base["Heading1"],
+        fontName="Helvetica-Bold",
         fontSize=15,
         leading=19,
         spaceBefore=18,
         spaceAfter=8,
-        textColor=COLOR_TEXT_PRIMARY,
+        textColor=HexColor(theme.heading_color),
     )
     out["H2"] = ParagraphStyle(
         name="H2",
         parent=base["Heading2"],
+        fontName="Helvetica-Bold",
         fontSize=11.5,
         leading=15,
         spaceBefore=14,
         spaceAfter=4,
-        textColor=COLOR_TEXT_SECONDARY,
+        textColor=HexColor(theme.subheading_color),
     )
     out["Body"] = ParagraphStyle(
         name="Body",
         parent=base["BodyText"],
+        fontName="Helvetica",
         fontSize=10,
         leading=14,
         spaceAfter=7,
         alignment=TA_LEFT,
+        textColor=HexColor(theme.text_primary),
     )
     out["BodySmall"] = ParagraphStyle(
         name="BodySmall",
         parent=base["BodyText"],
+        fontName="Helvetica",
         fontSize=9,
         leading=12,
         spaceAfter=4,
         alignment=TA_LEFT,
+        textColor=HexColor(theme.table_cell_fg),
     )
     out["BodySmallBold"] = ParagraphStyle(
         name="BodySmallBold",
@@ -264,9 +483,10 @@ def _build_styles() -> dict[str, ParagraphStyle]:
     out["Meta"] = ParagraphStyle(
         name="Meta",
         parent=base["BodyText"],
+        fontName="Helvetica",
         fontSize=9,
         leading=12,
-        textColor=COLOR_TEXT_MUTED,
+        textColor=HexColor(theme.text_muted),
         spaceAfter=10,
     )
     out["Footer"] = ParagraphStyle(
@@ -274,42 +494,48 @@ def _build_styles() -> dict[str, ParagraphStyle]:
         parent=base["BodyText"],
         fontSize=8,
         leading=10,
-        textColor=COLOR_TEXT_MUTED,
+        textColor=HexColor(theme.footer_text_color),
         alignment=TA_CENTER,
     )
     out["Callout"] = ParagraphStyle(
         name="Callout",
         parent=base["BodyText"],
+        fontName="Helvetica",
         fontSize=10,
         leading=14,
         leftIndent=4,
         rightIndent=4,
         spaceBefore=4,
         spaceAfter=4,
+        textColor=HexColor(theme.callout_text),
     )
     out["TOCHeading"] = ParagraphStyle(
         name="TOCHeading",
         parent=base["Heading1"],
+        fontName="Helvetica-Bold",
         fontSize=15,
         leading=19,
         spaceAfter=12,
-        textColor=COLOR_TEXT_PRIMARY,
+        textColor=HexColor(theme.toc_heading_color),
     )
     out["TOC1"] = ParagraphStyle(
         name="TOC1",
         parent=base["Normal"],
+        fontName="Helvetica",
         fontSize=10.5,
         leading=15,
         leftIndent=0,
         firstLineIndent=0,
+        textColor=HexColor(theme.toc_level1_color),
     )
     out["TOC2"] = ParagraphStyle(
         name="TOC2",
         parent=base["Normal"],
+        fontName="Helvetica",
         fontSize=9.5,
         leading=13,
         leftIndent=18,
-        textColor=COLOR_TEXT_SECONDARY,
+        textColor=HexColor(theme.toc_level2_color),
     )
     return out
 
@@ -319,12 +545,31 @@ def _build_styles() -> dict[str, ParagraphStyle]:
 # ---------------------------------------------------------------------------
 
 
-def _cell(text: str, styles: dict[str, ParagraphStyle], bold: bool = False) -> Paragraph:
+def _maybe_caps(text: str, theme: Theme) -> str:
+    """Uppercase if theme requests caps headings.
+
+    Note: HTML markup tags inside the text remain functional after upper().
+    Tag names like 'b', 'i', 'sub' are case-insensitive in reportlab's
+    parser. Attribute values (e.g., color="#ff0000") are NOT recursed
+    into, but we don't expect them in heading text.
+    """
+    return text.upper() if theme.caps_headings else text
+
+
+def _cell(
+    text: str,
+    styles: dict[str, ParagraphStyle],
+    bold: bool = False,
+) -> Paragraph:
     """Wrap a table-cell string so it word-wraps inside its column."""
     return Paragraph(text, styles["BodySmallBold" if bold else "BodySmall"])
 
 
-def _render_table(block: TableBlock, styles: dict[str, ParagraphStyle]) -> Table:
+def _render_table(
+    block: TableBlock,
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+) -> Table:
     emph = set(block.emphasized_rows)
     header_row = [_cell(h, styles, bold=True) for h in block.header]
     body_rows = [
@@ -339,38 +584,60 @@ def _render_table(block: TableBlock, styles: dict[str, ParagraphStyle]) -> Table
         repeatRows=1,
     )
 
-    # Modernized table style: horizontal rules only, no vertical grid.
+    # Override the header-row paragraph color since BodySmallBold uses
+    # table_cell_fg (which is body text color, not header text color).
+    # We achieve header text color by re-styling the Paragraphs in the
+    # header row using a header-specific paragraph style on the fly.
+    header_style = ParagraphStyle(
+        name="TableHeader",
+        parent=styles["BodySmallBold"],
+        textColor=HexColor(theme.table_header_fg),
+    )
+    for i, h in enumerate(block.header):
+        data[0][i] = Paragraph(h, header_style)
+
     style_cmds: list = [
         ("FONT", (0, 0), (-1, -1), "Helvetica", 9),
         ("VALIGN", (0, 0), (-1, -1), "TOP"),
         # Header row
-        ("BACKGROUND", (0, 0), (-1, 0), COLOR_HEADER_BG),
-        ("LINEBELOW", (0, 0), (-1, 0), 1.0, COLOR_HEADER_RULE),
-        ("LINEABOVE", (0, 0), (-1, 0), 1.0, COLOR_HEADER_RULE),
+        ("BACKGROUND", (0, 0), (-1, 0), HexColor(theme.table_header_bg)),
+        ("LINEBELOW", (0, 0), (-1, 0), 1.0, HexColor(theme.table_header_rule)),
+        ("LINEABOVE", (0, 0), (-1, 0), 1.0, HexColor(theme.table_header_rule)),
         # Row separators
-        ("LINEBELOW", (0, 1), (-1, -1), 0.25, COLOR_BODY_RULE),
+        ("LINEBELOW", (0, 1), (-1, -1), 0.25, HexColor(theme.table_body_rule)),
         # Padding
         ("LEFTPADDING", (0, 0), (-1, -1), 5),
         ("RIGHTPADDING", (0, 0), (-1, -1), 5),
         ("TOPPADDING", (0, 0), (-1, -1), 4),
         ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
     ]
-    # Emphasized rows: tinted background. (Bold is applied via _cell.)
     for idx in emph:
-        row = idx + 1  # account for header
-        style_cmds.append(("BACKGROUND", (0, row), (-1, row), COLOR_EMPH_BG))
+        row = idx + 1
+        style_cmds.append(
+            ("BACKGROUND", (0, row), (-1, row), HexColor(theme.table_emph_bg))
+        )
     tbl.setStyle(TableStyle(style_cmds))
     return tbl
 
 
-def _render_callout(block: CalloutBlock, styles: dict[str, ParagraphStyle]) -> Table:
-    bg = COLOR_CALLOUT_WARN_BG if block.kind == "warn" else COLOR_CALLOUT_NOTE_BG
-    prefix = "<b>Warning:</b> " if block.kind == "warn" else "<b>Note:</b> "
+def _render_callout(
+    block: CalloutBlock,
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+) -> Table:
+    if block.kind == "warn":
+        bg = HexColor(theme.callout_warn_bg)
+        border = HexColor(theme.callout_border_warn)
+        prefix = "<b>Warning:</b> "
+    else:
+        bg = HexColor(theme.callout_note_bg)
+        border = HexColor(theme.callout_border_note)
+        prefix = "<b>Note:</b> "
     para = Paragraph(prefix + block.text, styles["Callout"])
     tbl = Table([[para]])
     tbl.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, -1), bg),
-        ("BOX", (0, 0), (-1, -1), 0.5, COLOR_CALLOUT_BORDER),
+        ("BOX", (0, 0), (-1, -1), 0.7, border),
         ("LEFTPADDING", (0, 0), (-1, -1), 10),
         ("RIGHTPADDING", (0, 0), (-1, -1), 10),
         ("TOPPADDING", (0, 0), (-1, -1), 7),
@@ -379,13 +646,18 @@ def _render_callout(block: CalloutBlock, styles: dict[str, ParagraphStyle]) -> T
     return tbl
 
 
-def _render_block(block: Block, styles: dict[str, ParagraphStyle]) -> list:
+def _render_block(
+    block: Block,
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+) -> list:
     if isinstance(block, HeadingBlock):
+        text = _maybe_caps(block.text, theme) if block.level == 1 else block.text
         style = styles["H1"] if block.level == 1 else styles["H2"]
         if block.toc:
             level = 0 if block.level == 1 else 1
-            return [TocParagraph(block.text, style, level)]
-        return [Paragraph(block.text, style)]
+            return [TocParagraph(text, style, level)]
+        return [Paragraph(text, style)]
     if isinstance(block, ParaBlock):
         return [Paragraph(block.text, styles["Body"])]
     if isinstance(block, BulletsBlock):
@@ -399,26 +671,36 @@ def _render_block(block: Block, styles: dict[str, ParagraphStyle]) -> list:
             for n, item in enumerate(block.items, start=block.start)
         ]
     if isinstance(block, TableBlock):
-        return [_render_table(block, styles), Spacer(1, 6)]
+        return [_render_table(block, styles, theme), Spacer(1, 6)]
     if isinstance(block, CalloutBlock):
-        return [_render_callout(block, styles), Spacer(1, 4)]
+        return [_render_callout(block, styles, theme), Spacer(1, 4)]
     if isinstance(block, PageBreakBlock):
         return [PageBreak()]
     raise TypeError(f"Unknown block type: {type(block).__name__}")
 
 
 # ---------------------------------------------------------------------------
-# Doc template with TOC notify + Page-N-of-M support.
+# Doc template with theme-aware chrome.
 # ---------------------------------------------------------------------------
 
 
 class _ReportDocTemplate(BaseDocTemplate):
-    """Custom doc template: notifies TOC on H1/H2 and tracks total pages."""
+    """Custom doc template: paints background, draws decorations, notifies
+    TOC on opted-in headings, tracks total pages."""
 
-    def __init__(self, *args, doc_title: str = "", show_header: bool = True, **kwargs):
+    def __init__(
+        self,
+        *args,
+        doc_title: str = "",
+        show_header: bool = True,
+        theme: Theme = LIGHT_THEME,
+        starts_with_cover: bool = True,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self._doc_title = doc_title
         self._show_header = show_header
+        self._theme = theme
         self._total_pages = 0
 
         page_w, page_h = self.pagesize
@@ -447,42 +729,87 @@ class _ReportDocTemplate(BaseDocTemplate):
             bottomPadding=0,
         )
 
-        self.addPageTemplates([
-            PageTemplate(id="cover", frames=[cover_frame], onPage=self._draw_cover_chrome),
-            PageTemplate(id="body", frames=[body_frame], onPage=self._draw_body_chrome),
-        ])
+        cover_template = PageTemplate(
+            id="cover", frames=[cover_frame], onPage=self._draw_cover_chrome
+        )
+        body_template = PageTemplate(
+            id="body", frames=[body_frame], onPage=self._draw_body_chrome
+        )
+        # Reportlab uses pageTemplates[0] for page 1. Order accordingly so
+        # the chrome on page 1 matches the document's actual first page.
+        if starts_with_cover:
+            self.addPageTemplates([cover_template, body_template])
+        else:
+            self.addPageTemplates([body_template, cover_template])
 
     def afterFlowable(self, flowable):
-        """Notify the TOC only when an opted-in heading is laid out.
-
-        Plain Paragraphs styled H1/H2 do NOT emit entries — only
-        TocParagraph instances do. Section titles are auto-rendered as
-        TocParagraph; HeadingBlock entries opt in via toc=True.
-        """
         if isinstance(flowable, TocParagraph):
             level = flowable._toc_level
             text = flowable.getPlainText()
             self.notify("TOCEntry", (level, text, self.page))
 
+    # -- chrome helpers ----------------------------------------------------
+
+    def _paint_background(self, canvas) -> None:
+        page_w, page_h = self.pagesize
+        canvas.setFillColor(HexColor(self._theme.background))
+        canvas.rect(0, 0, page_w, page_h, fill=1, stroke=0)
+
+    def _draw_corner_brackets(self, canvas) -> None:
+        if not self._theme.corner_brackets:
+            return
+        page_w, page_h = self.pagesize
+        size = self._theme.corner_bracket_size_in * inch
+        inset = 0.3 * inch
+        canvas.setStrokeColor(HexColor(self._theme.corner_bracket_color))
+        canvas.setLineWidth(self._theme.corner_bracket_width_pt)
+        # Top-left: vertical going down + horizontal going right
+        x0, y0 = inset, page_h - inset
+        canvas.line(x0, y0, x0, y0 - size)            # vertical down
+        canvas.line(x0, y0, x0 + size, y0)            # horizontal right
+        # Bottom-right: vertical going up + horizontal going left
+        x1, y1 = page_w - inset, inset
+        canvas.line(x1, y1, x1, y1 + size)            # vertical up
+        canvas.line(x1, y1, x1 - size, y1)            # horizontal left
+
     def _draw_cover_chrome(self, canvas, doc) -> None:
-        # Cover page intentionally has no header/footer.
-        pass
+        canvas.saveState()
+        self._paint_background(canvas)
+        self._draw_corner_brackets(canvas)
+        canvas.restoreState()
 
     def _draw_body_chrome(self, canvas, doc) -> None:
         canvas.saveState()
+        self._paint_background(canvas)
+        self._draw_corner_brackets(canvas)
         page_w, page_h = self.pagesize
         # Header
         if self._show_header and self._doc_title:
             canvas.setFont("Helvetica", 8.5)
-            canvas.setFillColor(COLOR_TEXT_MUTED)
-            canvas.drawString(0.6 * inch, page_h - 0.42 * inch, self._doc_title)
-            canvas.setStrokeColor(COLOR_BODY_RULE)
-            canvas.setLineWidth(0.4)
-            canvas.line(0.6 * inch, page_h - 0.5 * inch,
-                        page_w - 0.6 * inch, page_h - 0.5 * inch)
+            canvas.setFillColor(HexColor(self._theme.header_text_color))
+            header_text = (
+                self._doc_title.upper()
+                if self._theme.caps_headings
+                else self._doc_title
+            )
+            canvas.drawString(0.6 * inch, page_h - 0.42 * inch, header_text)
+            if self._theme.header_rule:
+                canvas.setStrokeColor(HexColor(self._theme.header_rule_color))
+                canvas.setLineWidth(0.4)
+                canvas.line(
+                    0.6 * inch, page_h - 0.5 * inch,
+                    page_w - 0.6 * inch, page_h - 0.5 * inch,
+                )
         # Footer
+        if self._theme.footer_rule:
+            canvas.setStrokeColor(HexColor(self._theme.footer_rule_color))
+            canvas.setLineWidth(0.4)
+            canvas.line(
+                0.6 * inch, 0.55 * inch,
+                page_w - 0.6 * inch, 0.55 * inch,
+            )
         canvas.setFont("Helvetica", 8)
-        canvas.setFillColor(COLOR_TEXT_MUTED)
+        canvas.setFillColor(HexColor(self._theme.footer_text_color))
         if self._total_pages:
             footer = f"Page {doc.page} of {self._total_pages}"
         else:
@@ -492,12 +819,107 @@ class _ReportDocTemplate(BaseDocTemplate):
 
 
 # ---------------------------------------------------------------------------
+# Cover and TOC builders.
+# ---------------------------------------------------------------------------
+
+
+def _build_metadata_block(
+    metadata: dict[str, str],
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+    align: Literal["center", "left"] = "center",
+) -> list:
+    """Render metadata as a stacked LABEL / value block.
+
+    On a centered cover this produces centered rows; on a left-aligned
+    title block (for cyber-style first-page-title layout) it stacks
+    LABELS over values, left-aligned. Labels render in
+    metadata_label_color (often the theme accent), values in
+    metadata_value_color.
+    """
+    if not metadata:
+        return []
+    flowables = []
+    if align == "center":
+        # Compact centered layout: one row per metadata pair.
+        for k, v in metadata.items():
+            label = k.upper() if theme.caps_headings else k
+            flowables.append(
+                Paragraph(f"<b>{label}</b>: {v}", styles["CoverMeta"])
+            )
+    else:
+        # Stacked left layout: LABEL over value, blank line between pairs.
+        label_style = ParagraphStyle(
+            name="MetaLabelInline",
+            parent=styles["MetaLabel"],
+            fontSize=8,
+            leading=11,
+        )
+        value_style = styles["MetaValue"]
+        for k, v in metadata.items():
+            label = k.upper()
+            flowables.append(Paragraph(label, label_style))
+            flowables.append(Paragraph(v, value_style))
+    return flowables
+
+
+def _build_cover(
+    title: str,
+    subtitle: str | None,
+    metadata: dict[str, str],
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+) -> list:
+    out: list = []
+    out.append(Spacer(1, 2.5 * inch))
+    out.append(Paragraph(_maybe_caps(title, theme), styles["DocTitle"]))
+    if subtitle:
+        out.append(Paragraph(subtitle, styles["DocSubtitle"]))
+    out.extend(_build_metadata_block(metadata, styles, theme, align="center"))
+    out.append(NextPageTemplate("body"))
+    out.append(PageBreak())
+    return out
+
+
+def _build_inline_title(
+    title: str,
+    subtitle: str | None,
+    metadata: dict[str, str],
+    styles: dict[str, ParagraphStyle],
+    theme: Theme,
+) -> list:
+    """Title block at the top of page 1 (cover_page=False).
+
+    Rendered left-aligned with a stacked LABEL/value metadata layout —
+    matches the strix-halo aesthetic when paired with the cyber theme.
+    """
+    out: list = []
+    out.append(NextPageTemplate("body"))
+    out.append(Paragraph(_maybe_caps(title, theme), styles["DocTitleLeft"]))
+    if subtitle:
+        out.append(Paragraph(subtitle, styles["DocSubtitleLeft"]))
+    out.extend(_build_metadata_block(metadata, styles, theme, align="left"))
+    out.append(Spacer(1, 12))
+    return out
+
+
+def _build_toc(styles: dict[str, ParagraphStyle], theme: Theme) -> list:
+    out: list = []
+    heading_text = "CONTENTS" if theme.caps_headings else "Contents"
+    out.append(Paragraph(heading_text, styles["TOCHeading"]))
+    toc = TableOfContents()
+    toc.levelStyles = [styles["TOC1"], styles["TOC2"]]
+    out.append(toc)
+    out.append(PageBreak())
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Section validation and assembly.
 # ---------------------------------------------------------------------------
 
 
 def _validate_section(section: Section, idx: int) -> None:
-    """Catch driver mistakes that produced the v2 PDF defects."""
     if not section.blocks:
         return
     first = section.blocks[0]
@@ -521,27 +943,15 @@ def _assemble_section(
     section_index: int,
     styles: dict[str, ParagraphStyle],
     numbered: bool,
+    theme: Theme,
 ) -> list:
-    """Turn a Section into a flat list of flowables.
-
-    Group-based assembly:
-    - The title plus the first block form group 0 (prevents heading orphans).
-    - Each subsequent block normally starts a new group.
-    - A CalloutBlock with keep_with_previous=True joins the current group
-      instead of starting a new one — the callout stays with the content
-      it qualifies.
-    - PageBreakBlock flushes the current group, emits a page break, and
-      starts a new empty group.
-
-    Each group becomes a single KeepTogether flowable (if it has 2+ items)
-    or a plain flowable (if just one). This is what guarantees that a
-    callout never floats to the next page alone.
-    """
     _validate_section(section, section_index)
 
-    title_text = (
-        f"{section_index}. {section.title}" if numbered else section.title
-    )
+    if numbered:
+        title_text = f"{section_index}. {section.title}"
+    else:
+        title_text = section.title
+    title_text = _maybe_caps(title_text, theme)
     title_para = TocParagraph(title_text, styles["H1"], toc_level=0)
 
     out: list = []
@@ -566,19 +976,16 @@ def _assemble_section(
             out.append(PageBreak())
             continue
 
-        rendered = _render_block(block, styles)
+        rendered = _render_block(block, styles, theme)
 
         if i == 0:
-            # First block always joins the title group to avoid heading orphans.
             current_group.extend(rendered)
         elif isinstance(block, CalloutBlock) and block.keep_with_previous:
-            # Stay in the current group with whatever it currently anchors.
             if not current_group:
                 current_group = list(rendered)
             else:
                 current_group.extend(rendered)
         else:
-            # Normal block: end the previous group and start a new one.
             flush()
             current_group = list(rendered)
 
@@ -587,14 +994,13 @@ def _assemble_section(
 
 
 # ---------------------------------------------------------------------------
-# Public API.
+# Layout heuristics: section packing.
 # ---------------------------------------------------------------------------
 
 
 def _body_dimensions(
     page_size: tuple[float, float], show_header: bool
 ) -> tuple[float, float]:
-    """Return (body_width, body_height) — the usable frame inside margins."""
     page_w, page_h = page_size
     margin = 0.6 * inch
     header_band = 0.3 * inch if show_header else 0.0
@@ -603,33 +1009,7 @@ def _body_dimensions(
     return body_w, body_h
 
 
-def _half_body_height(
-    page_size: tuple[float, float], show_header: bool
-) -> float:
-    """Half the usable body-frame height — the lower bound on the
-    section-break threshold (the 'previous section was large' rule)."""
-    _, body_h = _body_dimensions(page_size, show_header)
-    return 0.5 * body_h
-
-
 def _measure_natural_height(flowables: list, avail_width: float) -> float:
-    """Sum of natural rendered heights for a list of flowables.
-
-    Used to predict how tall an upcoming section will be so the
-    CondPageBreak threshold can be set to that height.
-
-    Subtleties:
-    - PageBreak / CondPageBreak contribute zero — they're layout
-      instructions, not content.
-    - KeepTogether.wrap() returns (0, 0) outside a live doc context,
-      so we recurse into its _content list directly.
-    - Other flowables (Paragraph, Table, Spacer) measure correctly via
-      wrap() with a generous availHeight that prevents internal splitting.
-    - On any wrap exception we silently skip the flowable; the threshold
-      is then a slight underestimate, which is the safe direction (the
-      worst case is a section that could have been packed but instead
-      gets a fresh page — visually fine, just slightly less dense).
-    """
     total = 0.0
     for f in flowables:
         if isinstance(f, (PageBreak, CondPageBreak)):
@@ -652,17 +1032,13 @@ def _section_break_threshold(
     body_h: float,
     half_body_h: float,
 ) -> float:
-    """Compute the CondPageBreak threshold for the upcoming section.
-
-    Combines two rules into one threshold:
-    1. 'Previous section was large' — fires when remaining space is
-       less than half the body height. (Lower bound: half_body_h.)
-    2. 'Next section is large' — fires when remaining space is less
-       than the next section's natural height. (Upper bound: body_h,
-       so multi-page sections don't trigger on a fresh page.)
-    """
     predicted = _measure_natural_height(section_flowables, avail_width)
     return min(body_h, max(half_body_h, predicted))
+
+
+# ---------------------------------------------------------------------------
+# Public API.
+# ---------------------------------------------------------------------------
 
 
 def build_report(
@@ -677,198 +1053,92 @@ def build_report(
     show_header: bool = True,
     numbered_sections: bool = True,
     pack_sections: bool = True,
+    theme: Theme | str | None = "default",
 ) -> None:
     """Build a branded PDF report and write it to output_path.
 
     Args:
         output_path: Absolute path for the output PDF.
-        title: Document title shown on the cover and in the running header.
-        subtitle: Optional second line on the cover.
-        metadata: Optional dict of label->value rendered as a meta block on
-            the cover page (e.g., {"Author": "...", "Date": "2026-05-07"}).
+        title: Document title (cover and running header).
+        subtitle: Optional second line on the cover or under the title.
+        metadata: Optional dict of label->value rendered as a meta block.
         sections: Ordered sections rendered after the cover/TOC.
-        page_size: reportlab page-size tuple. Default letter; pass A4 for non-US.
-        cover_page: When True (default), the title and metadata get their own
-            page with vertical centering. When False, the title runs inline
-            ahead of the first section.
-        table_of_contents: When True (default), a TOC is generated on the
-            page after the cover. Resolved via two-pass build.
-        show_header: When True (default), every body page shows a thin
-            running header with the document title.
-        numbered_sections: When True (default), each section title is
-            auto-prefixed with its 1-based index.
-        pack_sections: When True (default), the builder inserts a
-            CondPageBreak before each section (after the first) with a
-            threshold equal to half the body height. This implements the
-            rule: a section that consumed more than half a page is
-            followed by a fresh page for the next section, instead of
-            cramming the next section's heading into the bottom of the
-            previous page. Set False to let sections pack tightly.
+        page_size: reportlab page-size tuple.
+        cover_page: When True (default), title and metadata get their
+            own page with vertical centering. When False, the title
+            runs inline at the top of the first content page.
+        table_of_contents: When True (default), TOC on page after cover.
+        show_header: When True (default), running header on body pages.
+        numbered_sections: When True (default), titles auto-prefixed with index.
+        pack_sections: When True (default), CondPageBreak heuristic
+            inserted between sections to avoid cramped transitions.
+        theme: Visual theme. Pass a registered name ("light", "cyber") or
+            a Theme instance for full control. Default "light".
 
     Raises:
-        ValueError: a section is malformed (e.g., redundant title heading).
+        ValueError: a section is malformed or theme name is unknown.
         TypeError: a block is of an unrecognised type.
         OSError: output_path is not writable.
     """
     sections = list(sections or [])
     metadata = metadata or {}
-    styles = _build_styles()
+    resolved_theme = _resolve_theme(theme)
+    styles = _build_styles(resolved_theme)
 
-    doc = _ReportDocTemplate(
-        output_path,
-        pagesize=page_size,
-        title=title,
-        author=metadata.get("Author", ""),
-        doc_title=title,
-        show_header=show_header,
-        leftMargin=0.6 * inch,
-        rightMargin=0.6 * inch,
-        topMargin=0.6 * inch,
-        bottomMargin=0.6 * inch,
-    )
-
-    story: list = []
-
-    # --- Cover ---
-    if cover_page:
-        # Vertical centering: insert a flexible spacer that pushes content
-        # toward vertical mid-page.
-        page_h = page_size[1]
-        # Roughly center: spacer of ~3" before title.
-        story.append(Spacer(1, 2.5 * inch))
-        story.append(Paragraph(title, styles["DocTitle"]))
-        if subtitle:
-            story.append(Paragraph(subtitle, styles["DocSubtitle"]))
-        if metadata:
-            for k, v in metadata.items():
-                story.append(Paragraph(f"<b>{k}:</b> {v}", styles["CoverMeta"]))
-        story.append(NextPageTemplate("body"))
-        story.append(PageBreak())
-    else:
-        story.append(NextPageTemplate("body"))
-        story.append(Paragraph(title, styles["DocTitle"]))
-        if subtitle:
-            story.append(Paragraph(subtitle, styles["DocSubtitle"]))
-        if metadata:
-            meta_line = " &nbsp;|&nbsp; ".join(
-                f"<b>{k}:</b> {v}" for k, v in metadata.items()
-            )
-            story.append(Paragraph(meta_line, styles["Meta"]))
-            story.append(Spacer(1, 8))
-
-    # --- TOC ---
-    if table_of_contents:
-        story.append(Paragraph("Contents", styles["TOCHeading"]))
-        toc = TableOfContents()
-        toc.levelStyles = [styles["TOC1"], styles["TOC2"]]
-        story.append(toc)
-        story.append(PageBreak())
-
-    # --- Sections ---
-    body_w, body_h = _body_dimensions(page_size, show_header)
-    half_body_h = 0.5 * body_h
-    for idx, section in enumerate(sections, start=1):
-        section_flowables = _assemble_section(
-            section, idx, styles, numbered_sections
+    def make_doc() -> _ReportDocTemplate:
+        return _ReportDocTemplate(
+            output_path,
+            pagesize=page_size,
+            title=title,
+            author=metadata.get("Author", ""),
+            doc_title=title,
+            show_header=show_header,
+            theme=resolved_theme,
+            starts_with_cover=cover_page,
+            leftMargin=0.6 * inch,
+            rightMargin=0.6 * inch,
+            topMargin=0.6 * inch,
+            bottomMargin=0.6 * inch,
         )
-        # Decide whether to insert a conditional page break. Threshold
-        # combines the 'previous section was large' rule (lower bound:
-        # half body) and the 'next section is large' rule (upper bound:
-        # full body, capped so multi-page sections don't always break).
-        if pack_sections and idx > 1 and not section.starts_on_new_page:
-            threshold = _section_break_threshold(
-                section_flowables, body_w, body_h, half_body_h
-            )
-            story.append(CondPageBreak(threshold))
-        story.extend(section_flowables)
 
-    # Two-pass build for TOC + Page N of M.
-    # First pass: discover total page count and TOC entries.
-    doc.multiBuild(story)
-    total_pages = doc.page
-    # Second pass: render with the total known.
-    # Recreate doc since multiBuild already consumed the story.
-    doc2 = _ReportDocTemplate(
-        output_path,
-        pagesize=page_size,
-        title=title,
-        author=metadata.get("Author", ""),
-        doc_title=title,
-        show_header=show_header,
-        leftMargin=0.6 * inch,
-        rightMargin=0.6 * inch,
-        topMargin=0.6 * inch,
-        bottomMargin=0.6 * inch,
-    )
+    def build_story() -> list:
+        story: list = []
+        if cover_page:
+            story.extend(
+                _build_cover(title, subtitle, metadata, styles, resolved_theme)
+            )
+        else:
+            story.extend(
+                _build_inline_title(
+                    title, subtitle, metadata, styles, resolved_theme
+                )
+            )
+        if table_of_contents:
+            story.extend(_build_toc(styles, resolved_theme))
+
+        body_w, body_h = _body_dimensions(page_size, show_header)
+        half_body_h = 0.5 * body_h
+        for idx, section in enumerate(sections, start=1):
+            section_flowables = _assemble_section(
+                section, idx, styles, numbered_sections, resolved_theme
+            )
+            if pack_sections and idx > 1 and not section.starts_on_new_page:
+                threshold = _section_break_threshold(
+                    section_flowables, body_w, body_h, half_body_h
+                )
+                story.append(CondPageBreak(threshold))
+            story.extend(section_flowables)
+        return story
+
+    # First pass: discover total pages.
+    doc1 = make_doc()
+    doc1.multiBuild(build_story())
+    total_pages = doc1.page
+
+    # Second pass: render with total known.
+    doc2 = make_doc()
     doc2._total_pages = total_pages
-    # Rebuild the same story (rendering is idempotent for our flowables
-    # because we reconstruct fresh Paragraph objects in this rebuild path).
-    story2 = _rebuild_story(
-        title, subtitle, metadata, sections, styles,
-        cover_page, table_of_contents, page_size, numbered_sections,
-        pack_sections, show_header,
-    )
-    doc2.multiBuild(story2)
-
-
-def _rebuild_story(
-    title: str,
-    subtitle: str | None,
-    metadata: dict[str, str],
-    sections: Sequence[Section],
-    styles: dict[str, ParagraphStyle],
-    cover_page: bool,
-    table_of_contents: bool,
-    page_size: tuple[float, float],
-    numbered_sections: bool,
-    pack_sections: bool,
-    show_header: bool,
-) -> list:
-    """Identical to the inline assembly in build_report; factored out so
-    the two passes use the same logic."""
-    story: list = []
-    if cover_page:
-        story.append(Spacer(1, 2.5 * inch))
-        story.append(Paragraph(title, styles["DocTitle"]))
-        if subtitle:
-            story.append(Paragraph(subtitle, styles["DocSubtitle"]))
-        if metadata:
-            for k, v in metadata.items():
-                story.append(Paragraph(f"<b>{k}:</b> {v}", styles["CoverMeta"]))
-        story.append(NextPageTemplate("body"))
-        story.append(PageBreak())
-    else:
-        story.append(NextPageTemplate("body"))
-        story.append(Paragraph(title, styles["DocTitle"]))
-        if subtitle:
-            story.append(Paragraph(subtitle, styles["DocSubtitle"]))
-        if metadata:
-            meta_line = " &nbsp;|&nbsp; ".join(
-                f"<b>{k}:</b> {v}" for k, v in metadata.items()
-            )
-            story.append(Paragraph(meta_line, styles["Meta"]))
-            story.append(Spacer(1, 8))
-
-    if table_of_contents:
-        story.append(Paragraph("Contents", styles["TOCHeading"]))
-        toc = TableOfContents()
-        toc.levelStyles = [styles["TOC1"], styles["TOC2"]]
-        story.append(toc)
-        story.append(PageBreak())
-
-    body_w, body_h = _body_dimensions(page_size, show_header)
-    half_body_h = 0.5 * body_h
-    for idx, section in enumerate(sections, start=1):
-        section_flowables = _assemble_section(
-            section, idx, styles, numbered_sections
-        )
-        if pack_sections and idx > 1 and not section.starts_on_new_page:
-            threshold = _section_break_threshold(
-                section_flowables, body_w, body_h, half_body_h
-            )
-            story.append(CondPageBreak(threshold))
-        story.extend(section_flowables)
-    return story
+    doc2.multiBuild(build_story())
 
 
 __all__ = [
@@ -881,4 +1151,8 @@ __all__ = [
     "TableBlock",
     "CalloutBlock",
     "PageBreakBlock",
+    "Theme",
+    "LIGHT_THEME",
+    "CYBER_THEME",
+    "THEMES",
 ]

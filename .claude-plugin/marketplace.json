@@ -38,8 +38,8 @@
     {
       "name": "sat-analysis",
       "source": "./plugins/sat-analysis",
-      "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data. Pairs with pdf-report-formatting for polished PDF deliverables.",
-      "version": "1.2.0"
+      "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data. Pairs with pdf-report-formatting for polished PDF deliverables (light or cyber theme).",
+      "version": "1.2.1"
     },
     {
       "name": "simulation-components",
@@ -170,8 +170,8 @@
     {
       "name": "pdf-report-formatting",
       "source": "./plugins/pdf-report-formatting",
-      "description": "Produce branded, professionally formatted PDF reports with cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, and ordered/unordered lists. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor) to convert structured output into a polished deliverable PDF.",
-      "version": "1.0.0"
+      "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor) to convert structured output into a polished deliverable PDF.",
+      "version": "1.1.0"
     }
   ]
 }

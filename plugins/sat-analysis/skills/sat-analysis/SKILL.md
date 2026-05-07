@@ -316,3 +316,11 @@ The builder auto-generates the cover page, table of contents, running header, an
 - The user wants the analysis as inline chat output (default).
 - The user wants markdown for a wiki / Confluence / Notion page (use markdown directly).
 - The output is a one-paragraph response (overhead not justified).
+
+**Theme selection:**
+
+The `pdf-report-formatting` skill ships two themes: `light` (default — black-on-white, formal, print-first) and `cyber` (dark navy + cyan/magenta tactical aesthetic, screen-first). For SAT analyses:
+
+- Use `theme="light"` for audit deliverables, leadership briefings, anything going to outside parties.
+- Use `theme="cyber"` for internal red-team / threat-intel briefings, security ops dashboards, "tactical brief" framing. Pair with `cover_page=False, table_of_contents=False, numbered_sections=False` for the canonical strix-halo look.
+- Pass `theme=Theme(...)` for a custom palette (e.g., brand colors).
