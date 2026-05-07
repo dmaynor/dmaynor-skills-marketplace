@@ -56,7 +56,7 @@ Debug Keystore: /path/to/.android/debug.keystore
 Configuration:
 - **Package Unique Name**: `com.company.gamename`
 - **Version Code**: Integer, increment each release
-- **Version Name**: Display version (e.g., "1.0.0")
+- **Version Name**: Display version (e.g., "1.1.0")
 - **Min SDK**: API level 21+ recommended
 - **Target SDK**: Latest stable API
 - **Permissions**: Request only needed permissions

@@ -5055,7 +5055,7 @@ but its weighted score is too low to win the tiebreaker.
 7 seed rules + 1 variant under `doctrine/catalog.v1.json`. See
 `references/doctrine.md` for details.
 
-## 1.0.0 — 2026-03-29
+## 1.1.0 — 2026-03-29
 
 Initial release.
 ```
@@ -5116,7 +5116,7 @@ grep -n "sat-analysis" /home/dmaynor/code/dmaynor-skills-marketplace/.claude-plu
 
 - [ ] **Step 2: Update version**
 
-In `/home/dmaynor/code/dmaynor-skills-marketplace/.claude-plugin/marketplace.json`, find the `sat-analysis` plugin entry and change `"version": "1.0.0"` to `"version": "2.0.0"`.
+In `/home/dmaynor/code/dmaynor-skills-marketplace/.claude-plugin/marketplace.json`, find the `sat-analysis` plugin entry and change `"version": "1.1.0"` to `"version": "2.0.0"`.
 
 - [ ] **Step 3: Commit**
 

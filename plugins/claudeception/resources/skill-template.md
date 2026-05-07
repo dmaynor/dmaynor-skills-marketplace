@@ -7,7 +7,7 @@ description: |
   (3) Key technologies/frameworks involved
   Use phrases like "Use when:", "Helps with:", "Solves:"]
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: YYYY-MM-DD
 ---
 

@@ -123,7 +123,7 @@ zig build -Doptimize=ReleaseSmall   # Minimize binary size
     .minimum_zig_version = "0.13.0",
     .dependencies = .{
         .some_dep = .{
-            .url = "https://github.com/user/repo/archive/refs/tags/v1.0.0.tar.gz",
+            .url = "https://github.com/user/repo/archive/refs/tags/v1.1.0.tar.gz",
             .hash = "1220...",  // Use any hash, zig will show correct one
         },
         .git_dep = .{
@@ -145,7 +145,7 @@ zig build -Doptimize=ReleaseSmall   # Minimize binary size
 
 ```bash
 # Add dependency
-zig fetch --save https://github.com/user/repo/archive/v1.0.0.tar.gz
+zig fetch --save https://github.com/user/repo/archive/v1.1.0.tar.gz
 zig fetch --save git+https://github.com/user/repo#main
 
 # Update dependencies

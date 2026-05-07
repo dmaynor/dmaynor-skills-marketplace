@@ -1,6 +1,6 @@
 {
   "name": "rca-investigation",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Root Cause Analysis investigation skill. Systematic failure diagnosis using layered taxonomy, timeline reconstruction, causal chain analysis, and corrective action validation. Use when something failed and you need to understand why before deciding what to change.",
   "author": {
     "name": "dmaynor"

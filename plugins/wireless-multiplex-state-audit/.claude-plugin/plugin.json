@@ -1,6 +1,6 @@
 {
   "name": "wireless-multiplex-state-audit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cross-driver audit methodology for protocol-multiplex state machines in wireless drivers (Wi-Fi 7 EMLSR/MLSR, Wi-Fi Direct, NAN, TDLS, FTM, AWDL-class). Identifies the multiplex primitive each vendor uses to time-share one radio across multiple links/protocols, enumerates state-transition surfaces, and hunts the canonical bug shape: state divergence between chip/firmware and host driver. Use when: (1) auditing modern Wi-Fi drivers (iwlwifi/mld, mt7925, rtw89, mt7996) for the AWDL-class state-machine bug pattern, (2) hunting cross-vendor multiplex bugs that share architecture but differ in vendor terminology (EMLSR vs DBCC vs set_active_links_async), (3) investigating chip-host state divergence in any time-multiplexed radio (cellular modems, BT coex, NIC offload). Pairs with wireless-driver-control-frame-audit (different lens — wire-format parsing).",
   "author": {
     "name": "dmaynor"

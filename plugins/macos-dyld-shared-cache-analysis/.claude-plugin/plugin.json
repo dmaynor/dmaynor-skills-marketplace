@@ -1,6 +1,6 @@
 {
   "name": "macos-dyld-shared-cache-analysis",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Analyze macOS framework binaries in the dyld shared cache using dyld_info.",
   "author": {
     "name": "dmaynor"
