@@ -1,0 +1,35 @@
+{
+  "name": "claudeception",
+  "version": "1.0.0",
+  "description": "Continuous-learning meta-skill: identifies skill gaps in the current session's work and creates new skills to fill them. Adapted from blader/Claudeception (MIT) with marketplace-plugin packaging and dmaynor-skills-marketplace conventions. Use when: (1) you just developed a methodology that should outlive the current session, (2) you want to /claudeception at end of session to extract skills retrospectively, (3) you found a non-obvious solution that future you will need again, (4) you want to detect overlap with existing skills before creating a new one. Pairs with skill-improver (which refines existing skills).",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "hooks": {
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/session-retrospective.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/user-prompt-nudge.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
