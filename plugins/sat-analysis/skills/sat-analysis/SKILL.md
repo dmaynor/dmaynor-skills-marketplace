@@ -259,3 +259,60 @@ For detailed guidance, see:
 - `scripts/parse_logs.py` - Parse common log formats
 - `scripts/timeline.py` - Build event timelines
 - `scripts/ach_matrix.py` - Generate ACH matrix markdown
+
+## PDF Deliverable Output
+
+When the user wants the analysis as a polished PDF (briefing for leadership, audit deliverable, archive document), use the `pdf-report-formatting` skill from this marketplace. It owns layout, typography, cover pages, TOC, running headers, page numbering, and table styling — your job is just to construct the content.
+
+**Mapping SAT sections to pdf-report-formatting blocks:**
+
+| SAT element | Block type |
+|------------|------------|
+| Observations table (O1, O2, ...) | `TableBlock` with columns ID / Observation / Source |
+| Key Assumptions Check | `TableBlock` with `emphasized_rows` for the load-bearing assumption |
+| Hypotheses table (H1...HN, with priors) | `TableBlock` |
+| ACH matrix | `TableBlock` with `emphasized_rows=[score_row_index]` for the raw-score row |
+| MPCoA / MDCoA pair | 3-column `TableBlock` (Dimension / MPCoA / MDCoA) |
+| Confidence calibration callout | `CalloutBlock(kind="warn", keep_with_previous=True)` after the ACH matrix |
+| Falsification criteria | `BulletsBlock` |
+| Numbered list of risks (Q7-style ranked output) | `OrderedListBlock` |
+| Recommendation summary | `CalloutBlock(kind="warn")` |
+| Kill criteria | `TableBlock` |
+| Limitations | `BulletsBlock` |
+
+**Driver pattern:**
+
+```python
+from build_pdf import (
+    build_report, Section, ParaBlock, TableBlock,
+    CalloutBlock, BulletsBlock, OrderedListBlock,
+)
+
+build_report(
+    output_path="/path/to/sat_analysis.pdf",
+    title="SAT Analysis: <subject>",
+    subtitle="<one-line framing>",
+    metadata={
+        "Mode": "STATEMENT_ANALYSIS",  # or whichever
+        "Confidence": "Likely (65–75%)",
+        "Date": "<YYYY-MM-DD>",
+    },
+    sections=[
+        Section(title="Observation / Interpretation Separation", blocks=[...]),
+        Section(title="Key Assumptions Check", blocks=[...]),
+        Section(title="Hypotheses", blocks=[...]),
+        Section(title="ACH Matrix", blocks=[...]),
+        Section(title="MPCoA / MDCoA Table", blocks=[...]),
+        Section(title="Recommendation", blocks=[...]),
+        Section(title="Assumptions, Falsification, Limitations", blocks=[...]),
+    ],
+)
+```
+
+The builder auto-generates the cover page, table of contents, running header, and "Page N of M" footer. Section numbering is automatic — do NOT prefix titles with "1.", "2.". The packing rule (a section that consumed more than half a page is followed by a fresh page for the next section, AND a section whose natural height exceeds remaining space gets a fresh page) handles layout transitions automatically.
+
+**When NOT to use pdf-report-formatting:**
+
+- The user wants the analysis as inline chat output (default).
+- The user wants markdown for a wiki / Confluence / Notion page (use markdown directly).
+- The output is a one-paragraph response (overhead not justified).

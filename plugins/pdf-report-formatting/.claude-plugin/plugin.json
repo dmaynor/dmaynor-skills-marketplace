@@ -1,0 +1,10 @@
+{
+  "name": "pdf-report-formatting",
+  "version": "1.0.0",
+  "description": "Produce branded, professionally formatted PDF reports with cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, and ordered/unordered lists.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
