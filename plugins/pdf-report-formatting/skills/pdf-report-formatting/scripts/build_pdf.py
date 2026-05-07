@@ -831,35 +831,30 @@ def _build_metadata_block(
 ) -> list:
     """Render metadata as a stacked LABEL / value block.
 
-    On a centered cover this produces centered rows; on a left-aligned
-    title block (for cyber-style first-page-title layout) it stacks
-    LABELS over values, left-aligned. Labels render in
+    Both layouts use the same color treatment — LABELS in
     metadata_label_color (often the theme accent), values in
-    metadata_value_color.
+    metadata_value_color — so the cover and inline-title look
+    visually consistent. The only difference is alignment:
+    'center' for cover pages, 'left' for inline title blocks.
     """
     if not metadata:
         return []
+    label_align = TA_CENTER if align == "center" else TA_LEFT
+    label_style = ParagraphStyle(
+        name=f"MetaLabel{align.title()}",
+        parent=styles["MetaLabel"],
+        alignment=label_align,
+    )
+    value_style = ParagraphStyle(
+        name=f"MetaValue{align.title()}",
+        parent=styles["MetaValue"],
+        alignment=label_align,
+    )
     flowables = []
-    if align == "center":
-        # Compact centered layout: one row per metadata pair.
-        for k, v in metadata.items():
-            label = k.upper() if theme.caps_headings else k
-            flowables.append(
-                Paragraph(f"<b>{label}</b>: {v}", styles["CoverMeta"])
-            )
-    else:
-        # Stacked left layout: LABEL over value, blank line between pairs.
-        label_style = ParagraphStyle(
-            name="MetaLabelInline",
-            parent=styles["MetaLabel"],
-            fontSize=8,
-            leading=11,
-        )
-        value_style = styles["MetaValue"]
-        for k, v in metadata.items():
-            label = k.upper()
-            flowables.append(Paragraph(label, label_style))
-            flowables.append(Paragraph(v, value_style))
+    for k, v in metadata.items():
+        label = k.upper()
+        flowables.append(Paragraph(label, label_style))
+        flowables.append(Paragraph(v, value_style))
     return flowables
 
 
