@@ -8,7 +8,7 @@ description: >-
   detection coverage gaps, or Kill Chain/Diamond Model/Pyramid of Pain analysis.
   Methodologies: ATOMIC (isolated techniques), SCENARIO (attack chains).
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

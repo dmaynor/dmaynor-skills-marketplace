@@ -9,7 +9,7 @@ description: |
   Found 7+ vulnerable daemons including sharingd (AirDrop), callservicesd
   (FaceTime), rapportd (Continuity), studentd (Classroom).
 author: David Maynor / Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

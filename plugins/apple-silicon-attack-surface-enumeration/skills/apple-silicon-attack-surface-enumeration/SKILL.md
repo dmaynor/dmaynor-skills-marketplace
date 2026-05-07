@@ -10,7 +10,7 @@ description: |
   kext inventory, IOKit driver enumeration, system service mapping, and cross-platform
   diff methodology.
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-12
 ---
 

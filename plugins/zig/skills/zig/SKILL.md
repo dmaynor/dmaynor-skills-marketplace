@@ -89,7 +89,7 @@ pub fn build(b: *std.Build) void {
     .version = "0.1.0",
     .dependencies = .{
         .some_dep = .{
-            .url = "https://github.com/user/repo/archive/refs/tags/v1.0.0.tar.gz",
+            .url = "https://github.com/user/repo/archive/refs/tags/v1.1.0.tar.gz",
             .hash = "1220...",
         },
     },

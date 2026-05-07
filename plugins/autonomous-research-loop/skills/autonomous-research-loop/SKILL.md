@@ -7,7 +7,7 @@ description: |
   survive crashes and quota limits. Covers: loop script, state tracking, cron auto-restart,
   heartbeat monitoring, backup, inflight task addition, graceful quota handling.
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-12
 ---
 

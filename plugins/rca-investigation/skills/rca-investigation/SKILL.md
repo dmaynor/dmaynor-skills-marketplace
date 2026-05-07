@@ -11,7 +11,7 @@ description: >-
   Modes: SYSTEM_FAILURE, PROCESS_FAILURE, SECURITY_INCIDENT, BUG_REGRESSION,
   GENERAL_INVESTIGATION.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-04-23
 ---
 

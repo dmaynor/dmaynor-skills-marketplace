@@ -7,7 +7,7 @@ description: >
   Triggers on requests for simulation assets, isometric sprite sheets, dual-plane visualizations,
   or GitS-style city simulation graphics. Assets encode FSM states mechanically, not decoratively.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

@@ -9,7 +9,7 @@ description: |
   Covers: submission process, form fields, affected area mapping, bounty categories,
   report structure, attachment packaging, and Target Flag eligibility.
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-14
 ---
 

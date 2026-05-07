@@ -9,7 +9,7 @@ description: >-
   or combining services into coherent simulations. Outputs: Docker containers,
   zone files, web content, AD population scripts, NPC configs.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

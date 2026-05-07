@@ -12,7 +12,7 @@ description: |
   cross-driver propagation, file-level inconsistency-within-driver), MLE/MBSSID/RNR
   Wi-Fi 6/7 surface analysis, and cross-OS protocol-parser-surface mapping.
 author: David Maynor + Claude
-version: 1.0.0
+version: 1.1.0
 date: 2026-05-06
 ---
 

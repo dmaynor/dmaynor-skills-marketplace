@@ -18,7 +18,7 @@ description: |
   decoding chained-fixup pointers in `__DATA_CONST`, and detecting
   deliberate silent-case branches in default/unhandled paths.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-04-21
 ---
 

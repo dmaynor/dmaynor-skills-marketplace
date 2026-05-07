@@ -9,7 +9,7 @@ description: |
   rationalize past. Covers: prompt hardening patterns, mandatory service
   blocklists in generated code, graduated constraint escalation.
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-13
 ---
 
