@@ -2,7 +2,7 @@
 name: swarm-orchestration
 description: Multi-agent swarm orchestration for complex tasks. TD (Technical Director) decomposes user requests into task lists, delegates to specialized role-based agents (Architect, Programmer, QA, Critic, Security Engineer, Red Team, etc.), and coordinates via shared channel communication. Supports comprehensive Notion persistence for cross-session continuity - captures conversation dialogue, extended thinking, agent communication, artifacts (code/config/docs), and outputs. Use when tasks require parallel specialist work, coordinated implementation pipelines, multi-perspective review, or when user says "save/load project", "sync logs", "team-based", "swarm", "multi-agent", or references existing projects by name.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

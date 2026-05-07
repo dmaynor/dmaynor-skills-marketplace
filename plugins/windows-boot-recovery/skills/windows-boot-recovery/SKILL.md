@@ -10,7 +10,7 @@ description: >
   involving Linux-based diagnosis of a Windows disk. When in doubt, use this skill — it
   is designed to run safely and will ask the operator before any destructive action.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

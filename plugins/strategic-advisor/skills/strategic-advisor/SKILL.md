@@ -10,7 +10,7 @@ description: |
   NOTE: Use this for evaluating external work, business decisions, and
   other people's proposals. Use zero-analysis for judging your OWN work.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

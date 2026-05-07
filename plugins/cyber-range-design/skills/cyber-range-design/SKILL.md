@@ -9,7 +9,7 @@ description: >-
   assessment. Modes: DESIGN (architecture), IMPLEMENT (build guidance), EXERCISE
   (execution planning).
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

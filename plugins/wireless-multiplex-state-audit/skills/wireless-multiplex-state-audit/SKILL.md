@@ -14,7 +14,7 @@ description: |
   Companion to wireless-driver-control-frame-audit (different lens — that one
   covers wire-format/IE parsing; this one covers state-machine transitions).
 author: David Maynor + Claude
-version: 1.0.0
+version: 1.1.0
 date: 2026-05-06
 ---
 

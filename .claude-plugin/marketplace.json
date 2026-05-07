@@ -9,163 +9,163 @@
       "name": "design-philosophy",
       "source": "./plugins/design-philosophy",
       "description": "Rigorous design philosophy for simplicity, user experience, and uncompromising quality.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "cyber-range-design",
       "source": "./plugins/cyber-range-design",
       "description": "Design, architect, and implement high-fidelity cyber ranges for training and exercises.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "gits-dual-plane-isometric-assets",
       "source": "./plugins/gits-dual-plane-isometric-assets",
       "description": "Generate isometric sprite sheet images for Ghost-in-the-Shell-inspired dual-plane city simulation.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "godot",
       "source": "./plugins/godot",
       "description": "Godot Engine 4.x game development skill for GDScript, scene architecture, physics, UI, shaders, and project structure.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "purple-teaming",
       "source": "./plugins/purple-teaming",
       "description": "Plan and execute purple team exercises for detection validation.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "sat-analysis",
       "source": "./plugins/sat-analysis",
       "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "simulation-components",
       "source": "./plugins/simulation-components",
       "description": "Create modular, composable virtualized roles and services for cyber range simulations.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "strategic-advisor",
       "source": "./plugins/strategic-advisor",
       "description": "Brutally honest strategic advisor for evaluating ideas, plans, decisions, and proposals.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "swarm-orchestration",
       "source": "./plugins/swarm-orchestration",
       "description": "Multi-agent swarm orchestration for complex tasks with TD coordination.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "zero-analysis",
       "source": "./plugins/zero-analysis",
       "description": "Viktor \"Zero\" Kozlov critical analysis persona for evaluating security projects and technical proposals.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "zig",
       "source": "./plugins/zig",
       "description": "Zig systems programming language skill for memory-safe, high-performance code.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "autonomous-loop-safety-constraints",
       "source": "./plugins/autonomous-loop-safety-constraints",
       "description": "Harden autonomous research loop safety blocks against LLM rationalization.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "apple-vuln-research-security-report-submission",
       "source": "./plugins/apple-vuln-research-security-report-submission",
       "description": "Submit vulnerability reports to Apple Security Research bounty program.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "apple-vuln-research-txm-sptm-firmware-extraction",
       "source": "./plugins/apple-vuln-research-txm-sptm-firmware-extraction",
       "description": "Extract and analyze TXM/SPTM firmware from IM4P containers on Apple Silicon.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "apple-silicon-attack-surface-enumeration",
       "source": "./plugins/apple-silicon-attack-surface-enumeration",
       "description": "Systematic attack surface enumeration for Apple Silicon devices (A-series, M-series).",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "autonomous-research-loop",
       "source": "./plugins/autonomous-research-loop",
       "description": "Run Claude Code as an autonomous research agent with restart-with-state loops.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "claude-code-hook-debugging",
       "source": "./plugins/claude-code-hook-debugging",
       "description": "Debug Claude Code hook errors (SessionStart, UserPromptSubmit, PreToolUse, PostToolUse).",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "hardware-re-usb-hid",
       "source": "./plugins/hardware-re-usb-hid",
       "description": "Reverse engineer USB HID peripherals via Linux hidraw.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "windows-boot-recovery",
       "source": "./plugins/windows-boot-recovery",
       "description": "Diagnose and recover non-booting Windows machines from a Linux recovery environment.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "rca-investigation",
       "source": "./plugins/rca-investigation",
       "description": "Root Cause Analysis investigation — systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "apple-vuln-research-cve-to-binary-regression",
       "source": "./plugins/apple-vuln-research-cve-to-binary-regression",
       "description": "Validate whether a seed CVE maps to a specific Apple macOS/iOS binary before porting its PoC.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "apple-vuln-research-daemon-enum-recovery",
       "source": "./plugins/apple-vuln-research-daemon-enum-recovery",
       "description": "Recover message-type/frame-type/command-type enums and dispatch tables from stripped Apple daemon binaries.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "macos-dyld-shared-cache-analysis",
       "source": "./plugins/macos-dyld-shared-cache-analysis",
       "description": "Analyze macOS framework binaries in the dyld shared cache using dyld_info.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "macos-preference-injection-hunting",
       "source": "./plugins/macos-preference-injection-hunting",
       "description": "Systematic methodology for finding NSUserDefaults preference injection vulnerabilities in macOS daemons.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "wireless-driver-control-frame-audit",
       "source": "./plugins/wireless-driver-control-frame-audit",
       "description": "Systematic audit methodology for wireless driver control-frame and IE parsing across kernel drivers — bug-class taxonomy, per-driver fingerprint, inconsistency-within-driver heuristic, MLE/MBSSID Wi-Fi 6/7 surface, cross-OS protocol-parser-surface mapping.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "claudeception",
       "source": "./plugins/claudeception",
       "description": "Continuous-learning meta-skill: detects when current session has produced reusable methodology and creates a new skill in the marketplace. Pair-skill to skill-improver. Adapted from blader/Claudeception (MIT) for the dmaynor-skills-marketplace plugin structure.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "name": "wireless-multiplex-state-audit",
       "source": "./plugins/wireless-multiplex-state-audit",
       "description": "Cross-driver audit methodology for protocol-multiplex state machines in wireless drivers (Wi-Fi 7 EMLSR, Wi-Fi Direct, NAN, TDLS, AWDL-class). Identifies vendor-specific multiplex primitives (Intel EMLSR / Realtek DBCC / Mediatek set_active_links_async), enumerates state-transition surfaces, hunts chip-firmware-vs-host-driver state divergence bugs.",
-      "version": "1.0.0"
+      "version": "1.1.0"
     }
   ]
 }

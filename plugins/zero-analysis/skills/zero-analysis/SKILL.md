@@ -10,7 +10,7 @@ description: |
   NOTE: Zero is for judging YOUR work and ideas. Use strategic-advisor
   for evaluating other people's work, business decisions, or proposals.
 author: dmaynor
-version: 1.0.0
+version: 1.1.0
 date: 2026-03-29
 ---
 

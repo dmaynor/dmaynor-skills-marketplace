@@ -12,7 +12,7 @@ description: |
   Adapted from blader/Claudeception (MIT, https://github.com/blader/Claudeception) for
   the dmaynor-skills-marketplace plugin structure.
 author: dmaynor (adapted from AlexMikhalev/blader Claudeception)
-version: 1.0.0
+version: 1.1.0
 date: 2026-05-06
 allowed-tools:
   - Read
@@ -199,7 +199,7 @@ description: |
   (3) key technologies/domains involved, (4) what's covered (the methodology phases).
   Length: enough to surface accurately, not so long that it's noise.>
 author: <attribution>
-version: 1.0.0
+version: 1.1.0
 date: <YYYY-MM-DD>
 ---
 
@@ -281,7 +281,7 @@ Update `<marketplace-root>/.claude-plugin/marketplace.json`:
   "name": "<plugin-name>",
   "source": "./plugins/<plugin-name>",
   "description": "<short description, ~1 sentence>",
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
 ```
 
@@ -379,7 +379,7 @@ Before finalizing a new skill, verify:
 
 Skills evolve:
 
-1. **Creation** — initial extraction, version 1.0.0, dated.
+1. **Creation** — initial extraction, version 1.1.0, dated.
 2. **Refinement (via skill-improver)** — bug fixes, additional phases, refined
    trigger conditions. Bump patch / minor version.
 3. **Cross-linking** — when a related skill is created, add `See also:` in both
