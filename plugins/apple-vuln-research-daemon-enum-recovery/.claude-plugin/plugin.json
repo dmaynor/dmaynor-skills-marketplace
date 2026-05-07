@@ -1,6 +1,6 @@
 {
   "name": "apple-vuln-research-daemon-enum-recovery",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Recover message-type/frame-type/command-type enums and their dispatch tables from stripped Apple daemon binaries via static disassembly.",
   "author": {"name": "dmaynor"},
   "license": "MIT",

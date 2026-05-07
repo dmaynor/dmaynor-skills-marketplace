@@ -1,6 +1,6 @@
 {
   "name": "apple-silicon-attack-surface-enumeration",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Systematic attack surface enumeration for Apple Silicon devices (A-series, M-series). Use when: (1) starting security re",
   "author": {
     "name": "dmaynor"
