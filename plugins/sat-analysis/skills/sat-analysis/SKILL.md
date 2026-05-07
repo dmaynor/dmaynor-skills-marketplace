@@ -317,10 +317,29 @@ The builder auto-generates the cover page, table of contents, running header, an
 - The user wants markdown for a wiki / Confluence / Notion page (use markdown directly).
 - The output is a one-paragraph response (overhead not justified).
 
-**Theme selection:**
+**Theme and layout selection:**
 
-The `pdf-report-formatting` skill ships two themes: `light` (default — black-on-white, formal, print-first) and `cyber` (dark navy + cyan/magenta tactical aesthetic, screen-first). For SAT analyses:
+The `pdf-report-formatting` skill exposes two orthogonal axes: `theme` (visual style) and `layout` (structural elements).
 
-- Use `theme="light"` for audit deliverables, leadership briefings, anything going to outside parties.
-- Use `theme="cyber"` for internal red-team / threat-intel briefings, security ops dashboards, "tactical brief" framing. Pair with `cover_page=False, numbered_sections=False` for the canonical strix-halo look. Keep `table_of_contents=True` (the default) for any document longer than ~6 pages — a TOC renders cleanly under cyber and is essential navigation for long analyses.
+Themes:
+
+- `light` (default) — black-on-white, formal, print-first. Use for audit deliverables, leadership briefings, anything going to outside parties.
+- `cyber` — dark navy + cyan/magenta tactical aesthetic, screen-first. Use for internal red-team / threat-intel briefings, security ops dashboards.
 - Pass `theme=Theme(...)` for a custom palette (e.g., brand colors).
+
+Layouts:
+
+- `formal` (default) — cover page + TOC + numbered sections. Use for analytical deliverables and long-form documents.
+- `tactical` — no cover, no TOC, no numbering; inline title at the top of page 1. Use for short briefings where section titles read as standalone callouts.
+- `navigable_tactical` — tactical look but TOC retained. Use for SAT analyses long enough (>6 pages) to need navigation while keeping the briefing aesthetic.
+
+Recommended pairings for SAT output:
+
+| Audience / use | theme | layout |
+|---|---|---|
+| Audit, external deliverable, formal report | `light` | `formal` |
+| Internal threat brief, short tactical analysis | `cyber` | `tactical` |
+| Internal SAT analysis, long enough to need navigation | `cyber` | `navigable_tactical` |
+| Cyber-themed cover + TOC (works but feels mixed) | `cyber` | `formal` |
+
+Individual flags (`cover_page`, `table_of_contents`, `numbered_sections`) override the layout's defaults if explicitly passed, so combinations like `layout="tactical", table_of_contents=True` are valid (and equivalent to `navigable_tactical`).
