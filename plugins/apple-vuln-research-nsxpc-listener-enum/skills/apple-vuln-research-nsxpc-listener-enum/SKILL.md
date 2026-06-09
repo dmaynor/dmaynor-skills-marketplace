@@ -17,7 +17,7 @@ description: |
   unknown-method) to classify each mach endpoint as
   entitlement-gated / schema-rejecting / silent-drop / inactive.
 author: David Maynor / Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-04-21
 ---
 

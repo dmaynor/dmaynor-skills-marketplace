@@ -2,26 +2,21 @@
 name: apple-vuln-research-kernelcache-kext-binary-diff
 description: |
   Reliably diff a single macOS kext between two macOS versions (e.g. 26.4.1
-  vs 26.5) when both kexts ship inside the kernelcache. Use when:
-  (1) you need to confirm whether a kext was actually changed across a
-  point release (kext CFBundleVersion is unreliable in macOS 26+: bumps
-  with no code change, AND code changes with no version bump are both
-  common); (2) you've extracted two .macho files but they differ in raw
-  byte hash entirely because of linker relocation churn; (3) you need to
-  rule out a silent CVE patch in a security-sensitive kext (e.g.
-  AppleJPEGDriver, IOAESAccelerator, AppleH16CameraInterface,
-  AppleUSBAudio, MT7932 DEXT); (4) you saw a 100-version kext bump and
-  want to know whether it's a real change or just a SDK marker; (5) two
-  kernelcaches have the same kext at different load VAs and a raw diff
-  shows ~16% byte difference. Covers: kernelcache extraction with
-  pyimg4 + ipsw, kext extraction with kmutil splitkc, PC-relative-
-  immediate masking, load/store offset masking, opcode-class change
-  counting, LC_UUID comparison, kalloc_type_view tag stability, per-
-  function masked diff. Applicable to ALL kexts shipped inside the
-  kernelcache on Apple Silicon Macs (i.e. essentially all kexts since
-  macOS 11).
+  vs 26.5) when both ship inside the kernelcache. Use when: (1) confirming
+  whether a kext actually changed across a point release (kext CFBundleVersion
+  is unreliable in macOS 26+ — bumps with no code change, and code changes
+  with no bump, both happen); (2) two extracted .macho files differ in raw
+  hash entirely due to linker relocation churn; (3) ruling out a silent CVE
+  patch in a security-sensitive kext (AppleJPEGDriver, IOAESAccelerator,
+  AppleUSBAudio, MT7932 DEXT); (4) a 100-version kext bump that may be just an
+  SDK marker; (5) the same kext at different load VAs shows ~16% raw byte
+  difference. Covers kernelcache extraction (pyimg4 + ipsw), kext extraction
+  (kmutil splitkc), PC-relative-immediate and load/store-offset masking,
+  opcode-class change counting, LC_UUID comparison, kalloc_type_view tag
+  stability, per-function masked diff. Applies to all kexts shipped in the
+  kernelcache on Apple Silicon (all since macOS 11).
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-05-31
 ---
 

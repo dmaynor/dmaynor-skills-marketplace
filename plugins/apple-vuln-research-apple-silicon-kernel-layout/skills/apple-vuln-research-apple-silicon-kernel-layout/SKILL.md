@@ -1,26 +1,22 @@
 ---
 name: apple-vuln-research-apple-silicon-kernel-layout
 description: |
-  Find the correct arm64e kernel and per-SoC kernelcache for a
-  research target on Apple Silicon macOS. Use when:
-  (1) `/System/Library/Kernels/kernel` reports as `Mach-O 64-bit
-  executable x86_64` on an Apple Silicon Mac and you wonder which
-  binary the system actually boots; (2) you need the per-SoC arm64e
-  kernel for a specific Mac model (t8140 = A18 Pro / MacBook Neo,
-  t8103 = M1, t8112 = M2, t6000/t6020/t6030/t6031/t6041/t6050 = M-Pro/
-  Max/Ultra families, t8122/t8132 = newer A-series in Mac, t8142 =
-  next-gen MacBook Air, vmapple = virtualization); (3) you need the
-  monolithic prelinked kernelcache that the BootROM actually loads
-  (it's NOT at /System/Library/Kernels and NOT named "kernel" — it's
-  at /System/Volumes/Preboot/<UUID>/restore/kernelcache.release.macNg
-  where macNg is a board-id, e.g. mac17g for Mac17,5); (4) you took
-  a "pre-update kernel snapshot" by copying /System/Library/Kernels/
-  kernel and a diff agent told you it's the wrong architecture;
-  (5) you need to know whether two Mac models share a kernel build
-  (for cross-platform vuln porting). Saves the wrong-arch baseline
-  mistake that wastes hours of diff time.
+  Find the correct arm64e kernel and per-SoC kernelcache for a research
+  target on Apple Silicon macOS. Use when: (1) `/System/Library/Kernels/kernel`
+  reports as `Mach-O 64-bit executable x86_64` on an Apple Silicon Mac and you
+  wonder which binary actually boots; (2) you need the per-SoC arm64e kernel
+  for a specific Mac model (t8103=M1, t8112=M2, t8140=A18 Pro,
+  t6000-t6050=M-Pro/Max/Ultra, vmapple=virtualization); (3) you need the
+  monolithic prelinked kernelcache the BootROM actually loads (NOT at
+  /System/Library/Kernels, NOT named "kernel" — it's at
+  /System/Volumes/Preboot/<UUID>/restore/kernelcache.release.macNg, where
+  macNg is a board-id, e.g. mac17g for Mac17,5); (4) you took a "pre-update
+  kernel snapshot" by copying /System/Library/Kernels/kernel and a diff agent
+  says it's the wrong architecture; (5) you need to know whether two Mac models
+  share a kernel build (cross-platform vuln porting). Saves the wrong-arch
+  baseline mistake that wastes hours of diff time.
 author: Claude Code
-version: 1.0.0
+version: 1.1.0
 date: 2026-05-31
 ---
 

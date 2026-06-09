@@ -6,7 +6,7 @@ description: >-
   "USB HID protocol", "HID analysis", "hidraw", "HID report descriptor",
   "USB peripheral RE", "vendor-specific HID", or any USB HID device reverse
   engineering task.
-tools:
+allowed-tools:
   - Bash
   - Read
   - Write

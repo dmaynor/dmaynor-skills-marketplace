@@ -1,8 +1,10 @@
 {
   "name": "apple-vuln-research-nsxpc-listener-enum",
-  "version": "1.0.0",
-  "description": "",
-  "author": {"name": "dmaynor"},
+  "version": "1.1.0",
+  "description": "Enumerate the server-side NSXPC attack surface of an Apple daemon without extracting private-framework binaries from the dyld shared cache.",
+  "author": {
+    "name": "dmaynor"
+  },
   "license": "MIT",
   "skills": "./skills/"
 }

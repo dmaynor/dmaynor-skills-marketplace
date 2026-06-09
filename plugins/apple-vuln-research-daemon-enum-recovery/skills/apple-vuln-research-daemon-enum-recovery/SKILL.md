@@ -1,22 +1,19 @@
 ---
 name: apple-vuln-research-daemon-enum-recovery
 description: |
-  Recover a complete message-type / frame-type / command-type enum and its
-  dispatch table from a stripped Apple daemon binary (arm64e/x86_64, Mach-O)
-  via static disassembly. Use when: (1) probing an Apple daemon (rapportd,
-  sharingd, nearbyd, bluetoothd, sociald, identityservicesd, etc.) has
-  surfaced integer message/frame types whose names and handlers are
-  unknown, (2) you need to map which numeric types are reachable pre-trust
-  vs. which are silently filtered (e.g. NoOp/keepalive), (3) you want to
-  prove a handler is benign without running live probes, (4) you see
-  `"### Ignoring unhandled frame 0x%02X (%s)"` or similar log strings and
-  need the full valid-type table. Covers: adjacent-string enum detection
-  in `__cstring`, ADRP literal-pool pivoting to find all name-lookup
-  sites, reconstructing ARM64 jump tables from the
-  `adr x17,#0; add x16, x17, ldrsw[tbl, idx, lsl #2]; br x16` pattern
-  (where jump offsets show as `udf #N` pseudo-instructions in `otool -tV`),
-  decoding chained-fixup pointers in `__DATA_CONST`, and detecting
-  deliberate silent-case branches in default/unhandled paths.
+  Recover the message-type/frame-type/command-type enum and its dispatch
+  table from a stripped Apple daemon binary (arm64e/x86_64, Mach-O) via
+  static disassembly. Use when: (1) probing an Apple daemon (rapportd,
+  sharingd, nearbyd, bluetoothd, identityservicesd, etc.) surfaced integer
+  message/frame types whose names and handlers are unknown, (2) you need to
+  map which numeric types are reachable pre-trust vs. silently filtered (e.g.
+  NoOp/keepalive), (3) you want to prove a handler is benign without live
+  probes, (4) you see `"### Ignoring unhandled frame 0x%02X (%s)"`-style log
+  strings and need the full valid-type table. Covers adjacent-string enum
+  detection in `__cstring`, ADRP literal-pool pivoting to find name-lookup
+  sites, reconstructing ARM64 jump tables (the `adr/add/ldrsw/br x16` pattern
+  that otool renders as `udf #N`), decoding chained-fixup pointers in
+  `__DATA_CONST`, and spotting deliberate silent-case branches.
 author: dmaynor
 version: 1.1.0
 date: 2026-04-21

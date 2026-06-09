@@ -1,0 +1,10 @@
+{
+  "name": "apple-vuln-research-kernelcache-kext-binary-diff",
+  "version": "1.1.0",
+  "description": "Reliably diff a single macOS kext between two macOS versions when both kexts ship inside the kernelcache.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

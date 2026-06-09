@@ -122,7 +122,7 @@
     {
       "name": "rca-investigation",
       "source": "./plugins/rca-investigation",
-      "description": "Root Cause Analysis investigation — systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
+      "description": "Root Cause Analysis investigation \u2014 systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
       "version": "1.1.0"
     },
     {
@@ -152,7 +152,7 @@
     {
       "name": "wireless-driver-control-frame-audit",
       "source": "./plugins/wireless-driver-control-frame-audit",
-      "description": "Systematic audit methodology for wireless driver control-frame and IE parsing across kernel drivers — bug-class taxonomy, per-driver fingerprint, inconsistency-within-driver heuristic, MLE/MBSSID Wi-Fi 6/7 surface, cross-OS protocol-parser-surface mapping.",
+      "description": "Systematic audit methodology for wireless driver control-frame and IE parsing across kernel drivers \u2014 bug-class taxonomy, per-driver fingerprint, inconsistency-within-driver heuristic, MLE/MBSSID Wi-Fi 6/7 surface, cross-OS protocol-parser-surface mapping.",
       "version": "1.1.0"
     },
     {
@@ -172,6 +172,30 @@
       "source": "./plugins/pdf-report-formatting",
       "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber) and structural layouts (formal/tactical/navigable_tactical), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Tactical layout drops cover/TOC/numbering for the strix-halo briefing pattern. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor).",
       "version": "1.2.0"
+    },
+    {
+      "name": "apple-vuln-research-apple-silicon-kernel-layout",
+      "source": "./plugins/apple-vuln-research-apple-silicon-kernel-layout",
+      "description": "Find the correct arm64e kernel and per-SoC kernelcache for a research target on Apple Silicon macOS.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "apple-vuln-research-kernelcache-kext-binary-diff",
+      "source": "./plugins/apple-vuln-research-kernelcache-kext-binary-diff",
+      "description": "Reliably diff a single macOS kext between two macOS versions when both kexts ship inside the kernelcache.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "apple-vuln-research-nsxpc-listener-enum",
+      "source": "./plugins/apple-vuln-research-nsxpc-listener-enum",
+      "description": "Enumerate the server-side NSXPC attack surface of an Apple daemon without extracting private-framework binaries from the dyld shared cache.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "macos-screen-flash-triage",
+      "source": "./plugins/macos-screen-flash-triage",
+      "description": "Triage \"screen flashed like a screenshot\" reports on macOS by reading WindowServer/SkyLight unified logs.",
+      "version": "1.1.0"
     }
   ]
 }
