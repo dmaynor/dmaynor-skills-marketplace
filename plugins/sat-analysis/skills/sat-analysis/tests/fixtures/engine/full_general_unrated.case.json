@@ -1,0 +1,149 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "full_general_unrated",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-general-unrated",
+    "revision": 2,
+    "mode": "FULL",
+    "submode": "GENERAL",
+    "question": "What can be said before hypothesis ratings are supplied?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "general.dispatch",
+        "raw": "shipment=27 dispatch reported",
+        "source": "dispatch.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T13:00:00Z",
+        "record_sha256": "2e2b85f245a758f6021df30bc9d82f9826968465a7003f06a7c12d7cc800be5d",
+        "reliability": "unknown",
+        "origin_id": "dispatch-measurement-27",
+        "dependency_groups": [
+          "shipment-27"
+        ],
+        "clock_domain": "dispatch-clock",
+        "timestamp_semantics": "dispatch-report"
+      },
+      {
+        "schema_version": "1",
+        "id": "general.receipt",
+        "raw": "shipment=27 receipt reported",
+        "source": "receipt.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T13:00:00.750Z",
+        "record_sha256": "03f9cf06717b3a529fd05995fa9c46dd901eab9bdea8640d5846ae87935f74c1",
+        "reliability": "unknown",
+        "origin_id": "receipt-measurement-27",
+        "dependency_groups": [
+          "shipment-27"
+        ],
+        "clock_domain": "receipt-clock",
+        "timestamp_semantics": "receipt-report"
+      }
+    ],
+    "judgment": {
+      "summary": "A 0.75-second difference exists between the reported clocks; no hypothesis comparison has been supplied.",
+      "observation_ids": [
+        "general.dispatch",
+        "general.receipt"
+      ],
+      "confidence": {
+        "level": "low",
+        "reasoning": "Distinct measurements concern one shipment, and clock alignment is unknown."
+      }
+    },
+    "calculations": [
+      {
+        "id": "reported_difference",
+        "operation": "reported_interval",
+        "start_observation_id": "general.dispatch",
+        "end_observation_id": "general.receipt"
+      },
+      {
+        "id": "empty_sum",
+        "operation": "sum",
+        "operands": [],
+        "unit": "explicit arithmetic identity"
+      },
+      {
+        "id": "empty_product",
+        "operation": "product",
+        "operands": [],
+        "unit": "explicit arithmetic identity"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ],
+    "hypotheses": [
+      {
+        "schema_version": "1",
+        "id": "H_delay",
+        "description": "A physical delay occurred."
+      },
+      {
+        "schema_version": "1",
+        "id": "H_clock",
+        "description": "Clock differences contributed."
+      }
+    ],
+    "evidence": [],
+    "tasks": [
+      {
+        "id": "T_rate",
+        "action": "Obtain clock context and explicitly rate available observations.",
+        "observation_ids": [
+          "general.dispatch",
+          "general.receipt"
+        ]
+      }
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "reported_difference": 0.75,
+      "empty_sum": 0,
+      "empty_product": 1
+    },
+    "event_ids_ordered": [
+      "general.dispatch",
+      "general.receipt"
+    ],
+    "timestamp_utc_by_id": {
+      "general.dispatch": "2026-09-09T13:00:00+00:00",
+      "general.receipt": "2026-09-09T13:00:00.750000+00:00"
+    },
+    "parse_counts": {
+      "parsed": 2,
+      "rejected": 0,
+      "unparsed": 0
+    },
+    "resolved_events": 2,
+    "unresolved_events": 0,
+    "ach": {
+      "status": "insufficient_evidence",
+      "scores": {
+        "H_clock": 0,
+        "H_delay": 0
+      },
+      "heuristic_leaders": [],
+      "contributing_record_count": 0,
+      "missing_ratings": [],
+      "diagnosticity": {},
+      "heuristic_stable": null
+    }
+  },
+  "expected_result_file": "full_general_unrated.expected.json",
+  "expected_result_bytes_sha256": "48dd3a26b1f4c74e77bb86d50db94ae906238ba805d14153f03eec56295f11f0",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "6cfb25b608c6fc04671bd6e2053614744746cca8d38800c7a1efb9a53170c2a2",
+    "analytic_trace": "407507db15450ad8a2d0954fa309f83b709180e4eb07fb84d484f1fe3e2e916b",
+    "tasking_view": "8c0ef9cf867dd832f904149fc2dc4f3a1d0fc7679d6cdc4aac034315168fb863"
+  }
+}

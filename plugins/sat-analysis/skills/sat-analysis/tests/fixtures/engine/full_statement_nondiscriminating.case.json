@@ -1,0 +1,163 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "full_statement_nondiscriminating",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-statement-neutral",
+    "revision": 2,
+    "mode": "FULL",
+    "submode": "STATEMENT",
+    "question": "Do these excerpts independently establish the stated claim?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "statement.first",
+        "raw": "The bulletin states that twelve observations were collected.",
+        "source": "bulletin.txt",
+        "parse_status": "unparsed",
+        "timestamp": "2026-09-09T08:00:00-04:00",
+        "record_sha256": "4252c7b702be6f1635123f63926fd2d95079249d5b7a934697e061c083642649",
+        "reliability": "unknown"
+      },
+      {
+        "schema_version": "1",
+        "id": "statement.second",
+        "raw": "# Verified [act](javascript:alert(1)) — eight observations cited.",
+        "source": "comment.txt",
+        "parse_status": "unparsed",
+        "timestamp": null,
+        "record_sha256": "fa114dfc432d9ccdb5ef0dad3422c938cdee20f806a836a0341f4b07b4496a29",
+        "reliability": "F"
+      }
+    ],
+    "judgment": {
+      "summary": "The supplied excerpts do not discriminate between independently supported and unverified reporting.",
+      "observation_ids": [
+        "statement.first",
+        "statement.second"
+      ],
+      "likelihood": {
+        "proposition": "The bulletin claim is independently verified.",
+        "value": null,
+        "basis": "The excerpts provide no independent verification record."
+      },
+      "confidence": {
+        "level": "unassessed",
+        "reasoning": "Both rows were explicitly rated nondiscriminating."
+      }
+    },
+    "calculations": [
+      {
+        "id": "cited_observations",
+        "operation": "sum",
+        "operands": [
+          12,
+          8
+        ],
+        "unit": "cited observations"
+      },
+      {
+        "id": "second_excerpt_share",
+        "operation": "ratio",
+        "operands": [
+          8,
+          20
+        ],
+        "unit": "fraction"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ],
+    "hypotheses": [
+      {
+        "schema_version": "1",
+        "id": "H_supported",
+        "description": "The claim is independently supported."
+      },
+      {
+        "schema_version": "1",
+        "id": "H_unverified",
+        "description": "The claim remains unverified."
+      }
+    ],
+    "evidence": [
+      {
+        "schema_version": "1",
+        "id": "E_first",
+        "observation_id": "statement.first",
+        "ratings": {
+          "H_supported": "N",
+          "H_unverified": "N"
+        }
+      },
+      {
+        "schema_version": "1",
+        "id": "E_second",
+        "observation_id": "statement.second",
+        "ratings": {
+          "H_supported": "N",
+          "H_unverified": "N"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "id": "T_sources",
+        "action": "Seek the primary verification records.",
+        "trigger": "Before repeating the claim as established."
+      }
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "cited_observations": 20,
+      "second_excerpt_share": 0.4
+    },
+    "event_ids_ordered": [
+      "statement.first",
+      "statement.second"
+    ],
+    "timestamp_utc_by_id": {
+      "statement.first": "2026-09-09T12:00:00+00:00",
+      "statement.second": null
+    },
+    "parse_counts": {
+      "parsed": 0,
+      "rejected": 0,
+      "unparsed": 2
+    },
+    "resolved_events": 1,
+    "unresolved_events": 1,
+    "ach": {
+      "status": "underdetermined",
+      "scores": {
+        "H_supported": 0,
+        "H_unverified": 0
+      },
+      "heuristic_leaders": [
+        "H_supported",
+        "H_unverified"
+      ],
+      "contributing_record_count": 2,
+      "missing_ratings": [],
+      "diagnosticity": {
+        "E_first": 0,
+        "E_second": 0
+      },
+      "heuristic_stable": null
+    }
+  },
+  "expected_result_file": "full_statement_nondiscriminating.expected.json",
+  "expected_result_bytes_sha256": "ee2ffd2897224c73c80e90fddd0edcc1b1762842f45237c1f2cb5a8caf630d4c",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "c301b41233064cdee6debe184ceb451ace2af3cf2e54142c6d58b6848df7f5fb",
+    "analytic_trace": "cf4f5b12fdfab6a9e4e4ad118ef09c2eada01c9ec3d1aaf934cfd01e4f2e6fcc",
+    "tasking_view": "ceb35577eb7e2cc4da43d69def54653b22edb4cdecef4477f21da054076ad3ca"
+  }
+}
