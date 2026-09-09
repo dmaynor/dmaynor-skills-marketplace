@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sat-analysis-engine"
+version = "1.0.0"
+description = "Evidence-preserving Structured Analytic Techniques reference engine"
+requires-python = ">=3.12"
+dependencies = ["jsonschema>=4.26,<5", "rfc8785>=0.1.4,<1"]
+
+[project.scripts]
+sat = "sat_engine.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["sat_engine*"]
+
+[tool.setuptools.package-data]
+sat_engine = ["resources/schemas/*.json", "resources/doctrine/*.json", "resources/templates/*.md"]

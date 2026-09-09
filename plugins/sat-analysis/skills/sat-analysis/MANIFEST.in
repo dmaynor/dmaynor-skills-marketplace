@@ -1,0 +1,2 @@
+recursive-include assets/templates *.md
+recursive-include sat_engine/resources *.json

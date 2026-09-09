@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/doctrine.v1.json",
+  "title": "Offline doctrine catalog and identified engine adaptations",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "catalog_version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "$ref": "doctrine.v1.json#/$defs/rule"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "catalog_version",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "standard": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "section": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "citation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "severity": {
+          "enum": [
+            "BLOCKING",
+            "WARNING",
+            "NOTE"
+          ]
+        },
+        "implementation_policy": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "rule_id",
+        "title",
+        "summary",
+        "standard",
+        "section",
+        "citation",
+        "url",
+        "severity",
+        "implementation_policy"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

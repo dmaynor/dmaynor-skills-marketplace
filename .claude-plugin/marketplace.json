@@ -39,7 +39,7 @@
       "name": "sat-analysis",
       "source": "./plugins/sat-analysis",
       "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data. Pairs with pdf-report-formatting for polished PDF deliverables (light/cyber themes; formal/tactical/navigable_tactical layouts).",
-      "version": "1.3.0"
+      "version": "3.0.0"
     },
     {
       "name": "simulation-components",

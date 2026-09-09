@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/timeline.v1.json",
+  "title": "Reported-clock timeline with unresolved records",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "timeline.v1.json#/$defs/event"
+      }
+    },
+    "analysis": {
+      "$ref": "timeline.v1.json#/$defs/analysis"
+    },
+    "gap_threshold_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "rapid_threshold_seconds": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "events",
+    "analysis",
+    "gap_threshold_seconds",
+    "rapid_threshold_seconds"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "raw": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "parse_status": {
+          "enum": [
+            "parsed",
+            "unparsed",
+            "rejected"
+          ]
+        },
+        "timestamp": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line_number": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "record_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "minLength": 64,
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "raw_bytes_base64": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "base64",
+          "contentEncoding": "base64",
+          "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/][AQgw]==|[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=)?$(?![\\s\\S])"
+        },
+        "parse_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parser": {
+          "type": "string"
+        },
+        "address_mentions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "origin_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dependency_groups": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "timestamp_semantics": {
+          "type": "string"
+        },
+        "clock_domain": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp_uncertainty_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "timestamp_context": {
+          "type": "object",
+          "properties": {
+            "year": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9999
+            },
+            "timezone": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "fold": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "reliability": {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "unknown"
+          ],
+          "default": "unknown"
+        },
+        "reliability_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "actor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp_resolution_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timestamp_utc": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "raw",
+        "source",
+        "parse_status",
+        "timestamp",
+        "tags",
+        "source_id",
+        "line_number",
+        "record_sha256",
+        "raw_bytes_base64",
+        "parse_error",
+        "parser",
+        "address_mentions",
+        "origin_id",
+        "dependency_groups",
+        "timestamp_semantics",
+        "clock_domain",
+        "timestamp_uncertainty_seconds",
+        "timestamp_context",
+        "reliability",
+        "reliability_reason",
+        "description",
+        "actor",
+        "target",
+        "timestamp_resolution_error",
+        "timestamp_utc"
+      ],
+      "additionalProperties": false
+    },
+    "interval": {
+      "type": "object",
+      "properties": {
+        "event1": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "event2": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "delta_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "kind": {
+          "const": "reported_clock_interval"
+        },
+        "same_known_clock_domain": {
+          "type": "boolean"
+        },
+        "combined_timestamp_uncertainty_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "physical_latency_established": {
+          "const": false
+        }
+      },
+      "required": [
+        "event1",
+        "event2",
+        "delta_seconds",
+        "kind",
+        "same_known_clock_domain",
+        "combined_timestamp_uncertainty_seconds",
+        "physical_latency_established"
+      ],
+      "additionalProperties": false
+    },
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "total_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resolved_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_events": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parse_counts": {
+          "type": "object",
+          "properties": {
+            "parsed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unparsed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rejected": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "parsed",
+            "unparsed",
+            "rejected"
+          ],
+          "additionalProperties": false
+        },
+        "time_range": {
+          "type": "object",
+          "properties": {
+            "first": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "last": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "first",
+            "last"
+          ],
+          "additionalProperties": false
+        },
+        "actors": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "first": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "unresolved": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "count",
+              "first",
+              "last",
+              "unresolved"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "tag_sequences": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "rapid_succession": {
+          "type": "array",
+          "items": {
+            "$ref": "timeline.v1.json#/$defs/interval"
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "timeline.v1.json#/$defs/interval"
+          }
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "total_events",
+        "resolved_events",
+        "unresolved_events",
+        "parse_counts",
+        "time_range",
+        "actors",
+        "tag_sequences",
+        "rapid_succession",
+        "gaps",
+        "caveats"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
