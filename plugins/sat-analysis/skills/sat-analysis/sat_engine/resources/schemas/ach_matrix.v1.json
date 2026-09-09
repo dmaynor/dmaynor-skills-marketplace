@@ -1,0 +1,392 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/ach_matrix.v1.json",
+  "title": "Descriptive analysis of competing hypotheses",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "title": {
+      "type": "string"
+    },
+    "relationship": {
+      "enum": [
+        "unspecified",
+        "exclusive_exhaustive",
+        "exclusive_nonexhaustive",
+        "overlapping"
+      ]
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "$ref": "hypothesis.v1.json"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence.v1.json"
+      }
+    },
+    "assessment": {
+      "$ref": "ach_matrix.v1.json#/$defs/assessment"
+    },
+    "sensitivity": {
+      "$ref": "ach_matrix.v1.json#/$defs/sensitivity"
+    },
+    "diagnosticity": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "additionalProperties": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "minimum": 0
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "title",
+    "relationship",
+    "hypotheses",
+    "evidence",
+    "assessment",
+    "sensitivity",
+    "diagnosticity"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "assessment": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "insufficient_evidence",
+            "incomplete",
+            "underdetermined",
+            "differentiated"
+          ]
+        },
+        "heuristic_leaders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "winner": {
+          "type": "null"
+        },
+        "missing_ratings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "evidence_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "hypothesis_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "evidence_id",
+              "hypothesis_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scores": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "contradictions": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "uniqueItems": true
+                },
+                "origin_id": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "rating": {
+                  "enum": [
+                    "-",
+                    "--"
+                  ]
+                }
+              },
+              "required": [
+                "evidence_ids",
+                "origin_id",
+                "description",
+                "rating"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "contributing_record_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "status",
+        "heuristic_leaders",
+        "winner",
+        "missing_ratings",
+        "caveats",
+        "scores",
+        "contradictions",
+        "contributing_record_count"
+      ],
+      "additionalProperties": false
+    },
+    "impact": {
+      "type": "object",
+      "properties": {
+        "removed_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "insufficient_evidence",
+            "incomplete",
+            "underdetermined",
+            "differentiated"
+          ]
+        },
+        "heuristic_leaders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "winner": {
+          "type": "null"
+        },
+        "scores_without": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "changes_assessment": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "removed_evidence_ids",
+        "status",
+        "heuristic_leaders",
+        "winner",
+        "scores_without",
+        "changes_assessment"
+      ],
+      "additionalProperties": false
+    },
+    "group_impact": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "source",
+            "origin",
+            "dependency"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "removed_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "insufficient_evidence",
+            "incomplete",
+            "underdetermined",
+            "differentiated"
+          ]
+        },
+        "heuristic_leaders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "winner": {
+          "type": "null"
+        },
+        "scores_without": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "changes_assessment": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "removed_evidence_ids",
+        "status",
+        "heuristic_leaders",
+        "winner",
+        "scores_without",
+        "changes_assessment"
+      ],
+      "additionalProperties": false
+    },
+    "sensitivity": {
+      "type": "object",
+      "properties": {
+        "base_assessment": {
+          "$ref": "ach_matrix.v1.json#/$defs/assessment"
+        },
+        "base_scores": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "base_winner": {
+          "type": "null"
+        },
+        "evidence_impact": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "$ref": "ach_matrix.v1.json#/$defs/impact"
+          }
+        },
+        "group_impact": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "additionalProperties": {
+            "$ref": "ach_matrix.v1.json#/$defs/group_impact"
+          }
+        },
+        "heuristic_stable": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "caveat": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "base_assessment",
+        "base_scores",
+        "base_winner",
+        "evidence_impact",
+        "group_impact",
+        "heuristic_stable",
+        "caveat"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,254 +1,55 @@
-# Attack Patterns Reference
+# Security evidence patterns
 
-## Initial Access
+Use patterns to generate and distinguish explanations, not to classify an event
+as compromise by resemblance. Scope the asset, account, time window, observed
+action, authorization question, and possible impact separately.
 
-### Spearphishing
-**Indicators**:
-- Email from external with attachment/link
-- Macro-enabled document execution
-- Child process from Office/email client
-- Outbound connection after document open
+Consider external misuse, internal misuse, authorized unusual activity, accidental
+policy violations, and collection artifacts when each is plausible. Do not require
+every category. Preserve combined causes such as a real unauthorized action plus
+misattributed telemetry. Successful authentication establishes the system's
+authentication result, not the human operator or authorization of subsequent work.
 
-**False Positives**: Legitimate macros, marketing tracking, automated email processing
+| Reported pattern | Plausible mechanisms | Evidence that may discriminate |
+|---|---|---|
+| Login from a new location or at an unusual time | Credential misuse, travel, changed VPN exit, automation, geolocation error | Account/session linkage, device context, authorized work, actions within the session, independent operator confirmation. |
+| Repeated failed authentication | Guessing, expired service credentials, retry loop, user mistakes | Target distribution, exact failure reason, cadence, service ownership, scope of subsequent success. No universal count proves an attack. |
+| Office or browser process launches a script interpreter | User workflow, installer, automation, unwanted execution | Verified parent-child lineage, script content and provenance, file origin, authorization, resulting process and network activity. |
+| Encoded or unusual command content | Packaging, administration, evasion, corrupted logging | Decoded content through an authorized safe method, command semantics, expected workflow, outcomes. A substring or tool name is not intent. |
+| New task, service, or startup entry | Deployment, maintenance, persistence, user configuration | Creator and session, configured content, scope, installation records, execution history and authorization. |
+| Access to credential-related processes or files | Security tooling, backup, troubleshooting, credential theft | Exact access rights and operations, process identity, resulting artifacts, approved purpose, downstream account activity. |
+| Many host connections or directory queries | Inventory, monitoring, discovery, misconfiguration | Collection topology, schedule, tool ownership, queried objects, follow-on actions and declared authorization. |
+| Remote administration activity | Support, deployment, lateral movement | Established source/destination roles, session identity, requested work, executed action, target scope. |
+| Periodic outbound connections or unusual DNS labels | Health checks, synchronization, application protocol, remote control, data transfer | Process ownership, protocol semantics, request/response content when available, baseline, destination relationship. Periodicity alone is nondiagnostic. |
+| Large reads, archives, or outbound transfers | Backup, migration, user work, collection, exfiltration | Data identity, verified direction, destination control, authorization, volume relative to the relevant workload, completion evidence. |
 
-### Valid Credentials
-**Indicators**:
-- Auth from unusual location/time
-- No prior failed attempts (unlike brute force)
-- Immediate resource access after login
-- VPN/remote access usage
+## Preserve what the source actually establishes
 
-**Distinguishing**: User denies login, concurrent sessions from different locations, pattern differs from baseline
+- Quote a detector's verdict as the detector's verdict. Inspect the underlying
+  records before adopting “malware,” “attack attempt,” or “exfiltration.”
+- Keep untyped address mentions separate from source and destination. A first IP
+  in free text may identify a target, proxy, quoted example, or previous hop.
+- Check identity translation, NAT/proxy behavior, duplicate forwarding, clock
+  domains, retention, and gaps where they affect the inference.
+- Correlate events only with an explicit linkage, such as session or transaction
+  identifiers and compatible time bounds. Close timestamps alone do not establish
+  one actor or causal sequence.
+- Absence of later activity is informative only if the relevant telemetry was
+  collected and capable of observing it. A normal sampled endpoint does not clear
+  a fleet or an intermittent condition.
 
-**False Positives**: User traveling, new device, VPN exit changes
+## Use taxonomies after establishing behavior
 
-### Brute Force
-**Indicators**:
-- Many failed auth attempts (>10 in short window)
-- Same source, multiple targets OR same target, multiple sources
-- Automated timing pattern (consistent intervals)
-- Eventually successful after failures
+If an ATT&CK mapping helps the user's investigation, verify the current technique
+definition against official MITRE material and cite it. Label the observed behavior
+and any tentative mapping separately. Do not infer actor identity from a technique,
+or increase confidence by counting phases, tools, tactics, or matching keywords.
 
-**False Positives**: Forgotten password, misconfigured service, password manager sync
+## Choose a bounded response
 
-### Exploitation of Public App
-**Indicators**:
-- Unusual web/app requests
-- Error spikes → successful unusual requests
-- Process spawned by web server
-- File writes by web server process
-
-**False Positives**: Authorized scanners, app bugs, security team fuzzing
-
----
-
-## Execution
-
-### PowerShell Abuse
-**Indicators**:
-- Encoded commands (`-enc`, `-e`)
-- Download cradles (`IEX`, `DownloadString`, `Invoke-WebRequest`)
-- Spawned by unusual parent (Office, wscript, cscript)
-- Execution policy bypass (`-ep bypass`)
-- Hidden window (`-w hidden`)
-
-**Key Evidence**: Decoded command content, download destination, subsequent processes
-
-**False Positives**: IT admin scripts, software installation, config management
-
-### Living-off-the-Land
-**Common LOLBins**:
-| Tool | Suspicious Use |
-|------|----------------|
-| certutil | `-urlcache -f` (download) |
-| bitsadmin | `/transfer` (download) |
-| regsvr32 | `/s /n /u /i:URL` (execute) |
-| mshta | URL execution |
-| rundll32 | DLL execution |
-| wmic | Process creation |
-
-**False Positives**: Sysadmin tasks, software deployment, troubleshooting
-
-### Script Execution
-**Indicators**:
-- wscript/cscript with external files
-- VBScript/JScript from unusual locations
-- Script downloads or creates executables
-
----
-
-## Persistence
-
-### Scheduled Tasks
-**Indicators**:
-- Task created (especially via CLI: `schtasks`)
-- Runs from unusual path (`\Temp`, `\AppData`, `\ProgramData`)
-- SYSTEM or elevated privileges
-- Unusual schedule (boot, logon, frequent)
-
-**Key Evidence**: Creator identity, executable content, schedule timing
-
-**False Positives**: Software installation, IT automation, backup tools
-
-### Registry Run Keys
-**Locations**:
-```
-HKCU\Software\Microsoft\Windows\CurrentVersion\Run
-HKLM\Software\Microsoft\Windows\CurrentVersion\Run
-HKCU\...\RunOnce
-HKLM\...\RunOnce
-```
-
-**Indicators**: Modification by unusual process, executable in unusual path
-
-**False Positives**: Software installation, updates, user customization
-
-### Services
-**Indicators**:
-- New service created
-- Service binary in unusual location
-- Service runs as SYSTEM
-- Service name mimics legitimate services
-
----
-
-## Credential Access
-
-### Credential Dumping
-**Indicators**:
-- LSASS access (especially by non-security tools)
-- Mimikatz signatures
-- SAM/SECURITY/SYSTEM registry hive access
-- NTDS.dit access (domain controllers)
-
-**Tools**: mimikatz, procdump, comsvcs.dll, secretsdump
-
-### Kerberoasting
-**Indicators**:
-- TGS requests for many SPNs
-- RC4 encryption requested (downgrade)
-- Single source requesting multiple service tickets
-
----
-
-## Discovery
-
-### Network Scanning
-**Indicators**:
-- Connections to many IPs in short time
-- Sequential port scanning
-- ICMP sweeps
-- Common scan tool artifacts
-
-**False Positives**: Legitimate network management, monitoring tools
-
-### Account Discovery
-**Indicators**:
-- net user/group/localgroup commands
-- LDAP queries for all users/groups
-- whoami /all, nltest
-
----
-
-## Lateral Movement
-
-### Remote Services
-**Indicators**:
-- PsExec/similar tool usage
-- Remote service creation
-- WMI remote execution
-- WinRM connections
-
-**Key Evidence**: Source/destination relationship, credential used, payload
-
-### Pass-the-Hash/Ticket
-**Indicators**:
-- NTLM auth from unusual source
-- Kerberos ticket from unusual source
-- Credential reuse across systems
-
----
-
-## Exfiltration
-
-### Data Staging
-**Indicators**:
-- Large file copies to single location
-- Archive creation (zip, rar, 7z)
-- Sensitive directory access → archive
-- Unusual volume of file reads
-
-**False Positives**: Backups, project archival, legitimate transfers
-
-### Exfiltration Over Web
-**Indicators**:
-- Unusual outbound data volume
-- File sharing sites (mega, dropbox, gdrive)
-- HTTP POST with large body
-- Cloud storage sync from unusual paths
-
-**Key Evidence**: Destination reputation, volume vs baseline, timing, user authorization
-
-**False Positives**: Authorized cloud storage, updates, video calls, legitimate uploads
-
----
-
-## Command and Control
-
-### Beaconing
-**Indicators**:
-- Regular interval connections (±jitter)
-- Consistent destination
-- Small outbound, variable inbound
-- Unusual user-agent or headers
-
-**Analysis**: Calculate interval consistency, check destination reputation
-
-### DNS Tunneling
-**Indicators**:
-- Long DNS queries (>50 chars)
-- High volume of DNS to single domain
-- Unusual query types (TXT, NULL)
-- Base64/hex-like subdomains
-
-### Encrypted Channels
-**Indicators**:
-- HTTPS to unusual destinations
-- Non-standard ports (443 on non-443)
-- Certificate anomalies
-
----
-
-## MITRE ATT&CK Quick Reference
-
-| Tactic | Key Techniques | Primary Log Sources |
-|--------|---------------|---------------------|
-| Initial Access | T1566 (Phishing), T1078 (Valid Accounts) | Email, Auth |
-| Execution | T1059 (Scripting), T1204 (User Execution) | Process, CLI |
-| Persistence | T1053 (Scheduled Task), T1547 (Boot/Logon) | Task, Registry |
-| Priv Esc | T1548 (Abuse Elevation), T1134 (Token) | Security Events |
-| Defense Evasion | T1027 (Obfuscation), T1070 (Indicator Removal) | Process, File |
-| Cred Access | T1003 (OS Credential Dump), T1110 (Brute Force) | Auth, LSASS |
-| Discovery | T1087 (Account), T1046 (Network Scan) | Process, Network |
-| Lateral Movement | T1021 (Remote Services), T1550 (Alt Auth) | Auth, Network |
-| Collection | T1005 (Local Data), T1114 (Email) | File Access |
-| Exfiltration | T1041 (C2 Channel), T1567 (Web Service) | Network, DLP |
-| C2 | T1071 (App Layer), T1095 (Non-App Layer) | Network, DNS |
-
----
-
-## Kill Chain Mapping
-
-```
-RECON → WEAPONIZE → DELIVER → EXPLOIT → INSTALL → C2 → ACTIONS
-  |         |          |         |         |       |       |
-  |         |          |         |         |       |       └─ Exfil/Impact
-  |         |          |         |         |       └─ Beaconing, tunneling
-  |         |          |         |         └─ Persistence, backdoor
-  |         |          |         └─ Code execution, priv esc
-  |         |          └─ Phishing, exploit delivery
-  |         └─ Malware creation (rarely visible)
-  └─ Scanning, OSINT (often pre-attack)
-```
-
-**Analysis Tip**: Map observed indicators to kill chain phases. Multiple phases = higher confidence of compromise.
+Separate factual compromise judgment from a precautionary containment decision.
+For any recommendation, identify the affected scope, responsible role, likely
+disruption, available fallback, and the evidence or deadline that changes it.
+Do not wait for confirmed impact if a proportionate reversible measure can bound
+credible harm. Conversely, unexplained telemetry alone does not justify an
+unbounded disruptive response. Analysis does not authorize operational changes.

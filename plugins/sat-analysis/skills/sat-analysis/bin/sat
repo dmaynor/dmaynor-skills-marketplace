@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+"""Source-checkout entrypoint for the packaged SAT engine CLI."""
+
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from sat_engine.cli import main
+
+raise SystemExit(main())

@@ -1,0 +1,160 @@
+{
+  "schema_version": "1",
+  "catalog_version": "1.0.0",
+  "rules": [
+    {
+      "rule_id": "HEUER8-ALTERNATIVES",
+      "title": "Compare reasonable hypotheses",
+      "summary": "Generate and compare reasonable alternatives before committing to a preferred explanation.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 1, printed pp. 96-99",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 1, printed pp. 96-99.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-DISCONFIRMATION",
+      "title": "Examine contrary evidence",
+      "summary": "Seek evidence that challenges hypotheses; evaluate whether expected evidence could actually have been observed before interpreting its absence.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Steps 2 and 5; Conclusions, printed pp. 99, 103-105, 108-109",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Steps 2 and 5; Conclusions, printed pp. 99, 103-105, 108-109.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-JUDGMENT",
+      "title": "Keep analyst judgment explicit",
+      "summary": "Use a matrix to assist judgment; investigate disagreements between the matrix and the analyst instead of treating the matrix as the decision maker.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 5, printed pp. 104-105",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 5, printed pp. 104-105.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-SENSITIVITY",
+      "title": "Revisit critical evidence",
+      "summary": "Examine how conclusions depend on critical evidence and assumptions, including errors and alternative interpretations.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 6, printed pp. 105-106",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 6, printed pp. 105-106.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ALTERNATIVES",
+      "title": "Consider plausible alternatives",
+      "summary": "Assess plausible alternative explanations and identify observations that would change their assessed likelihood.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(4)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(4).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ARGUMENT",
+      "title": "Make reasoning assessable",
+      "summary": "Connect judgments to relevant information and coherent reasoning, acknowledging significant contrary information.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(6)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(6).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ASSUMPTIONS",
+      "title": "Separate information, assumptions, and judgments",
+      "summary": "Distinguish source information, assumptions, and judgments; explain consequential assumptions and what changes if they fail.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(3)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(3).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-SOURCES",
+      "title": "Describe the source basis",
+      "summary": "Identify the source and methodological basis of judgments, including relevant limits on quality and credibility.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(1)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(1).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-UNCERTAINTY",
+      "title": "Explain uncertainty",
+      "summary": "Explain uncertainty in major judgments, distinguishing an event's likelihood from confidence in the judgment's evidential and reasoning basis.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(2)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(2).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "SAT-DEPENDENCE",
+      "title": "Retain observation dependence",
+      "summary": "Deduplicate explicit derivative origins without merging distinct observations. Test source, origin, and declared dependency groups during sensitivity analysis.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "WARNING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-DERIVED-ENRICHMENT",
+      "title": "Keep enrichment separate from canonical analysis",
+      "summary": "Add doctrine references only to derived renderings. Enrichment cannot rewrite canonical artifacts, fabricate citations, or certify compliance.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Doctrine; Canonical snapshot and artifacts",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Doctrine; Canonical snapshot and artifacts; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-FALSIFICATION",
+      "title": "Qualify falsification and negative evidence",
+      "summary": "A contradiction rating is not verified falsification. Establish a necessary prediction, valid observation process, scope, and adequate detection coverage before excluding an explanation.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Corrected helper invariants: Judgment rules",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Corrected helper invariants: Judgment rules; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "WARNING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-NO-CAUSAL-WINNER",
+      "title": "Do not compute a causal winner",
+      "summary": "Descriptive ACH totals and variance do not determine causation, probability, or confidence. Preserve tied, incomplete, and insufficient states; any causal judgment remains analyst supplied.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-UNKNOWN-RELIABILITY",
+      "title": "Keep unknown reliability unknown",
+      "summary": "Do not convert source reliability categories into numeric support weights or confidence adjustments. F and unknown remain unjudged.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    }
+  ]
+}

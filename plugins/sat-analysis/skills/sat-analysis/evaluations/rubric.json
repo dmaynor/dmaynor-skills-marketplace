@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "rubric_version": "1.0.0",
+  "frozen_before_trials": true,
+  "scoring_instructions": "Assess the response, not use of SAT headings or vocabulary. Mark each critical check pass, fail, or unscored. Pass requires the criterion to be satisfied; failure may be an unsupported assertion or a consequential omission. Explain every actual rating and quote the relevant answer text verbatim. For an omission, quote the nearest relevant passage and explain what is missing; do not invent a quotation. If the answer does not permit judgment, leave unscored and explain outside the scores. A useful conclusion can be unresolved if justified and paired with an actionable decision. Do not reward universal abstention. Do not infer calibration from a few cases. Assessors must not receive condition labels, skill text, developer conclusions, or other conditions' answers before independent scoring.",
+  "metrics": {
+    "useful_conclusion": {"0": "Unsupported causal certainty, consequential false inference, or indiscriminate abstention despite decisive evidence.", "1": "Mostly warranted assessment but incomplete scope, evidence distinction, or explanation.", "2": "Evidence-proportionate conclusion that identifies what is established, what remains uncertain, and any material scope limit."},
+    "useful_decision": {"0": "No usable next action, an unsafe categorical action, or an action that cannot answer the stated question.", "1": "Plausible action/check but incomplete validity, decision linkage, bounds, or verification.", "2": "Proportionate, practical action/check with relevant expected outcomes and decision boundaries; a simple verification is sufficient for simple cases."},
+    "operator_burden": {"0": "Unnecessary investigation, infeasible checks, invented procedures, or omissions that transfer uncontrolled risk/work to operators.", "1": "Work is broadly feasible but priorities, ownership, or scope need refinement.", "2": "Effort is proportionate to ambiguity and consequence, with clear priorities and bounded ownership where required; concise wording alone does not earn this score."}
+  },
+  "cases": {
+    "case-01": {"critical_checks": {
+      "C1": "Recognizes the three automated reports have one COL-2 origin and do not independently corroborate measured physical delay.",
+      "C2": "Does not claim clean ICMP eliminates transport causation or that unbounded cross-device timestamps establish physical one-way latency.",
+      "C3": "Preserves possible combined real delay and telemetry inflation; does not attribute the recovery to one of the simultaneous changes as proved.",
+      "C4": "Does not categorically reject temporary/selective voice based solely on forecast demand or wait for delayed reconciliation to report a safety miss; provides an early bounded check/trigger."
+    }},
+    "case-02": {"critical_checks": {
+      "C1": "Does not treat bundled rollback, worker increase, region switch, and demand fall as isolated proof against build 41.",
+      "C2": "Proposes a controlled or otherwise discriminating comparison and avoids making the permanent release decision solely from the confounded recovery."
+    }},
+    "case-03": {"critical_checks": {
+      "C1": "Does not eliminate network/transport causation from five healthy ICMP probes of a different transaction.",
+      "C2": "Targets actual application flow, acknowledgments/retries, timing, or a suitably controlled path comparison; limits negative findings to valid detection scope."
+    }},
+    "case-04": {"critical_checks": {
+      "C1": "Retains both measured real end-to-end delay and possible telemetry inflation; does not accept either observation as excluding the other.",
+      "C2": "Does not assert the UI is overcounting by exactly 60 seconds without resolving different endpoints and clock offset; proposes a relevant measurement."
+    }},
+    "case-05": {"critical_checks": {
+      "C1": "Distinguishes current voice capacity from forecast demand and identifies a feasible temporary/selective fallback when digital delivery is unverifiable.",
+      "C2": "Uses prompt acknowledgment/capacity/review triggers with ownership rather than waiting for a missed safety order in delayed reconciliation; accounts for duplicate handling and staffing bounds."
+    }},
+    "case-06": {"critical_checks": {
+      "C1": "Correctly attributes the observed exception to division by zero and recognizes the guard addresses that specific failure.",
+      "C2": "Offers proportionate verification including zero and a nonzero case; does not invent a minimum quota of causes or force an unrelated compromise investigation."
+    }},
+    "case-07": {"critical_checks": {
+      "C1": "Rejects absence-of-error claims based on silently omitted records; preserves raw input, source location, and parsed/unparsed/rejected accounting.",
+      "C2": "Does not convert an address mention into established attacker/source attribution.",
+      "C3": "Does not treat missing timezone/year or unbounded different clocks as a valid physical-latency measurement; keeps unresolved timestamps visible."
+    }},
+    "case-08": {"critical_checks": {
+      "C1": "Reports no evidence as insufficient and complete neutral/tied evidence as underdetermined; input order cannot choose a causal winner.",
+      "C2": "Recognizes removal of the sole discriminator and a leader becoming tied as loss of discrimination; does not call that unqualified robustness."
+    }},
+    "case-09": {"critical_checks": {
+      "C1": "Recognizes three reports are derivative of one scan rather than three independent origin-certificate observations.",
+      "C2": "Does not treat an intercepted browser connection as decisive verification of the origin certificate; checks the origin and clock/validity context before a categorical conclusion."
+    }},
+    "case-10": {"critical_checks": {
+      "C1": "Does not normalize overlapping propositions or impose an arbitrary permissible total; identifies exclusive/exhaustive relationships needed for a sum of one.",
+      "C2": "Separates likelihood from evidentiary confidence and does not call rescaled estimates calibrated without outcome-based evidence."
+    }},
+    "case-11": {"critical_checks": {
+      "C1": "Recognizes shared-exporter dependency and the loss of independent evidence; graph agreement is not independent validation.",
+      "C2": "Keeps restart, worker increase, and reduced load causally unresolved and suggests a practical discriminating check."
+    }},
+    "case-12": {"critical_checks": {
+      "C1": "Reaches a scoped positive conclusion that enabled=false controls consumption in the tested replica rather than abstaining or inventing equal alternatives.",
+      "C2": "Rejects mandatory hypothesis inflation and numeric confidence bonuses; verification is proportionate and does not generalize isolated results to untested deployments."
+    }}
+  }
+}

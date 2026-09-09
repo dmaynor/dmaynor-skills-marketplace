@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/decision_card.v1.json",
+  "title": "Mechanically projected decision card",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "likelihood": {
+      "anyOf": [
+        {
+          "$ref": "analysis_request.v1.json#/$defs/likelihood"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "confidence": {
+      "anyOf": [
+        {
+          "$ref": "analysis_request.v1.json#/$defs/confidence"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "implications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assessment_status": {
+      "enum": [
+        "not_evaluated",
+        "insufficient_evidence",
+        "incomplete",
+        "underdetermined",
+        "differentiated"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "calculations": {
+      "type": "array",
+      "items": {
+        "$ref": "analysis_request.v1.json#/$defs/calculation_result"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "revision",
+    "content_hash",
+    "question",
+    "summary",
+    "likelihood",
+    "confidence",
+    "implications",
+    "assessment_status",
+    "limitations",
+    "calculations"
+  ],
+  "additionalProperties": false
+}

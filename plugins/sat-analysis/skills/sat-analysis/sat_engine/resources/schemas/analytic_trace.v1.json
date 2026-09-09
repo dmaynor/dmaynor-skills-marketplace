@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/analytic_trace.v1.json",
+  "title": "Complete canonical analysis snapshot",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "engine_version": {
+      "const": "1.0.0"
+    },
+    "request": {
+      "$ref": "analysis_request.v1.json",
+      "required": [
+        "analysis_id",
+        "revision",
+        "observations",
+        "hypotheses",
+        "evidence",
+        "relationship",
+        "judgment",
+        "assumptions",
+        "limitations",
+        "tasks",
+        "rule_ids",
+        "calculations",
+        "timeline_options"
+      ]
+    },
+    "ach_matrix": {
+      "anyOf": [
+        {
+          "$ref": "ach_matrix.v1.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timeline": {
+      "$ref": "timeline.v1.json"
+    },
+    "calculations": {
+      "type": "array",
+      "items": {
+        "$ref": "analysis_request.v1.json#/$defs/calculation_result"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "analytic_trace.v1.json#/$defs/diagnostic"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "revision",
+    "content_hash",
+    "engine_version",
+    "request",
+    "ach_matrix",
+    "timeline",
+    "calculations",
+    "diagnostics"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "diagnostic": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "warning",
+            "error"
+          ]
+        },
+        "remediation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "path",
+        "message",
+        "severity",
+        "remediation"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "request": {
+            "properties": {
+              "mode": {
+                "const": "LIGHT"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ach_matrix": {
+            "type": "null"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "ach_matrix": {
+            "$ref": "ach_matrix.v1.json"
+          }
+        }
+      }
+    }
+  ]
+}
