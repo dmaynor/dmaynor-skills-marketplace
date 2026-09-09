@@ -1,0 +1,217 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "full_breach_origin_closure",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-breach-origin",
+    "revision": 2,
+    "mode": "FULL",
+    "submode": "BREACH",
+    "question": "Do these authentication reports establish account misuse?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "breach.auth",
+        "raw": "user=operator auth=success request=27",
+        "source": "gateway.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T10:00:00Z",
+        "record_sha256": "d1ce56238e0bf35f35230c929329a6f4001d6ee74bd9d7db0fc2fb6d6668e34e",
+        "reliability": "unknown",
+        "source_id": "gateway-1",
+        "origin_id": "auth-measurement-27",
+        "dependency_groups": [
+          "identity-feed"
+        ]
+      },
+      {
+        "schema_version": "1",
+        "id": "breach.auth.copy",
+        "raw": "republished user=operator auth=success request=27",
+        "source": "mirror.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T10:00:00Z",
+        "record_sha256": "d6d175c1632ffd7e1933476adbac46749337fbd0c0810deb911b3dcef922636b",
+        "reliability": "unknown",
+        "source_id": "mirror-1",
+        "origin_id": "auth-measurement-27",
+        "dependency_groups": [
+          "identity-feed"
+        ]
+      },
+      {
+        "schema_version": "1",
+        "id": "breach.ticket",
+        "raw": "change_ticket=27 attribution=pending",
+        "source": "gateway.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T10:00:01Z",
+        "record_sha256": "c2e2422e6f1901c7578a044f4272e42c9b891e2ce2492a96db037e09911660b8",
+        "reliability": "unknown",
+        "source_id": "gateway-1",
+        "origin_id": "ticket-measurement-27"
+      }
+    ],
+    "judgment": {
+      "summary": "Retain authorized administration as a response-planning possibility while attribution is checked; the supplied ratings do not settle account origin.",
+      "selected_hypothesis_ids": [
+        "H_admin"
+      ],
+      "observation_ids": [
+        "breach.auth",
+        "breach.ticket"
+      ],
+      "confidence": {
+        "level": "low",
+        "reasoning": "Authentication success and an open ticket do not independently establish who acted."
+      }
+    },
+    "calculations": [
+      {
+        "id": "observed_attempts",
+        "operation": "sum",
+        "operands": [
+          4,
+          3
+        ],
+        "unit": "attempts"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ],
+    "relationship": "exclusive_nonexhaustive",
+    "hypotheses": [
+      {
+        "schema_version": "1",
+        "id": "H_stolen",
+        "description": "The supplied authentication used stolen credentials.",
+        "initial_probability": 0.6
+      },
+      {
+        "schema_version": "1",
+        "id": "H_admin",
+        "description": "The supplied authentication was authorized administration.",
+        "initial_probability": 0.2
+      }
+    ],
+    "evidence": [
+      {
+        "schema_version": "1",
+        "id": "E_auth",
+        "observation_id": "breach.auth",
+        "ratings": {
+          "H_stolen": "+",
+          "H_admin": "-"
+        }
+      },
+      {
+        "schema_version": "1",
+        "id": "E_auth_copy",
+        "observation_id": "breach.auth.copy",
+        "ratings": {
+          "H_stolen": "+",
+          "H_admin": "-"
+        }
+      },
+      {
+        "schema_version": "1",
+        "id": "E_ticket",
+        "observation_id": "breach.ticket",
+        "ratings": {
+          "H_stolen": "N",
+          "H_admin": "N"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "id": "T_attribution",
+        "action": "Obtain independent operator confirmation.",
+        "observation_ids": [
+          "breach.auth"
+        ],
+        "hypothesis_ids": [
+          "H_stolen",
+          "H_admin"
+        ]
+      }
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "observed_attempts": 7
+    },
+    "event_ids_ordered": [
+      "breach.auth",
+      "breach.auth.copy",
+      "breach.ticket"
+    ],
+    "timestamp_utc_by_id": {
+      "breach.auth": "2026-09-09T10:00:00+00:00",
+      "breach.auth.copy": "2026-09-09T10:00:00+00:00",
+      "breach.ticket": "2026-09-09T10:00:01+00:00"
+    },
+    "parse_counts": {
+      "parsed": 3,
+      "rejected": 0,
+      "unparsed": 0
+    },
+    "resolved_events": 3,
+    "unresolved_events": 0,
+    "ach": {
+      "status": "differentiated",
+      "scores": {
+        "H_admin": -1,
+        "H_stolen": 1
+      },
+      "heuristic_leaders": [
+        "H_stolen"
+      ],
+      "contributing_record_count": 2,
+      "missing_ratings": [],
+      "diagnosticity": {
+        "E_auth": 1,
+        "E_auth_copy": 1,
+        "E_ticket": 0
+      },
+      "heuristic_stable": false,
+      "groups": {
+        "source:gateway.log": {
+          "removed_evidence_ids": [
+            "E_auth",
+            "E_auth_copy",
+            "E_ticket"
+          ],
+          "status": "insufficient_evidence"
+        },
+        "source:mirror.log": {
+          "removed_evidence_ids": [
+            "E_auth",
+            "E_auth_copy"
+          ],
+          "status": "underdetermined"
+        },
+        "origin:auth-measurement-27": {
+          "removed_evidence_ids": [
+            "E_auth",
+            "E_auth_copy"
+          ],
+          "status": "underdetermined"
+        }
+      }
+    }
+  },
+  "expected_result_file": "full_breach_origin_closure.expected.json",
+  "expected_result_bytes_sha256": "c97aa2d7450229fcda13185335420a9d70feae04d0c2ef1317b9e9f765740904",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "a85f84f903df9fbbe0cd07dd1adf814a9fb589d346b1acd263a81b9a7f9ca5af",
+    "analytic_trace": "6f12fc73b41eaf0284c6454b3771a56824cb021769031ad93150d51fa4d881f4",
+    "tasking_view": "070975cf521c82df2f0315b3dfef8fd390c2ec8fac13886550775453407988e2"
+  }
+}

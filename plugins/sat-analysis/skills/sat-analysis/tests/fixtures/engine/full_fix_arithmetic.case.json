@@ -1,0 +1,203 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "full_fix_arithmetic",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-fix-arithmetic",
+    "revision": 2,
+    "mode": "FULL",
+    "submode": "FIX",
+    "question": "What changed in the supplied patch trial and what remains untested?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "fix.before",
+        "raw": "trial=before failed=20 total=100",
+        "source": "trial-before.json",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T14:00:00+02:00",
+        "record_sha256": "f32d5c277ebf9b442ab73430a5623082f67b301717359e5b789769df02c65489",
+        "reliability": "B",
+        "clock_domain": "trial-runner",
+        "timestamp_semantics": "trial-finished",
+        "timestamp_uncertainty_seconds": 0.01
+      },
+      {
+        "schema_version": "1",
+        "id": "fix.after",
+        "raw": "trial=after failed=5 total=100",
+        "source": "trial-after.json",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T12:01:00Z",
+        "record_sha256": "5cc0f355d0a197db89c55742e9f8dcdab3afd79d0ff73edff350397307900c8e",
+        "reliability": "B",
+        "clock_domain": "trial-runner",
+        "timestamp_semantics": "trial-finished",
+        "timestamp_uncertainty_seconds": 0.01
+      }
+    ],
+    "judgment": {
+      "summary": "The supplied trial has 15 fewer failures out of 100 executions; untested configurations remain outside this judgment.",
+      "selected_hypothesis_ids": [
+        "H_improves"
+      ],
+      "observation_ids": [
+        "fix.before",
+        "fix.after"
+      ],
+      "confidence": {
+        "level": "moderate",
+        "reasoning": "Counts are explicit, but a single before/after trial does not establish broad correctness."
+      },
+      "implications": [
+        "Retain the regression checks for other configurations."
+      ]
+    },
+    "calculations": [
+      {
+        "id": "fewer_failures",
+        "operation": "difference",
+        "operands": [
+          20,
+          5
+        ],
+        "unit": "failures"
+      },
+      {
+        "id": "failure_fraction",
+        "operation": "ratio",
+        "operands": [
+          5,
+          100
+        ],
+        "unit": "fraction"
+      },
+      {
+        "id": "fraction_reduction",
+        "operation": "ratio",
+        "operands": [
+          15,
+          100
+        ],
+        "unit": "fraction"
+      },
+      {
+        "id": "scaled_failures",
+        "operation": "product",
+        "operands": [
+          0.05,
+          100
+        ],
+        "unit": "failures"
+      },
+      {
+        "id": "trial_interval",
+        "operation": "reported_interval",
+        "start_observation_id": "fix.before",
+        "end_observation_id": "fix.after"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ],
+    "relationship": "exclusive_exhaustive",
+    "hypotheses": [
+      {
+        "schema_version": "1",
+        "id": "H_improves",
+        "description": "The patch improves the supplied trial.",
+        "initial_probability": 0.75
+      },
+      {
+        "schema_version": "1",
+        "id": "H_other",
+        "description": "The patch does not improve the supplied trial.",
+        "initial_probability": 0.25
+      }
+    ],
+    "evidence": [
+      {
+        "schema_version": "1",
+        "id": "E_before",
+        "observation_id": "fix.before",
+        "ratings": {
+          "H_improves": "N",
+          "H_other": "N"
+        }
+      },
+      {
+        "schema_version": "1",
+        "id": "E_after",
+        "observation_id": "fix.after",
+        "ratings": {
+          "H_improves": "+",
+          "H_other": "-"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "id": "T_configurations",
+        "action": "Repeat the trial on untested configurations.",
+        "owner": "Release engineering",
+        "hypothesis_ids": [
+          "H_improves",
+          "H_other"
+        ]
+      }
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "fewer_failures": 15,
+      "failure_fraction": 0.05,
+      "fraction_reduction": 0.15,
+      "scaled_failures": 5,
+      "trial_interval": 60
+    },
+    "event_ids_ordered": [
+      "fix.before",
+      "fix.after"
+    ],
+    "timestamp_utc_by_id": {
+      "fix.before": "2026-09-09T12:00:00+00:00",
+      "fix.after": "2026-09-09T12:01:00+00:00"
+    },
+    "parse_counts": {
+      "parsed": 2,
+      "rejected": 0,
+      "unparsed": 0
+    },
+    "resolved_events": 2,
+    "unresolved_events": 0,
+    "ach": {
+      "status": "differentiated",
+      "scores": {
+        "H_improves": 1,
+        "H_other": -1
+      },
+      "heuristic_leaders": [
+        "H_improves"
+      ],
+      "contributing_record_count": 2,
+      "missing_ratings": [],
+      "diagnosticity": {
+        "E_after": 1,
+        "E_before": 0
+      },
+      "heuristic_stable": false
+    }
+  },
+  "expected_result_file": "full_fix_arithmetic.expected.json",
+  "expected_result_bytes_sha256": "bc74f0deed1ccb8e4115ba6508e8f25783e23097b0df5cfd9d0cbaf91c5070da",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "e552a3bfd50006b86f518e5b2af47da955faec76b6f1f928c28d2aea853f3f16",
+    "analytic_trace": "8c011d842752a71979234404e1407b75e40b9ae5102a023a4e85b6bdede267aa",
+    "tasking_view": "f15398cb00b64047bb5d55529817f9f98f69f48f839dc98c4046f6bd3bcc025f"
+  }
+}

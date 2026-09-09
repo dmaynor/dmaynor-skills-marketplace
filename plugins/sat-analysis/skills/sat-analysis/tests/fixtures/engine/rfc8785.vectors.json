@@ -1,0 +1,89 @@
+{
+  "fixture_version": "1",
+  "source": "RFC 8785, sections 3.2.2 and 3.2.3 and Appendix B",
+  "portability_limit": "Exact serialization vectors test this implementation; they do not establish another platform has executed the fixture suite.",
+  "binary64_vectors": [
+    {
+      "ieee754_hex": "0000000000000000",
+      "canonical_utf8": "0"
+    },
+    {
+      "ieee754_hex": "8000000000000000",
+      "canonical_utf8": "0"
+    },
+    {
+      "ieee754_hex": "0000000000000001",
+      "canonical_utf8": "5e-324"
+    },
+    {
+      "ieee754_hex": "8000000000000001",
+      "canonical_utf8": "-5e-324"
+    },
+    {
+      "ieee754_hex": "7fefffffffffffff",
+      "canonical_utf8": "1.7976931348623157e+308"
+    },
+    {
+      "ieee754_hex": "ffefffffffffffff",
+      "canonical_utf8": "-1.7976931348623157e+308"
+    },
+    {
+      "ieee754_hex": "4340000000000000",
+      "canonical_utf8": "9007199254740992"
+    },
+    {
+      "ieee754_hex": "4430000000000000",
+      "canonical_utf8": "295147905179352830000"
+    },
+    {
+      "ieee754_hex": "44b52d02c7e14af5",
+      "canonical_utf8": "9.999999999999997e+22"
+    },
+    {
+      "ieee754_hex": "44b52d02c7e14af6",
+      "canonical_utf8": "1e+23"
+    },
+    {
+      "ieee754_hex": "44b52d02c7e14af7",
+      "canonical_utf8": "1.0000000000000001e+23"
+    },
+    {
+      "ieee754_hex": "444b1ae4d6e2ef4e",
+      "canonical_utf8": "999999999999999700000"
+    },
+    {
+      "ieee754_hex": "444b1ae4d6e2ef4f",
+      "canonical_utf8": "999999999999999900000"
+    },
+    {
+      "ieee754_hex": "444b1ae4d6e2ef50",
+      "canonical_utf8": "1e+21"
+    },
+    {
+      "ieee754_hex": "3eb0c6f7a0b5ed8c",
+      "canonical_utf8": "9.999999999999997e-7"
+    },
+    {
+      "ieee754_hex": "3eb0c6f7a0b5ed8d",
+      "canonical_utf8": "0.000001"
+    }
+  ],
+  "json_vectors": [
+    {
+      "input_json": "{\"b\":[1.0,-0.0],\"a\":true}",
+      "canonical_utf8": "{\"a\":true,\"b\":[1,0]}"
+    },
+    {
+      "input_json": "{\"דּ\":7,\"😀\":6,\"€\":5,\"ö\":4,\"\\u0080\":3,\"1\":2,\"\\r\":1}",
+      "canonical_utf8": "{\"\\r\":1,\"1\":2,\"\":3,\"ö\":4,\"€\":5,\"😀\":6,\"דּ\":7}"
+    },
+    {
+      "input_json": "\"e\\u0301\"",
+      "canonical_utf8": "\"é\""
+    },
+    {
+      "input_json": "\"é\"",
+      "canonical_utf8": "\"é\""
+    }
+  ]
+}
