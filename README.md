@@ -10,6 +10,7 @@ Private plugin marketplace for Claude Code.
 | `design-philosophy` | Rigorous design philosophy for simplicity, UX, and quality |
 | `gits-dual-plane-isometric-assets` | Isometric sprite sheets for dual-plane city simulation |
 | `godot` | Godot Engine 4.x game development |
+| `openproject` | Evidence-preserving OpenProject planning and API automation |
 | `purple-teaming` | Purple team exercises and detection validation |
 | `sat-analysis` | Structured Analytic Techniques for rigorous analysis |
 | `simulation-components` | Modular virtualized services for cyber range sims |
