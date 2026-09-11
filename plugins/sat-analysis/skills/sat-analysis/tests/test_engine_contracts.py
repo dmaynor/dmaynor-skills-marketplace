@@ -268,7 +268,7 @@ class SchemaBoundaryTests(unittest.TestCase):
             self.assert_invalid("doctrine", {"schema_version": "1", "catalog_version": "1", "rules": [{**rule, **fields}]})
 
     def test_invalid_engine_result_cannot_claim_artifacts(self) -> None:
-        value = {"schema_version": "1", "engine_version": "1.0.0", "status": "invalid", "diagnostics": [ValidationFailure("bad", "Input rejected").diagnostic()], "artifacts": None}
+        value = {"schema_version": "1", "engine_version": "1.1.0", "status": "invalid", "diagnostics": [ValidationFailure("bad", "Input rejected").diagnostic()], "artifacts": None}
         validate("engine_result", value)
         self.assert_invalid("engine_result", {**value, "status": "ok"})
         self.assert_invalid("engine_result", {**value, "artifacts": {}})
@@ -328,8 +328,8 @@ class SchemaBoundaryTests(unittest.TestCase):
                              relationship="unspecified", judgment=None, assumptions=[], limitations=[], tasks=[],
                              rule_ids=[], calculations=[], timeline_options={"gap_threshold_seconds": 300, "rapid_threshold_seconds": 1})
         trace = {"schema_version": "1", "analysis_id": "A1", "revision": 1, "content_hash": "0" * 64,
-                 "engine_version": "1.0.0", "request": normalized, "ach_matrix": None,
-                 "timeline": empty_timeline(), "calculations": [], "diagnostics": []}
+                 "engine_version": "1.1.0", "request": normalized, "ach_matrix": None,
+                 "timeline": empty_timeline(), "calculations": [], "diagnostics": [], "coherence": None}
         validate("analytic_trace", trace)
         minimal = deepcopy(trace)
         minimal["request"] = request(mode="LIGHT")
@@ -347,11 +347,11 @@ class SchemaBoundaryTests(unittest.TestCase):
                              relationship="unspecified", judgment=None, assumptions=[], limitations=[], tasks=[],
                              rule_ids=[], calculations=[], timeline_options={})
         identity = {"schema_version": "1", "analysis_id": "A1", "revision": 1, "content_hash": "0" * 64}
-        trace = {**identity, "engine_version": "1.0.0", "request": normalized, "ach_matrix": None,
-                 "timeline": empty_timeline(), "calculations": [], "diagnostics": []}
+        trace = {**identity, "engine_version": "1.1.0", "request": normalized, "ach_matrix": None,
+                 "timeline": empty_timeline(), "calculations": [], "diagnostics": [], "coherence": None}
         card = {**identity, "question": "Q", "summary": "No analyst judgment supplied.", "likelihood": None,
                 "confidence": None, "implications": [], "assessment_status": "not_evaluated", "limitations": [], "calculations": []}
-        result = {"schema_version": "1", "engine_version": "1.0.0", "status": "ok", "diagnostics": [],
+        result = {"schema_version": "1", "engine_version": "1.1.0", "status": "ok", "diagnostics": [],
                   "artifacts": {"decision_card": card, "analytic_trace": trace, "tasking_view": None}}
         validate("engine_result", result)
         result["artifacts"]["tasking_view"] = {**identity, "tasks": [], "limitations": []}

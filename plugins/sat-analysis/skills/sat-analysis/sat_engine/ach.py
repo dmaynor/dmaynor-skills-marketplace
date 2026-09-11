@@ -74,6 +74,7 @@ class Hypothesis:
     category: str = ""
     initial_probability: float | None = None
     falsifier: str | None = None
+    posterior_probability: float | None = None
 
     def validate(self) -> None:
         """Reject malformed hypothesis fields."""
@@ -81,6 +82,7 @@ class Hypothesis:
         _text(self.description, f"{self.id}.description")
         _text(self.category, f"{self.id}.category")
         _probability(self.initial_probability, f"{self.id}.initial_probability")
+        _probability(self.posterior_probability, f"{self.id}.posterior_probability")
         if self.falsifier is not None:
             _text(self.falsifier, f"{self.id}.falsifier")
 
@@ -181,17 +183,18 @@ class ACHMatrix:
                 previous = origin_ratings.setdefault(evidence.origin_id, evidence.ratings)
                 if previous != evidence.ratings:
                     raise ValueError(f"Conflicting ratings for origin {evidence.origin_id!r}")
-        probabilities = [h.initial_probability for h in self.hypotheses]
-        quantified = [p for p in probabilities if p is not None]
-        total = math.fsum(quantified)
-        exclusive = self.relationship in {"exclusive_exhaustive", "exclusive_nonexhaustive"}
-        if exclusive and total > 1 and not math.isclose(
-            total, 1, rel_tol=0, abs_tol=PROBABILITY_TOLERANCE
-        ):
-            raise ValueError("Exclusive probabilities cannot sum above 1")
-        if self.relationship == "exclusive_exhaustive" and probabilities and len(quantified) == len(probabilities):
-            if not math.isclose(total, 1, rel_tol=0, abs_tol=PROBABILITY_TOLERANCE):
-                raise ValueError("Fully quantified exclusive_exhaustive probabilities must sum to 1")
+        for label in ("initial_probability", "posterior_probability"):
+            probabilities = [getattr(h, label) for h in self.hypotheses]
+            quantified = [p for p in probabilities if p is not None]
+            total = math.fsum(quantified)
+            exclusive = self.relationship in {"exclusive_exhaustive", "exclusive_nonexhaustive"}
+            if exclusive and total > 1 and not math.isclose(
+                total, 1, rel_tol=0, abs_tol=PROBABILITY_TOLERANCE
+            ):
+                raise ValueError("Exclusive probabilities cannot sum above 1")
+            if self.relationship == "exclusive_exhaustive" and probabilities and len(quantified) == len(probabilities):
+                if not math.isclose(total, 1, rel_tol=0, abs_tol=PROBABILITY_TOLERANCE):
+                    raise ValueError("Fully quantified exclusive_exhaustive probabilities must sum to 1")
 
     def add_hypothesis(
         self, id: str, description: str, category: str = "",
@@ -475,7 +478,7 @@ def from_json(data: object) -> ACHMatrix:
     parsed_evidence: list[Evidence] = []
     for index, item in enumerate(hypotheses):
         item = _object(item, f"hypotheses[{index}]")
-        if item.keys() - {"id", "description", "category", "initial_probability", "falsifier"}:
+        if item.keys() - {"id", "description", "category", "initial_probability", "falsifier", "posterior_probability"}:
             raise ValueError(f"Unknown hypothesis fields at index {index}")
         if not {"id", "description"} <= item.keys():
             raise ValueError(f"hypotheses[{index}] requires id and description")
@@ -556,6 +559,7 @@ def compute_matrix(request: dict[str, object]) -> dict[str, object]:
             category=hypothesis.get("category", ""),
             initial_probability=hypothesis.get("initial_probability"),
             falsifier=hypothesis.get("falsifier"),
+            posterior_probability=hypothesis.get("posterior_probability"),
         ))
 
     observation_ratings: dict[str, dict[str, str]] = {}

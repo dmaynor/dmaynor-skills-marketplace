@@ -154,10 +154,10 @@
     }
   },
   "expected_result_file": "full_statement_nondiscriminating.expected.json",
-  "expected_result_bytes_sha256": "ee2ffd2897224c73c80e90fddd0edcc1b1762842f45237c1f2cb5a8caf630d4c",
+  "expected_result_bytes_sha256": "58c2547d2868eea3095d8ae95606491bd49e8f1923ae97e5866cb0dc4ef53c1a",
   "expected_artifact_canonical_sha256": {
-    "decision_card": "c301b41233064cdee6debe184ceb451ace2af3cf2e54142c6d58b6848df7f5fb",
-    "analytic_trace": "cf4f5b12fdfab6a9e4e4ad118ef09c2eada01c9ec3d1aaf934cfd01e4f2e6fcc",
-    "tasking_view": "ceb35577eb7e2cc4da43d69def54653b22edb4cdecef4477f21da054076ad3ca"
+    "decision_card": "08d7d7c3f4cc3fafe613e9adad8080b260638e933fe13725f1aa81807856d0d5",
+    "analytic_trace": "badb1b8e2fbbdfb0187a742c21ca5cecfb4fc4ed45d8d92f4740037269aef1cd",
+    "tasking_view": "ac6199e3022f8a879a40052e7eaf56c5dcb97015c02bbf79ab65d1d96f375b5b"
   }
 }

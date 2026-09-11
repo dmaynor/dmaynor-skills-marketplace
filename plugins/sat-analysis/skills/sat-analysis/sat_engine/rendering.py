@@ -149,9 +149,10 @@ def _hypotheses(request: Mapping[str, Any]) -> str:
     hypotheses = request.get("hypotheses", [])
     if not hypotheses:
         return "No hypotheses supplied."
-    return _table(["ID", "Description", "Category", "Initial probability", "Falsifier"], [
+    return _table(["ID", "Description", "Category", "Initial probability", "Posterior probability", "Falsifier"], [
         [hypothesis["id"], hypothesis["description"], hypothesis.get("category"),
          hypothesis.get("initial_probability") if hypothesis.get("initial_probability") is not None else "Unknown; not quantified.",
+         hypothesis.get("posterior_probability") if hypothesis.get("posterior_probability") is not None else "Not elicited.",
          hypothesis.get("falsifier")]
         for hypothesis in hypotheses
     ])
@@ -188,6 +189,21 @@ def _evidence(request: Mapping[str, Any]) -> str:
         _table(["Evidence ID", "Observation ID", *hypothesis_ids, "Rationale"], rows),
         "Source, reliability, origin and dependencies follow each referenced observation.",
     ])
+
+
+def _coherence(record: Mapping[str, Any] | None) -> str:
+    if record is None:
+        return "Not assessed; the hypothesis set is not declared exclusive and exhaustive."
+    lines = []
+    for label in ("prior", "posterior"):
+        vector = record.get(label)
+        lines.append(f"- {label}: " + ("not fully quantified." if vector is None else
+                     f"sum {vector['sum']:.6g}; incoherence metric {vector['incoherence_metric']:.6g}."))
+    lines.append("- posterior leaders: " + (", ".join(_text(i) for i in record["posterior_leaders"]) or "none"))
+    lines.append("- descriptive heuristic leaders: " + (", ".join(_text(i) for i in record["heuristic_leaders"]) or "none"))
+    lines.append("- leaders disagree: " + ("not assessable" if record["leaders_disagree"] is None else str(record["leaders_disagree"]).lower()))
+    lines.extend("- " + _text(c) for c in record["caveats"])
+    return "\n".join(lines)
 
 
 def _calculations(calculations: list[Mapping[str, Any]]) -> str:
@@ -293,6 +309,7 @@ def render_markdown(artifacts: Mapping[str, Any]) -> dict[str, str]:
         "ach_matrix": _record(trace["ach_matrix"]),
         "timeline": _record(trace["timeline"]),
         "calculations": _calculations(trace["calculations"]),
+        "coherence": _coherence(trace.get("coherence")),
         "tasks": _tasks(request.get("tasks", [])),
         "request": _record(request),
     }

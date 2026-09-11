@@ -76,3 +76,46 @@ class CatalogAdditionsTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CoherenceTests(unittest.TestCase):
+    def test_coherentize_and_metric(self) -> None:
+        from sat_engine.coherence import IncoherentElicitation, aggregate, check_and_project, coherentize
+        record = check_and_project([0.4, 0.4, 0.4])
+        self.assertAlmostEqual(sum(record["coherent"]), 1.0)
+        self.assertLess(record["incoherence_metric"], 0.15)
+        self.assertIsNone(record["warning"])
+        self.assertIsNotNone(check_and_project([0.6, 0.5, 0.4])["warning"])
+        with self.assertRaises(IncoherentElicitation):
+            check_and_project([0.9, 0.9, 0.9])
+        with self.assertRaises(IncoherentElicitation):
+            coherentize([0.0, 0.0])
+        self.assertEqual(aggregate([[0.8, 0.2], [0.2, 0.8], [1.0, 1.0]]), [0.5, 0.5])
+
+    def test_trace_coherence_block_and_leader_disagreement(self) -> None:
+        request = _fix_request()
+        ids = [h["id"] for h in request["hypotheses"]]
+        result = assess(deepcopy(request))
+        coherence = result["artifacts"]["analytic_trace"]["coherence"]
+        self.assertEqual(coherence["relationship"], "exclusive_exhaustive")
+        self.assertAlmostEqual(coherence["prior"]["sum"], 1.0)
+        self.assertEqual(coherence["prior"]["incoherence_metric"], 0.0)
+        self.assertIsNone(coherence["posterior"])
+        # posterior favouring the non-leader → disagreement reported, not resolved
+        leaders = coherence["heuristic_leaders"]
+        other = next(i for i in ids if i not in leaders)
+        for h in request["hypotheses"]:
+            h["posterior_probability"] = 0.9 if h["id"] == other else 0.1
+        result = assess(deepcopy(request))
+        self.assertEqual(result["status"], "ok")
+        coherence = result["artifacts"]["analytic_trace"]["coherence"]
+        self.assertEqual(coherence["posterior_leaders"], [other])
+        self.assertTrue(coherence["leaders_disagree"])
+        self.assertIn("posterior_leaders_disagree", {d["code"] for d in result["diagnostics"]})
+        # posterior must obey the same coherence contract as the prior
+        request["hypotheses"][0]["posterior_probability"] = 0.5
+        self.assertEqual(assess(deepcopy(request))["status"], "invalid")
+
+    def test_overlapping_sets_have_no_coherence_record(self) -> None:
+        request = deepcopy(loads_json((FIXTURES / "full_crash_unknown_clocks.case.json").read_bytes())["request"])
+        self.assertIsNone(assess(request)["artifacts"]["analytic_trace"]["coherence"])

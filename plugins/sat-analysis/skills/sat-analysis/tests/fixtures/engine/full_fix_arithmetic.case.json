@@ -194,10 +194,10 @@
     }
   },
   "expected_result_file": "full_fix_arithmetic.expected.json",
-  "expected_result_bytes_sha256": "bc74f0deed1ccb8e4115ba6508e8f25783e23097b0df5cfd9d0cbaf91c5070da",
+  "expected_result_bytes_sha256": "bd0ef495833d9455c8c759f5bafcf897f6e188999bb646146b8f08a10ee6d01b",
   "expected_artifact_canonical_sha256": {
-    "decision_card": "e552a3bfd50006b86f518e5b2af47da955faec76b6f1f928c28d2aea853f3f16",
-    "analytic_trace": "8c011d842752a71979234404e1407b75e40b9ae5102a023a4e85b6bdede267aa",
-    "tasking_view": "f15398cb00b64047bb5d55529817f9f98f69f48f839dc98c4046f6bd3bcc025f"
+    "decision_card": "3f14f253c6e7c63ffa1676163ce7f58a09d90367a6fab9cd0bd1d6d0318c60cc",
+    "analytic_trace": "84f134132c251be3b2c5abad604e56a47522771171b5b7acdd5596b36376330b",
+    "tasking_view": "4185276bedff49f053bdaf5a5e0c00e314585b6359002d4668dff6880e04d765"
   }
 }

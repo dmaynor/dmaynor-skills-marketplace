@@ -8,6 +8,7 @@ from typing import Any
 
 from . import __version__
 from .ach import compute_matrix
+from .coherence import trace_record
 from .doctrine import resolve_rules
 from .rendering import project
 from .timeline import build_timeline, resolve_timestamp
@@ -178,6 +179,10 @@ def assess(request: object) -> dict[str, Any]:
             diagnostics.append(_warning("matrix_" + matrix["assessment"]["status"],
                 "ACH assessment: " + matrix["assessment"]["status"] + ". This is distinct from the analyst's judgment.",
                 "$.evidence"))
+        coherence = trace_record(normalized, matrix if normalized["mode"] == "FULL" else None)
+        if coherence is not None and coherence["leaders_disagree"]:
+            diagnostics.append(_warning("posterior_leaders_disagree",
+                "Analyst posterior leaders differ from the matrix's descriptive heuristic leaders.", "$.hypotheses"))
         for calculation in calculations:
             if calculation["status"] == "unresolved":
                 diagnostics.append(_warning("calculation_unresolved",
@@ -185,7 +190,8 @@ def assess(request: object) -> dict[str, Any]:
         trace: dict[str, Any] = {"schema_version": "1", "engine_version": __version__,
             "analysis_id": normalized["analysis_id"], "revision": normalized["revision"],
             "request": normalized, "ach_matrix": matrix if normalized["mode"] == "FULL" else None,
-            "timeline": timeline, "calculations": calculations, "diagnostics": diagnostics}
+            "timeline": timeline, "calculations": calculations, "diagnostics": diagnostics,
+            "coherence": coherence}
         trace["content_hash"] = content_hash(trace)
         validate("analytic_trace", trace)
         artifacts = project(trace)

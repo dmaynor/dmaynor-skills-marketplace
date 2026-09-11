@@ -24,7 +24,7 @@
       "maxLength": 64
     },
     "engine_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "request": {
       "$ref": "analysis_request.v1.json",
@@ -68,6 +68,16 @@
       "items": {
         "$ref": "analytic_trace.v1.json#/$defs/diagnostic"
       }
+    },
+    "coherence": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/coherence"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "required": [
@@ -80,7 +90,8 @@
     "ach_matrix",
     "timeline",
     "calculations",
-    "diagnostics"
+    "diagnostics",
+    "coherence"
   ],
   "additionalProperties": false,
   "$defs": {
@@ -116,6 +127,85 @@
         "message",
         "severity",
         "remediation"
+      ],
+      "additionalProperties": false
+    },
+    "coherence": {
+      "type": "object",
+      "properties": {
+        "relationship": {
+          "const": "exclusive_exhaustive"
+        },
+        "prior": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/coherence_vector"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "posterior": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/coherence_vector"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "posterior_leaders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "heuristic_leaders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "leaders_disagree": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "relationship",
+        "prior",
+        "posterior",
+        "posterior_leaders",
+        "heuristic_leaders",
+        "leaders_disagree",
+        "caveats"
+      ],
+      "additionalProperties": false
+    },
+    "coherence_vector": {
+      "type": "object",
+      "properties": {
+        "sum": {
+          "type": "number"
+        },
+        "incoherence_metric": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "sum",
+        "incoherence_metric"
       ],
       "additionalProperties": false
     }

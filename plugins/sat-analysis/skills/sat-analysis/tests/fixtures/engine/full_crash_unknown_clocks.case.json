@@ -180,10 +180,10 @@
     }
   },
   "expected_result_file": "full_crash_unknown_clocks.expected.json",
-  "expected_result_bytes_sha256": "a1dafbba07fd59a47ab36a76c8da1696cdc04a6035d438f23ae21d97c7123e73",
+  "expected_result_bytes_sha256": "a4569f22a529156bcb48be3299d8de1780487f3066e325739e275f8d599fe011",
   "expected_artifact_canonical_sha256": {
-    "decision_card": "0459952c457cfed7e75cee6f6f07ca50500117575e3b3bae25ab07d8695f3910",
-    "analytic_trace": "807c96628b1970bc6f660fa0911a04ba6965162c60def07fa8e00a42ab61543f",
-    "tasking_view": "d8efdb371b6ea818f5ea72e9b9e343c96f468842dab0f5d8b335807232b286c6"
+    "decision_card": "4c988df645a55dfa3748291318b655d33f3eab0ac69f31f594e2e304f4c7c636",
+    "analytic_trace": "3323afd3dbad6ab22cad8105b5819cf2da9bfd77d38f31e733377317f66aca88",
+    "tasking_view": "96b7f1211cbc1aedf947be4ce576d5bfec85382fe2b14dd158ecdec840bf9182"
   }
 }

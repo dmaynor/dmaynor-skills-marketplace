@@ -208,10 +208,10 @@
     }
   },
   "expected_result_file": "full_breach_origin_closure.expected.json",
-  "expected_result_bytes_sha256": "c97aa2d7450229fcda13185335420a9d70feae04d0c2ef1317b9e9f765740904",
+  "expected_result_bytes_sha256": "3529968f9c80914cae7adbe1cf35f43d2a7e0f3a0cfaa38772d4248cb6d6aec4",
   "expected_artifact_canonical_sha256": {
-    "decision_card": "a85f84f903df9fbbe0cd07dd1adf814a9fb589d346b1acd263a81b9a7f9ca5af",
-    "analytic_trace": "6f12fc73b41eaf0284c6454b3771a56824cb021769031ad93150d51fa4d881f4",
-    "tasking_view": "070975cf521c82df2f0315b3dfef8fd390c2ec8fac13886550775453407988e2"
+    "decision_card": "35eddbcedcd39c71b19fa17137eeca03bf9d87965a012b588b0a165639765e20",
+    "analytic_trace": "841caf6ab9d3ccf248863da3ad63db354b406a1339248d3fbe2247c3fdd02f50",
+    "tasking_view": "48c778cd99b7a11446a252233310ff2af2526988350adf71d1a49a740b720ddd"
   }
 }

@@ -67,6 +67,7 @@ class Hypothesis(TypedDict):
     category: NotRequired[str]
     initial_probability: NotRequired[float | None]
     falsifier: NotRequired[str | None]
+    posterior_probability: NotRequired[float | None]
 
 
 class Evidence(TypedDict):

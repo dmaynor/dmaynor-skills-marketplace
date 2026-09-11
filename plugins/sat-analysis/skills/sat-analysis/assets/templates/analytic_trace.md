@@ -52,6 +52,10 @@ These are stored engine results; this view does not recalculate them. The normal
 
 $calculations
 
+## Probability coherence
+
+$coherence
+
 ## Analyst task references
 
 $tasks

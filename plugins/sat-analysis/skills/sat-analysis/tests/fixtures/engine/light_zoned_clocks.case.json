@@ -106,10 +106,10 @@
     "ach": null
   },
   "expected_result_file": "light_zoned_clocks.expected.json",
-  "expected_result_bytes_sha256": "deca90d05c25f40748887b1a4e12609fca5ab20027fc90a82753bd2d3ee0cbe5",
+  "expected_result_bytes_sha256": "c41c5baadfa9bcae6401b376a21ba6d282454e2a9740b22cf230e3cf7677cfbf",
   "expected_artifact_canonical_sha256": {
-    "decision_card": "bb75523d2f7eec552c13a1bf0409662e5b124b17d814838413ae5ea050b9e029",
-    "analytic_trace": "0da043e419183d0b234cf5a03e6ac6767de2b12c63753c397788a55e998b439c",
+    "decision_card": "10d98487ddc9338275c65d7f6ab552c8f426279b591b2f06fce91be7d0c01d4f",
+    "analytic_trace": "f4d96d19e97ee4db9ebf4fe623b2f46e918587cdae1c231b3337f928a1d1ce87",
     "tasking_view": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
   }
 }

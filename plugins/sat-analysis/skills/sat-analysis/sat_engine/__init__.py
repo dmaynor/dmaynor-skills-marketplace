@@ -7,7 +7,7 @@ loading optional schema dependencies merely by importing the package.
 from importlib import import_module
 from typing import Any
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __all__ = ["assess", "verify_artifacts", "ingest_file", "ingest_text", "validate",
            "ValidationFailure", "__version__"]
 _EXPORTS = {"assess": "pipeline", "verify_artifacts": "pipeline",
