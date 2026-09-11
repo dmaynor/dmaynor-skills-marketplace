@@ -11,6 +11,7 @@ from .ach import compute_matrix
 from .doctrine import resolve_rules
 from .rendering import project
 from .timeline import build_timeline, resolve_timestamp
+from .uncertainty import check_likelihood_term, check_sentence_separation
 from .validators import ValidationFailure, canonical_bytes, content_hash, validate
 
 
@@ -71,6 +72,8 @@ def _check_links(request: dict[str, Any]) -> None:
         _references(judgment.get("observation_ids", []), observations, "$.judgment.observation_ids")
         _references(judgment.get("selected_hypothesis_ids", []), hypotheses,
                     "$.judgment.selected_hypothesis_ids")
+        check_likelihood_term(judgment.get("likelihood"))
+        check_sentence_separation(judgment)
     for index, task in enumerate(request["tasks"]):
         _references(task.get("observation_ids", []), observations, f"$.tasks[{index}].observation_ids")
         _references(task.get("hypothesis_ids", []), hypotheses, f"$.tasks[{index}].hypothesis_ids")
