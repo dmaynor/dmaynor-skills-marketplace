@@ -12,6 +12,7 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,9 +28,6 @@ from swarm_persistence import (
     get_artifacts,
     get_artifact_content,
 )
-
-
-SWARM_HUB_DATA_SOURCE = "722ecbf3-0bee-46a4-b196-4b507d6b3d9f"
 
 
 def get_notion_sync_state(team_name: str) -> dict:
@@ -64,10 +62,13 @@ def prepare_sync(team_name: str, hub_data_source_id: str = None) -> dict:
     - operations: List of Notion operations to execute
     - pages_content: Full page content for each page
     """
-    hub_id = hub_data_source_id or SWARM_HUB_DATA_SOURCE
-    
     export = export_full(team_name)
     sync_state = get_notion_sync_state(team_name)
+    hub_id = hub_data_source_id or os.environ.get("SWARM_HUB_DATA_SOURCE_ID")
+    if not sync_state.get("hub_row_id") and not hub_id:
+        raise ValueError(
+            "first sync requires --hub-id or SWARM_HUB_DATA_SOURCE_ID"
+        )
     
     operations = []
     pages_content = {}
@@ -111,6 +112,19 @@ def prepare_sync(team_name: str, hub_data_source_id: str = None) -> dict:
             "save_id_as": "hub_row_id"
         })
     
+    hub_row_id = sync_state.get("hub_row_id")
+    if not hub_row_id:
+        return {
+            "team_name": team_name,
+            "export_version": export["version"],
+            "stats": export["stats"],
+            "operations": operations,
+            "pages_content": {},
+            "current_sync_state": sync_state,
+            "hub_data_source_id": hub_id,
+            "requires_hub_row_id": True,
+        }
+
     # =====================================================================
     # OPERATION 2+: Create/Update Child Pages
     # =====================================================================
@@ -153,7 +167,7 @@ def prepare_sync(team_name: str, hub_data_source_id: str = None) -> dict:
                     "op": f"create_artifact_{art_id}",
                     "tool": "Notion:notion-create-pages",
                     "params": {
-                        "parent": {"page_id": "$hub_row_id"},  # Placeholder
+                        "parent": {"page_id": hub_row_id},
                         "pages": [{
                             "properties": {"title": page["title"]},
                             "content": page["content"]
@@ -183,7 +197,7 @@ def prepare_sync(team_name: str, hub_data_source_id: str = None) -> dict:
                     "op": f"create_{page_type}",
                     "tool": "Notion:notion-create-pages",
                     "params": {
-                        "parent": {"page_id": "$hub_row_id"},  # Placeholder
+                        "parent": {"page_id": hub_row_id},
                         "pages": [{
                             "properties": {"title": page["title"]},
                             "content": page["content"]
@@ -200,7 +214,8 @@ def prepare_sync(team_name: str, hub_data_source_id: str = None) -> dict:
         "operations": operations,
         "pages_content": pages_content,
         "current_sync_state": sync_state,
-        "hub_data_source_id": hub_id
+        "hub_data_source_id": hub_id,
+        "requires_hub_row_id": False,
     }
 
 
@@ -247,6 +262,21 @@ Execute these Notion tool calls in order. Save returned page IDs for subsequent 
 ```
 
 """
+
+    if sync_plan["requires_hub_row_id"]:
+        instructions += f"""
+## Required continuation
+
+Stop after creating the hub row. Save its returned page ID, then rerun:
+
+```bash
+python3 scripts/notion_sync.py save-ids --team {team_name} --hub-row-id <returned-page-id>
+python3 scripts/notion_sync.py sync --team {team_name}
+```
+
+The second plan will contain child-page operations with the concrete parent ID.
+"""
+        return instructions
     
     instructions += f"""
 ## After Sync Complete
@@ -290,11 +320,14 @@ def main():
     args = parser.parse_args()
     
     if args.cmd == "sync":
-        if args.format == "json":
-            result = prepare_sync(args.team, args.hub_id)
-            print(json.dumps(result, indent=2))
-        else:
-            print(generate_claude_instructions(args.team, args.hub_id))
+        try:
+            if args.format == "json":
+                result = prepare_sync(args.team, args.hub_id)
+                print(json.dumps(result, indent=2))
+            else:
+                print(generate_claude_instructions(args.team, args.hub_id))
+        except (FileNotFoundError, ValueError) as error:
+            parser.error(str(error))
     
     elif args.cmd == "status":
         state = get_notion_sync_state(args.team)

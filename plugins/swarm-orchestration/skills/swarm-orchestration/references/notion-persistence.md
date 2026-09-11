@@ -144,7 +144,7 @@ python3 scripts/swarm_persistence.py export-full --team my-project
 
 ```bash
 # Generate sync instructions
-python3 scripts/notion_sync.py sync --team my-project
+python3 scripts/notion_sync.py sync --team my-project --hub-id <data-source-id>
 
 # Execute Notion tool calls (Claude does this)
 # Creates: hub row, state page, conversation page, thinking page, agent logs page, artifact pages

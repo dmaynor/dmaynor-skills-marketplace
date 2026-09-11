@@ -57,7 +57,7 @@
       "name": "swarm-orchestration",
       "source": "./plugins/swarm-orchestration",
       "description": "Multi-agent swarm orchestration for complex tasks with TD coordination.",
-      "version": "1.1.0"
+      "version": "1.2.0"
     },
     {
       "name": "zero-analysis",
@@ -99,7 +99,7 @@
       "name": "autonomous-research-loop",
       "source": "./plugins/autonomous-research-loop",
       "description": "Run Claude Code as an autonomous research agent with restart-with-state loops.",
-      "version": "1.1.0"
+      "version": "1.2.0"
     },
     {
       "name": "claude-code-hook-debugging",

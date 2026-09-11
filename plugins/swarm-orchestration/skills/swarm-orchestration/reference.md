@@ -75,7 +75,7 @@ python3 scripts/swarm_persistence.py export-full --team {name}
 
 ```bash
 # Generate sync instructions
-python3 scripts/notion_sync.py sync --team {name}
+python3 scripts/notion_sync.py sync --team {name} --hub-id {data-source-id}
 
 # After pushing to Notion, save page IDs
 python3 scripts/notion_sync.py save-ids \
@@ -209,7 +209,7 @@ The persistence system auto-detects file types:
 | **Add output** | `python3 scripts/swarm_persistence.py add-output --team X --title "..." --content "..."` |
 | **Set summary** | `python3 scripts/swarm_persistence.py set-summary --team X --summary "..."` |
 | **Export full** | `python3 scripts/swarm_persistence.py export-full --team X` |
-| **Prepare sync** | `python3 scripts/notion_sync.py sync --team X` |
+| **Prepare first sync** | `python3 scripts/notion_sync.py sync --team X --hub-id ID` |
 | **Save sync IDs** | `python3 scripts/notion_sync.py save-ids --team X --hub-row-id {id}` |
 | Set context | `python3 scripts/notion_persistence.py set-context --team X --prompt "..."` |
 | Sync logs | `python3 scripts/notion_persistence.py sync-logs --team X` |

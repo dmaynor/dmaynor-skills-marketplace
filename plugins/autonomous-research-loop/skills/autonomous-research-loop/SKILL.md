@@ -8,7 +8,7 @@ description: |
   heartbeat monitoring, backup, inflight task addition, graceful quota handling.
 metadata:
   author: Claude Code
-  version: 1.1.0
+  version: 1.2.0
   date: 2026-03-12
 ---
 
@@ -40,35 +40,42 @@ Instead of one long session, use a loop that:
 - `- [ ]` pending, `- [~]` in progress, `- [x]` done
 - In-progress marker prevents duplicate work across iterations
 
-**Loop script** — Bash wrapper that:
-- Launches `claude --print --dangerously-skip-permissions`
+**Loop script** — Bundled Bash wrapper that:
+- Launches `claude --print`; permission bypass requires an explicit environment opt-in
 - Tracks consecutive failures (3 = stop)
+- Stops after two successful iterations that do not reduce the task count
 - Backs off on failure (5 min), normal cooldown on success (60s)
-- Commits uncommitted work before/after each iteration
-- Pushes to remote every N iterations
+- Refuses a dirty tree or `main`/`master` by default
+- Commits iteration changes; pushing is disabled unless explicitly configured
 - Writes heartbeat file for monitoring
 - Uses `caffeinate` to prevent sleep
 
-**Cron auto-restart** — Every 5 min, check if loop is running:
-- If tmux session exists → log status
-- If tmux session missing + tasks remain → restart in tmux
+**Scheduler integration** — Optional and operator-owned. If a cron entry is used,
+wrap it in `# BEGIN autonomous-research-loop` and `# END autonomous-research-loop`
+markers so the bundled removal script can delete only those entries.
 
-**Backup** — Cron rsync to external drive every 15 min
+**Backup** — Optional and operator-configured. Require an explicit destination,
+verify it is mounted, and test restoration before relying on scheduled copies.
 
 **Inflight task addition** — Edit state file while loop is running.
 Next iteration picks up new tasks automatically.
 
 ### Launch Pattern
 ```bash
-tmux new-session -d -s research './scripts/research-loop.sh 0 60'
+SKILL_DIR=/path/to/autonomous-research-loop
+tmux new-session -d -s research "$SKILL_DIR/scripts/research-loop.sh 0 60"
 tmux attach -t research  # optional: watch it work
 # Detach: Ctrl-b d
 ```
 
+The project must contain `RESEARCH_STATE.md` and `RESEARCH_PROMPT.md`. Run from
+a clean, dedicated branch. Use environment variables documented by
+`scripts/research-loop.sh --help` to change filenames or loop policy.
+
 ### Stop Pattern
 ```bash
 tmux kill-session -t research
-./scripts/disable-crons.sh
+"$SKILL_DIR/scripts/disable-crons.sh"
 ```
 
 ### Monitoring
@@ -89,7 +96,10 @@ tmux kill-session -t research
 - Each iteration should aim for 1-3 subtasks, not the whole list
 - State file must be committed before the loop starts to avoid merge conflicts
 - Logs should be gitignored to avoid bloating the repo
+- Automatic commit mode refuses to start unless its log and heartbeat files are ignored
+- Do not enable `RESEARCH_LOOP_DANGEROUSLY_SKIP_PERMISSIONS=1` unless the user
+  explicitly authorizes unattended mutation and the prompt has concrete safety blocks
 
 ## References
 - Developed during MacBook Neo (A18 Pro) vulnerability research, 2026-03-12
-- See: ~/code/apple-vuln-research/scripts/ for reference implementation
+- Bundled implementation: `scripts/research-loop.sh` and `scripts/disable-crons.sh`

@@ -32,6 +32,7 @@ import argparse
 import hashlib
 import json
 import mimetypes
+import os
 import re
 import shutil
 import sys
@@ -41,7 +42,8 @@ from pathlib import Path
 from typing import Any, Optional
 
 
-TEAMS_BASE = Path.home() / ".claude" / "teams"
+TEAMS_BASE = Path(os.environ.get("SWARM_TEAMS_BASE", Path.home() / ".claude" / "teams")).expanduser()
+TEAM_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
 
 # Artifact type mappings
 ARTIFACT_TYPES = {
@@ -125,6 +127,10 @@ def append_jsonl(path: Path, record: dict) -> None:
 
 def get_team_dir(team_name: str) -> Path:
     """Get team directory path."""
+    if not TEAM_NAME_RE.fullmatch(team_name) or team_name in {".", ".."}:
+        raise ValueError(
+            "team name must be 1-64 characters using letters, digits, dot, underscore, or hyphen"
+        )
     return TEAMS_BASE / team_name
 
 
@@ -694,7 +700,7 @@ def export_full(team_name: str) -> dict:
     }
 
 
-def generate_notion_structure(team_name: str) -> str:
+def generate_notion_structure(team_name: str, hub_data_source_id: str) -> str:
     """
     Generate instructions for creating Notion page structure.
     
@@ -710,7 +716,7 @@ Execute the following steps to persist this swarm session to Notion:
 
 ```
 Notion:notion-create-pages({{
-  parent: {{ data_source_id: "722ecbf3-0bee-46a4-b196-4b507d6b3d9f" }},  // Swarm Hub
+  parent: {{ data_source_id: "{hub_data_source_id}" }},  // Swarm Hub
   pages: [{{
     properties: {json.dumps(export['hub_row'], indent=4)}
   }}]
@@ -871,6 +877,7 @@ def main():
     # Generate Notion structure
     struct_cmd = sub.add_parser("notion-structure", help="Generate Notion creation instructions")
     struct_cmd.add_argument("--team", required=True)
+    struct_cmd.add_argument("--hub-id", required=True, help="Swarm Hub data source ID")
     
     # List artifacts
     list_cmd = sub.add_parser("list-artifacts", help="List registered artifacts")
@@ -952,7 +959,7 @@ def main():
                 print(page['content'])
     
     elif args.cmd == "notion-structure":
-        print(generate_notion_structure(args.team))
+        print(generate_notion_structure(args.team, args.hub_id))
     
     elif args.cmd == "list-artifacts":
         artifacts = get_artifacts(args.team)
