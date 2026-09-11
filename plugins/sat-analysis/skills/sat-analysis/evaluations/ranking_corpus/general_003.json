@@ -1,0 +1,47 @@
+{
+  "case_id": "general_003",
+  "submode": "GENERAL",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Flaky test"
+    },
+    {
+      "id": "H2",
+      "description": "Real regression"
+    },
+    {
+      "id": "H3",
+      "description": "Infra timeout"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Fails 10/10 on commit, 0/10 on parent",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "-"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "No timeout string in log",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "--"
+      }
+    }
+  ],
+  "ground_truth": "H2",
+  "ground_truth_basis": "synthetic"
+}

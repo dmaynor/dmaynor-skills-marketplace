@@ -4,7 +4,7 @@ The engine uses a small, versioned reference catalog at
 `sat_engine/resources/doctrine/catalog.v1.json`. This is its only catalog source;
 the wheel includes it, and contract export copies its original bytes. Loading and
 resolving rules requires no network access. Schema family `1` and catalog version
-`1.0.0` identify contracts, not accuracy or certified compliance.
+`1.1.0` identify contracts, not accuracy or certified compliance.
 
 The cited editions were checked against these primary sources on 9 September
 2026:
@@ -24,6 +24,16 @@ contracts independently of which references a caller selects.
 | `ICD203-*` | Paraphrase tied to a specific directive section | `false` |
 | `HEUER8-*` | Paraphrase tied to a specific book passage | `false` |
 | `SAT-*` | Local safeguard or implementation decision | `true` |
+| `MANDEL-*`, `KM2020-*`, `EVID-*` | Paraphrase of a peer-reviewed finding, cited to the paper | `false` |
+| `NATO-*` | Paraphrase of the Admiralty Code as carried in AJP-2.1 / STANAG 2511 | `false` |
+
+Catalog 1.1.0 adds `ICD203-LIKELIHOOD-TERMS` (D.6.e.(2)(a)) and
+`ICD203-LIKELIHOOD-CONFIDENCE-SENTENCE` (D.6.e.(2)(b)), both enforced by
+`sat_engine.uncertainty`, plus research-derived rules whose sources are listed in
+`docs/2026-09-09-sat-research-digest.md`. The peer-reviewed citations were
+checked against the journal records on 9 September 2026; the Admiralty Code entry
+is corroborated from secondary sources and the primary AJP-2.1 text was not
+fetched.
 
 Local rules cite the implementation contract with a URN. They do not borrow an
 external authority's name to claim that an engine decision is mandated doctrine.

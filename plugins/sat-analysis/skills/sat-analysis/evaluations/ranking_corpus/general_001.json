@@ -1,0 +1,71 @@
+{
+  "case_id": "general_001",
+  "submode": "GENERAL",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Config drift after deploy"
+    },
+    {
+      "id": "H2",
+      "description": "Upstream API contract change"
+    },
+    {
+      "id": "H3",
+      "description": "Clock skew"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Errors began 3 min after deploy",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "N",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Config hash identical pre/post",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "N",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Upstream released v7 that morning",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "++",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "NTP offset 12ms",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "--"
+      }
+    }
+  ],
+  "ground_truth": "H2",
+  "ground_truth_basis": "synthetic"
+}

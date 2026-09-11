@@ -1,0 +1,59 @@
+{
+  "case_id": "general_002",
+  "submode": "GENERAL",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Disk full"
+    },
+    {
+      "id": "H2",
+      "description": "Permissions changed"
+    },
+    {
+      "id": "H3",
+      "description": "Service not started"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "df: 100% on /var",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "N",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "stat shows expected mode",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "--",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Process listed in ps",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "--"
+      }
+    }
+  ],
+  "ground_truth": "H1",
+  "ground_truth_basis": "synthetic"
+}

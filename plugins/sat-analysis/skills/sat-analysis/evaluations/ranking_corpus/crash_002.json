@@ -1,0 +1,95 @@
+{
+  "case_id": "crash_002",
+  "submode": "CRASH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Heap overflow in parser"
+    },
+    {
+      "id": "H2",
+      "description": "Deadlock on lock ordering"
+    },
+    {
+      "id": "H3",
+      "description": "Thread pool starvation"
+    },
+    {
+      "id": "H4",
+      "description": "Invalid state after retry"
+    },
+    {
+      "id": "H5",
+      "description": "Oversized request"
+    },
+    {
+      "id": "H6",
+      "description": "Intentional watchdog halt"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Process hung, no crash, 0% CPU",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "+",
+        "H4": "+",
+        "H5": "N",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "gdb: T1 holds A waits B; T2 holds B waits A",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "-",
+        "H4": "-",
+        "H5": "N",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Pool 8/8 threads blocked",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "++",
+        "H3": "++",
+        "H4": "N",
+        "H5": "N",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "Watchdog disabled in config",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "N",
+        "H4": "N",
+        "H5": "N",
+        "H6": "--"
+      }
+    }
+  ],
+  "ground_truth": "H2",
+  "ground_truth_basis": "synthetic: lock-order inversion"
+}

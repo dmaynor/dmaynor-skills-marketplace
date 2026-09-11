@@ -59,6 +59,17 @@ incident ID. Distinct observations can share a collector, clock, parser, or auth
 these dependencies matter even when records are not duplicates. Unknown dependence
 is a limitation.
 
+### Known limits of the comparison
+
+Evidence rated identically against every hypothesis carries no diagnostic weight;
+analysts nonetheless let it move judgments (`KM2020-PSEUDODIAGNOSTIC`). Counting
+only contradictions ranks a hypothesis consistent with everything first (Mandel,
+Karvetski and Dhami 2018; reproduced on this engine in
+`evaluations/ranking_baselines.py`, case `breach_002`). Controlled studies found ACH
+did not improve accuracy or coherence (`EVID-ACH-NOT-A-DEBIASER`); treat the
+matrix as an audit trail of ratings. An opt-in PARC weighted-inconsistency ranking
+lives in `sat_engine.parc` for harness comparison only.
+
 ## Test sensitivity and falsification
 
 Vary the evidence or assumption that could plausibly change the conclusion:
@@ -101,8 +112,16 @@ quantifying, label a subjective estimate as such and state its scope and basis.
 Use confidence separately to describe source quality, coverage, reasoning, and
 dependence on assumptions. Unknown reliability remains unknown.
 
+State the likelihood term and the confidence level in separate sentences
+(`ICD203-LIKELIHOOD-CONFIDENCE-SENTENCE`, D.6.e.(2)(b)); the engine rejects a
+sentence carrying both, and a term whose band excludes the value
+(`ICD203-LIKELIHOOD-TERMS`, D.6.e.(2)(a)).
+
 For exclusive and exhaustive alternatives, quantified point probabilities must sum
-to one; exclusive nonexhaustive sets may sum to less. For overlapping propositions,
+to one. Elicit raw values first and coherentize them (`sat coherentize`, or
+`sat_engine.coherence.check_and_project`), recording the incoherence metric — the
+distance between what was elicited and what was authored (`MANDEL-COHERENTIZE`).
+Independent elicitations can be pooled with equal weight; exclusive nonexhaustive sets may sum to less. For overlapping propositions,
 there is no arbitrary total band. Do not invent missing estimates or redistribute
 beliefs to pass validation. The general conjunction rule is
 `P(A ∩ B) = P(A) × P(B | A)` for `P(A) > 0`; use `P(A) × P(B)` only with independence.

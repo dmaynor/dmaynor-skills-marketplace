@@ -130,3 +130,12 @@ those are not model trials and must not be reported as skill performance.
 For numeric likelihood calibration, collect a sufficiently broad set of resolved
 cases with predeclared propositions and an appropriate proper scoring rule. This
 small diagnostic suite does not supply that evidence.
+
+## Ranking baselines (advisory)
+
+`evaluations/ranking_baselines.py` compares the descriptive total, PARC, and
+PARC-with-vague-guard on `evaluations/ranking_corpus/`. The shipped corpus is
+synthetic and favours the descriptive total by construction; its only settled
+result is that pure contradiction counting ranks a consistent-with-everything
+hypothesis first (`breach_002`). Replace the corpus with labeled real cases before
+any rule choice is made on it.

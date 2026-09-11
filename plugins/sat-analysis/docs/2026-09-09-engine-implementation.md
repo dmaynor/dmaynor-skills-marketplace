@@ -136,3 +136,12 @@ using redesigned instructions with the engine disabled would separate instructio
 changes from executable assistance. A stronger benchmark also needs a fresh
 context per case/repeat, randomized order, locked model/settings, and a larger
 unexposed corpus selected before observing candidate performance.
+
+## Ranking baselines added in 3.1.0 (advisory)
+
+`evaluations/ranking_baselines.py` on a 15-case synthetic corpus: descriptive total 100%,
+PARC weighted inconsistency 93.3%, PARC with vague guard 100%. The single disagreement,
+`breach_002`, is the one informative result: pure contradiction counting ranks the hypothesis
+consistent with everything first, as Mandel, Karvetski and Dhami (2018) describe. The 100%
+figures are construction artifacts and do not establish an accuracy improvement for any rule.
+See `2026-09-11-research-port.md`.

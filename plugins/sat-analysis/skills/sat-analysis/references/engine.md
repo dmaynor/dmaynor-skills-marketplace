@@ -1,4 +1,4 @@
-# SAT engine 1.0.0: usage and contracts
+# SAT engine 1.1.0: usage and contracts
 
 Skill/plugin version 3.0.0 uses schema family `1`. The Python SDK, source CLI,
 installed `sat` command, and exported schemas share the same implementation.
@@ -149,3 +149,23 @@ fail. `enrich(text, rule_ids, mode="appendix")` returns a derived string and pre
 source text; inline mode expands explicit `[[doctrine:RULE-ID]]` anchors. Repeating
 the same enrichment is idempotent. Local policies are identified separately from
 source principles; citations do not constitute evidence or compliance certification.
+
+## Coherence, posterior probabilities, and the opt-in PARC comparison (1.1.0)
+
+`sat coherentize '[0.5, 0.3, 0.4]'` projects a raw elicitation onto the simplex and
+reports the incoherence metric (warning above 0.15, refusal above 0.50). Pass a list
+of vectors to pool independent elicitations with equal weight. Author the request
+with the coherent values; the boundary still rejects a fully quantified
+`exclusive_exhaustive` set that does not sum to one.
+
+Hypotheses accept `posterior_probability` under the same contract as
+`initial_probability`. For an `exclusive_exhaustive` set the analytic trace carries
+`coherence`: prior and posterior sums and incoherence metrics, the posterior
+leaders, the matrix's descriptive heuristic leaders, and `leaders_disagree`. A
+disagreement adds the `posterior_leaders_disagree` diagnostic; it is reported, not
+resolved. Overlapping and unspecified sets carry `coherence: null`.
+
+`sat_engine.parc.descriptive_ranking(matrix, weights, guard_vague=False)` is an
+analyst-invoked comparison that weights only contradicting cells by explicit
+per-evidence `CellWeight(credibility, relevance)`. The pipeline never calls it and
+no artifact carries its output; see `evaluations/ranking_baselines.py`.

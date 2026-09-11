@@ -1,0 +1,95 @@
+{
+  "case_id": "crash_003",
+  "submode": "CRASH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Stack overflow via recursion"
+    },
+    {
+      "id": "H2",
+      "description": "Data race on counter"
+    },
+    {
+      "id": "H3",
+      "description": "OOM kill"
+    },
+    {
+      "id": "H4",
+      "description": "Off-by-one in ring buffer"
+    },
+    {
+      "id": "H5",
+      "description": "Hostile input triggers alloc bomb"
+    },
+    {
+      "id": "H6",
+      "description": "Planned restart"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "dmesg: Out of memory: Killed process 4412",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "--",
+        "H3": "++",
+        "H4": "-",
+        "H5": "+",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "RSS grew 200MB/min for 40 min",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "-",
+        "H2": "N",
+        "H3": "++",
+        "H4": "+",
+        "H5": "+",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Growth correlates with one client's uploads",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "+",
+        "H4": "N",
+        "H5": "++",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "Same growth with synthetic benign uploads",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "++",
+        "H4": "+",
+        "H5": "--",
+        "H6": "N"
+      }
+    }
+  ],
+  "ground_truth": "H3",
+  "ground_truth_basis": "synthetic: leak \u2192 OOM"
+}

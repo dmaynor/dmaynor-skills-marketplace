@@ -1,0 +1,79 @@
+{
+  "case_id": "fix_001",
+  "submode": "FIX",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Complete fix: root cause addressed"
+    },
+    {
+      "id": "H2",
+      "description": "Partial fix: some vectors"
+    },
+    {
+      "id": "H3",
+      "description": "Symptom-only fix"
+    },
+    {
+      "id": "H4",
+      "description": "Ineffective"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Diff adds bounds check at the single copy site",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "-",
+        "H4": "--"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Only one call path reaches the copy (call-graph verified)",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "--",
+        "H3": "N",
+        "H4": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Original PoC no longer crashes",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "+",
+        "H2": "+",
+        "H3": "+",
+        "H4": "--"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "Fuzz 24h no new crash",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "+",
+        "H2": "N",
+        "H3": "N",
+        "H4": "-"
+      }
+    }
+  ],
+  "ground_truth": "H1",
+  "ground_truth_basis": "synthetic: single-site bounds check"
+}

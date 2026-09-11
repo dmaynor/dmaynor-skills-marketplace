@@ -8,7 +8,7 @@ description: >-
   on a straightforward factual question or an already established simple cause.
 metadata:
   author: dmaynor
-  version: 3.0.0
+  version: 3.1.0
   date: 2026-09-09
 ---
 
@@ -59,12 +59,21 @@ event. Unknown dependence or reliability does not establish independence or qual
 Generate materially different mechanisms before choosing a leader. Include relevant
 baselines, challenged assumptions, and combined causes; no fixed hypothesis quota.
 Separate mechanisms that predict different observations. State whether hypotheses
-are exclusive, exhaustive, overlapping, or unspecified.
+are exclusive, exhaustive, overlapping, or unspecified. Coherence checks and the
+posterior comparison run only for an `exclusive_exhaustive` set, so partition
+when the question allows it: CRASH on root cause (proximate cause is an attribute);
+FIX on `complete | partial | symptom-only | ineffective` with regression and bypass
+risk as attributes, not hypotheses; STATEMENT per sub-claim as
+`true | false | underdetermined`. Overlapping sets stay overlapping; do not force them.
 
 Rate ACH cells as analyst interpretations using `++`, `+`, `N`, `-`, `--` from
 [techniques](references/techniques.md). Explain discriminating cells. Compatibility
 alone is not relative support; missing is unevaluated, not neutral. Do not turn a
 heuristic score, contradiction count, or sensitivity result into a causal winner.
+Evidence rated identically against every hypothesis is nondiagnostic; list it and
+keep it out of the judgment. Pure contradiction counting ranks a hypothesis that is
+consistent with everything first; `sat_engine.parc` exists only for the evaluation
+harness and is never presented as a result.
 Revisit pivotal ratings and whole source-dependency groups; stable arithmetic does
 not establish a robust explanation. Keep incomplete and unresolved states visible.
 
@@ -102,6 +111,18 @@ reasoning. Quantify only with a defensible basis or an explicitly subjective
 estimate useful to the request. State the proposition, horizon when relevant, and
 basis. Insufficient basis to quantify is valid. Do not normalize overlapping
 hypotheses, apply fixed confidence caps, or claim calibration without outcome data.
+
+Use the ICD 203 ladder term whose band contains the value, and keep the likelihood
+term and the confidence level in separate sentences; the engine rejects a mixed
+sentence and an off-ladder term. For an exclusive and exhaustive set, elicit raw
+prior probabilities, run `sat coherentize` to project them onto the simplex and
+record the incoherence metric, and author the request with the coherent values.
+After rating, elicit `posterior_probability` the same way with nondiagnostic
+evidence excluded; the trace reports whether the posterior leaders differ from the
+descriptive heuristic leaders, which is a finding to state, not an error to fix.
+Do not present the structured method as having removed bias: controlled studies
+found ACH did not improve accuracy or coherence, while coherentizing and
+aggregating independent judgments did.
 
 For consequential explanations, specify what would change the judgment. A result
 falsifies only a necessary prediction under a valid test. State measured events,

@@ -1,0 +1,59 @@
+{
+  "case_id": "statement_002",
+  "submode": "STATEMENT",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Claim is true: 'No data left the network'"
+    },
+    {
+      "id": "H2",
+      "description": "Claim is false: 'No data left the network'"
+    },
+    {
+      "id": "H3",
+      "description": "Claim is underdetermined: 'No data left the network'"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Netflow shows 2.1 GB to unknown ASN during window",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "-"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "DLP shows no alerts",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "M",
+      "ratings": {
+        "H1": "+",
+        "H2": "N",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Proxy logs for window were rotated (missing)",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "+"
+      }
+    }
+  ],
+  "ground_truth": "H2",
+  "ground_truth_basis": "synthetic"
+}
