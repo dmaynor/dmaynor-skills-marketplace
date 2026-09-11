@@ -8,9 +8,10 @@ description: |
   via string scanning, validation via defaults write, and impact assessment.
   Found 7+ vulnerable daemons including sharingd (AirDrop), callservicesd
   (FaceTime), rapportd (Continuity), studentd (Classroom).
-author: David Maynor / Claude Code
-version: 1.1.0
-date: 2026-03-29
+metadata:
+  author: David Maynor / Claude Code
+  version: 1.1.0
+  date: 2026-03-29
 ---
 
 # macOS Preference Injection Hunting

@@ -8,9 +8,10 @@ description: |
   blocked operation), (3) you need to write a blocklist that an LLM cannot
   rationalize past. Covers: prompt hardening patterns, mandatory service
   blocklists in generated code, graduated constraint escalation.
-author: Claude Code
-version: 1.1.0
-date: 2026-03-13
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-03-13
 ---
 
 # Autonomous Loop Safety Constraints

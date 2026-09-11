@@ -10,9 +10,10 @@ description: >-
   "post-mortem", "what went wrong", "failure analysis", "incident review".
   Modes: SYSTEM_FAILURE, PROCESS_FAILURE, SECURITY_INCIDENT, BUG_REGRESSION,
   GENERAL_INVESTIGATION.
-author: dmaynor
-version: 1.1.0
-date: 2026-04-23
+metadata:
+  author: dmaynor
+  version: 1.1.0
+  date: 2026-04-23
 ---
 
 # Root Cause Analysis (RCA) Investigation

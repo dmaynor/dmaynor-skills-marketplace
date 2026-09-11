@@ -10,9 +10,10 @@ description: |
   app is actually capturing the screen vs. just probing TCC permissions.
   Covers macOS 14–26 (Sonoma → 26) on Apple Silicon. Includes the specific
   log markers that prove "this was a swipe gesture, not surveillance."
-author: Claude Code
-version: 1.1.0
-date: 2026-04-15
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-04-15
 ---
 
 # macOS Screen Flash Triage

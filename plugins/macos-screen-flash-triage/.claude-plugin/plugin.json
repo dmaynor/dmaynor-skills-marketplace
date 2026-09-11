@@ -1,0 +1,10 @@
+{
+  "name": "macos-screen-flash-triage",
+  "version": "1.1.0",
+  "description": "Triage macOS display flashes using WindowServer, ScreenCaptureKit, TCC, and related unified-log evidence.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

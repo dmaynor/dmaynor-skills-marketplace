@@ -1,24 +1,15 @@
 ---
 name: apple-vuln-research-nsxpc-listener-enum
-description: |
-  Enumerate the server-side NSXPC attack surface of an Apple daemon without
-  extracting its private-framework binaries from the dyld shared cache.
-  Use when: (1) need to know what XPC methods a daemon like rapportd,
-  sharingd, nearbyd, homed, coreduetd exposes on each of its mach
-  endpoints, (2) need to distinguish an entitlement-gated mach service
-  from an ungated one before crafting entitled-client exploits, (3) need
-  to dump Obj-C/Swift XPC protocol method signatures without running
-  dsc_extractor, Ghidra, or class-dump, (4) mapping CUPairingDaemon,
-  CUSharingDaemon, CUFindMy*Daemon and similar private-framework XPC
-  listeners. Two techniques: (a) `dlopen` on shared-cache-only framework
-  paths + Obj-C runtime reflection (`objc_getClass`,
-  `class_copyMethodList`, `protocol_copyMethodDescriptionList`), and
-  (b) NSXPCConnection two-pass fingerprint (locally-handled selector vs
-  unknown-method) to classify each mach endpoint as
-  entitlement-gated / schema-rejecting / silent-drop / inactive.
-author: David Maynor / Claude Code
-version: 1.0.0
-date: 2026-04-21
+description: >-
+  Enumerate an Apple daemon's server-side NSXPC surface using runtime
+  reflection and controlled connection fingerprinting. Use to map Mach service
+  listeners, Obj-C protocol methods, entitlement gates, and schema behavior
+  without first extracting shared-cache frameworks. Revalidate on each OS build.
+metadata:
+  author: David Maynor / Claude Code
+  version: 1.0.0
+  date: 2026-04-21
+  lifecycle: experimental
 ---
 
 # Apple NSXPC Listener Attack-Surface Enumeration

@@ -11,9 +11,6 @@ description: |
   need to derive.
   Adapted from blader/Claudeception (MIT, https://github.com/blader/Claudeception) for
   the dmaynor-skills-marketplace plugin structure.
-author: dmaynor (adapted from AlexMikhalev/blader Claudeception)
-version: 1.1.0
-date: 2026-05-06
 allowed-tools:
   - Read
   - Write
@@ -26,6 +23,10 @@ allowed-tools:
   - AskUserQuestion
   - TodoWrite
   - Bash
+metadata:
+  author: dmaynor (adapted from AlexMikhalev/blader Claudeception)
+  version: 1.1.0
+  date: 2026-05-06
 ---
 
 # Claudeception — skill gap detection + creation
@@ -198,9 +199,10 @@ description: |
   (1) what problem this solves, (2) specific trigger conditions ("Use when..."),
   (3) key technologies/domains involved, (4) what's covered (the methodology phases).
   Length: enough to surface accurately, not so long that it's noise.>
-author: <attribution>
-version: 1.1.0
-date: <YYYY-MM-DD>
+metadata:
+  author: <attribution>
+  version: 1.1.0
+  date: <YYYY-MM-DD>
 ---
 
 # <Skill Name — Human-Readable Title>

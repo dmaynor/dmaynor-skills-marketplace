@@ -6,9 +6,10 @@ description: |
   "No such file or directory", (2) framework binary is a broken symlink,
   (3) need to extract strings/symbols/linked-libs from shared-cache
   residents. Key tool: dyld_info (in /usr/bin/ on macOS 13+).
-author: David Maynor / Claude Code
-version: 1.1.0
-date: 2026-03-29
+metadata:
+  author: David Maynor / Claude Code
+  version: 1.1.0
+  date: 2026-03-29
 ---
 
 # macOS dyld Shared Cache Binary Analysis
