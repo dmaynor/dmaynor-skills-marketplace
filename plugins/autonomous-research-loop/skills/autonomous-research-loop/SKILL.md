@@ -6,9 +6,10 @@ description: |
   (2) need autonomous operation for hours/days, (3) systematic task-based work that should
   survive crashes and quota limits. Covers: loop script, state tracking, cron auto-restart,
   heartbeat monitoring, backup, inflight task addition, graceful quota handling.
-author: Claude Code
-version: 1.1.0
-date: 2026-03-12
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-03-12
 ---
 
 # Autonomous Research Loop

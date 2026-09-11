@@ -8,9 +8,10 @@ description: |
   /System/Volumes/Preboot for static analysis, (4) mapping panic strings
   to error codes in Apple's secure monitor. Covers: IM4P container format,
   pyimg4 extraction, LZFSE decompression, Mach-O arm64e analysis.
-author: Claude Code
-version: 1.1.0
-date: 2026-03-14
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-03-14
 ---
 
 # TXM/SPTM Firmware Extraction and Analysis

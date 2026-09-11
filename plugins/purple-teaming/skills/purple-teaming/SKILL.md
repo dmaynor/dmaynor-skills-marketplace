@@ -7,9 +7,10 @@ description: >-
   emulation", or requests for ATT&CK technique test cases, Splunk/Sigma queries,
   detection coverage gaps, or Kill Chain/Diamond Model/Pyramid of Pain analysis.
   Methodologies: ATOMIC (isolated techniques), SCENARIO (attack chains).
-author: dmaynor
-version: 1.1.0
-date: 2026-03-29
+metadata:
+  author: dmaynor
+  version: 1.1.0
+  date: 2026-03-29
 ---
 
 # Purple Teaming

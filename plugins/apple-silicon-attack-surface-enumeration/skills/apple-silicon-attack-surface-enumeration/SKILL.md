@@ -9,9 +9,10 @@ description: |
   Covers: chip identification, device tree analysis, firmware inventory, boot chain,
   kext inventory, IOKit driver enumeration, system service mapping, and cross-platform
   diff methodology.
-author: Claude Code
-version: 1.1.0
-date: 2026-03-12
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-03-12
 ---
 
 # Apple Silicon Attack Surface Enumeration
