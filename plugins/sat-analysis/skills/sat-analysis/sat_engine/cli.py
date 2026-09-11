@@ -142,6 +142,8 @@ def _parser() -> argparse.ArgumentParser:
     citations.add_argument("path", type=Path)
     citations.add_argument("--rule", action="append", default=[])
     citations.add_argument("--mode", choices=("appendix", "inline"), default="appendix")
+    coherent = commands.add_parser("coherentize", help="Coherentize raw probability elicitations before authoring a request.")
+    coherent.add_argument("vectors", help="JSON: one vector [p1, p2, ...] or several [[...], [...]] to aggregate.")
     export = commands.add_parser("export-contracts", help="Export the packaged contracts for other implementations.")
     export.add_argument("--output", type=Path, required=True)
     return parser
@@ -193,6 +195,21 @@ def main(argv: list[str] | None = None) -> int:
                 print(_json({"status": "ok", "output": str(args.output), "files": sorted(contents)}), end="")
             case "enrich":
                 print(enrich(args.path.read_text(encoding="utf-8"), args.rule, mode=args.mode), end="")
+            case "coherentize":
+                from .coherence import IncoherentElicitation, aggregate, check_and_project
+                raw = json.loads(args.vectors)
+                try:
+                    if raw and isinstance(raw[0], list):
+                        runs = [check_and_project(v) for v in raw]
+                        output = {"runs": runs, "aggregate": aggregate(raw), "n_runs": len(raw),
+                                  "method": "equal_weight_linop"}
+                    else:
+                        output = check_and_project(raw)
+                except IncoherentElicitation as exc:
+                    print(json.dumps({"status": "invalid", "error": str(exc)}), file=sys.stderr)
+                    return 2
+                print(json.dumps(output, indent=2))
+                return 0
             case "export-contracts":
                 root = files("sat_engine").joinpath("resources")
                 contents = {}
