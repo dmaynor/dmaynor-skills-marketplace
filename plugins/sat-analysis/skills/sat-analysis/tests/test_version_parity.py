@@ -14,6 +14,7 @@ import sat_engine  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT.parents[1] / ".claude-plugin" / "plugin.json"
+MARKETPLACE = ROOT.parents[3] / ".claude-plugin" / "marketplace.json"
 
 
 class VersionParityTests(unittest.TestCase):
@@ -22,6 +23,8 @@ class VersionParityTests(unittest.TestCase):
         skill = re.search(r"^metadata:\n(?:  .*\n)*?  version:\s*(\S+)", frontmatter, re.M).group(1)
         self.assertEqual(skill, (ROOT / "VERSION").read_text().strip())
         self.assertEqual(skill, json.loads(PLUGIN.read_text())["version"])
+        entry = next(e for e in json.loads(MARKETPLACE.read_text())["plugins"] if e["name"] == "sat-analysis")
+        self.assertEqual(skill, entry["version"])
 
     def test_engine_versions_agree(self) -> None:
         project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]

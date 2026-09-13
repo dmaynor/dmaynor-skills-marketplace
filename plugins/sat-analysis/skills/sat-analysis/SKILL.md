@@ -144,3 +144,30 @@ and explicit local conventions. Enrichment adds citations to a derived document;
 it does not add evidence or certify compliance. Default to inline answers. For
 requested documents/PDFs, use the relevant available formatting skill and retain
 the engine's verified content across formats.
+
+## PDF theme and layout (pdf-report-formatting)
+
+The `pdf-report-formatting` skill exposes two orthogonal axes: `theme` (visual style) and `layout` (structural elements).
+
+Themes:
+
+- `light` (default) — black-on-white, formal, print-first. Use for audit deliverables, leadership briefings, anything going to outside parties.
+- `cyber` — dark navy + cyan/magenta tactical aesthetic, screen-first. Use for internal red-team / threat-intel briefings, security ops dashboards.
+- Pass `theme=Theme(...)` for a custom palette (e.g., brand colors).
+
+Layouts:
+
+- `formal` (default) — cover page + TOC + numbered sections. Use for analytical deliverables and long-form documents.
+- `tactical` — no cover, no TOC, no numbering; inline title at the top of page 1. Use for short briefings where section titles read as standalone callouts.
+- `navigable_tactical` — tactical look but TOC retained. Use for SAT analyses long enough (>6 pages) to need navigation while keeping the briefing aesthetic.
+
+Recommended pairings for SAT output:
+
+| Audience / use | theme | layout |
+|---|---|---|
+| Audit, external deliverable, formal report | `light` | `formal` |
+| Internal threat brief, short tactical analysis | `cyber` | `tactical` |
+| Internal SAT analysis, long enough to need navigation | `cyber` | `navigable_tactical` |
+| Cyber-themed cover + TOC (works but feels mixed) | `cyber` | `formal` |
+
+Individual flags (`cover_page`, `table_of_contents`, `numbered_sections`) override the layout's defaults if explicitly passed, so combinations like `layout="tactical", table_of_contents=True` are valid (and equivalent to `navigable_tactical`).
