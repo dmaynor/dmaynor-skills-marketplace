@@ -13,9 +13,10 @@ description: |
   (cellular modems, Bluetooth coex, NIC offload).
   Companion to wireless-driver-control-frame-audit (different lens — that one
   covers wire-format/IE parsing; this one covers state-machine transitions).
-author: David Maynor + Claude
-version: 1.1.0
-date: 2026-05-06
+metadata:
+  author: David Maynor + Claude
+  version: 1.1.0
+  date: 2026-05-06
 ---
 
 # Wireless multiplex-state-machine audit

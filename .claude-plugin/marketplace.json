@@ -172,6 +172,30 @@
       "source": "./plugins/pdf-report-formatting",
       "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber) and structural layouts (formal/tactical/navigable_tactical), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Tactical layout drops cover/TOC/numbering for the strix-halo briefing pattern. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor).",
       "version": "1.2.0"
+    },
+    {
+      "name": "openproject",
+      "source": "./plugins/openproject",
+      "description": "Evidence-preserving OpenProject work-package, Gantt, activity, attachment, reconciliation, and API automation workflows.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "macos-screen-flash-triage",
+      "source": "./plugins/macos-screen-flash-triage",
+      "description": "Triage macOS display flashes using WindowServer and unified-log evidence.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "mvp-acceptance-audit",
+      "source": "./plugins/mvp-acceptance-audit",
+      "description": "Audit an MVP or release against its actual requirements, qualify recovery and user journeys, and produce evidence-backed completion and delivery records. Use for readiness assessments and requested release qualification, not routine isolated code edits.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "repeatable-demo-evidence",
+      "source": "./plugins/repeatable-demo-evidence",
+      "description": "Prepare and rehearse a repeatable application demonstration with synthetic accounts, role-specific journeys, recovery instructions, screenshots, and a portable offline walkthrough ZIP. Use for demo preparation and evidence handoff, not ordinary screenshot capture.",
+      "version": "1.0.0"
     }
   ]
 }

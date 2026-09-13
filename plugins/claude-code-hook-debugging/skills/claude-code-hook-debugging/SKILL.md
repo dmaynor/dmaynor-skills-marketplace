@@ -5,9 +5,10 @@ description: |
   Use when: (1) console shows "hook error" with no details, (2) plugin hooks fail silently,
   (3) need to trace which plugin registers which hook event. Covers finding hooks.json across
   plugin cache, diagnosing missing dependencies, and resolving auth/config issues.
-author: Claude Code
-version: 1.1.0
-date: 2026-03-12
+metadata:
+  author: Claude Code
+  version: 1.1.0
+  date: 2026-03-12
 ---
 
 # Claude Code Hook Debugging

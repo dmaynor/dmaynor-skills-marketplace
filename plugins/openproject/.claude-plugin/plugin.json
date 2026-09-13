@@ -1,0 +1,10 @@
+{
+  "name": "openproject",
+  "version": "1.0.0",
+  "description": "Evidence-preserving OpenProject planning, work-package, Gantt, activity, attachment, and API automation workflows.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

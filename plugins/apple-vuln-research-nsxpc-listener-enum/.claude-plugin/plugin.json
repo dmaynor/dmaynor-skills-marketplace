@@ -1,0 +1,8 @@
+{
+  "name": "apple-vuln-research-nsxpc-listener-enum",
+  "version": "1.0.0",
+  "description": "",
+  "author": {"name": "dmaynor"},
+  "license": "MIT",
+  "skills": "./skills/"
+}

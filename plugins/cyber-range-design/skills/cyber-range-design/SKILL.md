@@ -8,9 +8,10 @@ description: >-
   range zones, NPC traffic, ICS/SCADA/OT integration, range resets, or fidelity
   assessment. Modes: DESIGN (architecture), IMPLEMENT (build guidance), EXERCISE
   (execution planning).
-author: dmaynor
-version: 1.1.0
-date: 2026-03-29
+metadata:
+  author: dmaynor
+  version: 1.1.0
+  date: 2026-03-29
 ---
 
 # Cyber Range Design and Implementation

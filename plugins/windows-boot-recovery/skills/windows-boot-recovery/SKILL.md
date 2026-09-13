@@ -9,9 +9,10 @@ description: >
   filesystem", "rsync from Windows", "recover data from Windows drive", or any scenario
   involving Linux-based diagnosis of a Windows disk. When in doubt, use this skill — it
   is designed to run safely and will ask the operator before any destructive action.
-author: dmaynor
-version: 1.1.0
-date: 2026-03-29
+metadata:
+  author: dmaynor
+  version: 1.1.0
+  date: 2026-03-29
 ---
 
 # Windows Recovery Skill
