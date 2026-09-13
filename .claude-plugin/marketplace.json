@@ -122,7 +122,7 @@
     {
       "name": "rca-investigation",
       "source": "./plugins/rca-investigation",
-      "description": "Root Cause Analysis investigation — systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
+      "description": "Root Cause Analysis investigation \u2014 systematic failure diagnosis using layered taxonomy, causal chain analysis, and corrective action validation.",
       "version": "1.1.0"
     },
     {
@@ -152,7 +152,7 @@
     {
       "name": "wireless-driver-control-frame-audit",
       "source": "./plugins/wireless-driver-control-frame-audit",
-      "description": "Systematic audit methodology for wireless driver control-frame and IE parsing across kernel drivers — bug-class taxonomy, per-driver fingerprint, inconsistency-within-driver heuristic, MLE/MBSSID Wi-Fi 6/7 surface, cross-OS protocol-parser-surface mapping.",
+      "description": "Systematic audit methodology for wireless driver control-frame and IE parsing across kernel drivers \u2014 bug-class taxonomy, per-driver fingerprint, inconsistency-within-driver heuristic, MLE/MBSSID Wi-Fi 6/7 surface, cross-OS protocol-parser-surface mapping.",
       "version": "1.1.0"
     },
     {
@@ -202,6 +202,24 @@
       "source": "./plugins/github-repo-cleanup",
       "description": "Inventory local or remote GitHub repositories, create PRs for eligible branches, merge under repository review and CI rules, and delete verified merged branches without losing unmerged work.",
       "version": "1.0.1"
+    },
+    {
+      "name": "apple-vuln-research-apple-silicon-kernel-layout",
+      "source": "./plugins/apple-vuln-research-apple-silicon-kernel-layout",
+      "description": "Find the correct arm64e kernel and per-SoC kernelcache for a research target on Apple Silicon macOS.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "apple-vuln-research-kernelcache-kext-binary-diff",
+      "source": "./plugins/apple-vuln-research-kernelcache-kext-binary-diff",
+      "description": "Reliably diff a single macOS kext between two macOS versions when both kexts ship inside the kernelcache.",
+      "version": "1.1.0"
+    },
+    {
+      "name": "apple-vuln-research-nsxpc-listener-enum",
+      "source": "./plugins/apple-vuln-research-nsxpc-listener-enum",
+      "description": "Enumerate an Apple daemon's server-side NSXPC surface via runtime reflection without extracting shared-cache frameworks.",
+      "version": "1.1.0"
     }
   ]
 }

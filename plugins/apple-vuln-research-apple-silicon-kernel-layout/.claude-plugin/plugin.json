@@ -1,0 +1,10 @@
+{
+  "name": "apple-vuln-research-apple-silicon-kernel-layout",
+  "version": "1.1.0",
+  "description": "Find the correct arm64e kernel and per-SoC kernelcache for a research target on Apple Silicon macOS.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
