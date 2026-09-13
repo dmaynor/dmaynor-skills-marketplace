@@ -6,6 +6,7 @@ Private plugin marketplace for Claude Code.
 
 | Plugin | Description |
 |--------|-------------|
+| `github-repo-cleanup` | Consolidate branches through reviewed PRs and remove verified merged refs |
 | `mvp-acceptance-audit` | Qualify MVP requirements, recovery, and delivery against evidence |
 | `repeatable-demo-evidence` | Rehearse demos and package portable screenshot walkthroughs |
 | `cyber-range-design` | Design and implement high-fidelity cyber ranges |

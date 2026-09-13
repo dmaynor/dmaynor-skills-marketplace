@@ -196,6 +196,12 @@
       "source": "./plugins/repeatable-demo-evidence",
       "description": "Prepare and rehearse a repeatable application demonstration with synthetic accounts, role-specific journeys, recovery instructions, screenshots, and a portable offline walkthrough ZIP. Use for demo preparation and evidence handoff, not ordinary screenshot capture.",
       "version": "1.0.0"
+    },
+    {
+      "name": "github-repo-cleanup",
+      "source": "./plugins/github-repo-cleanup",
+      "description": "Inventory local or remote GitHub repositories, create PRs for eligible branches, merge under repository review and CI rules, and delete verified merged branches without losing unmerged work.",
+      "version": "1.0.0"
     }
   ]
 }
