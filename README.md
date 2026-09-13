@@ -6,6 +6,8 @@ Private plugin marketplace for Claude Code.
 
 | Plugin | Description |
 |--------|-------------|
+| `mvp-acceptance-audit` | Qualify MVP requirements, recovery, and delivery against evidence |
+| `repeatable-demo-evidence` | Rehearse demos and package portable screenshot walkthroughs |
 | `cyber-range-design` | Design and implement high-fidelity cyber ranges |
 | `design-philosophy` | Rigorous design philosophy for simplicity, UX, and quality |
 | `gits-dual-plane-isometric-assets` | Isometric sprite sheets for dual-plane city simulation |

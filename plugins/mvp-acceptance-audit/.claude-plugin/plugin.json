@@ -1,0 +1,10 @@
+{
+  "name": "mvp-acceptance-audit",
+  "version": "1.0.0",
+  "description": "Audit an MVP or release against its actual requirements, qualify recovery and user journeys, and produce evidence-backed completion and delivery records. Use for readiness assessments and requested release qualification, not routine isolated code edits.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

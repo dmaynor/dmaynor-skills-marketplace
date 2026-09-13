@@ -21,5 +21,7 @@ jobs:
         run: python3 scripts/validate_marketplace.py
       - name: Compile Python helpers
         run: python3 -m compileall -q plugins scripts
+      - name: Test walkthrough verifier
+        run: python3 -m unittest discover -s plugins/repeatable-demo-evidence/skills/repeatable-demo-evidence/scripts -p 'test_*.py'
       - name: Check shell syntax
         run: find plugins -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
