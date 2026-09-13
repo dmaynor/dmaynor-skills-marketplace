@@ -1,0 +1,10 @@
+{
+  "name": "github-repo-cleanup",
+  "version": "1.0.0",
+  "description": "Inventory local or remote GitHub repositories, create PRs for eligible branches, merge under repository review and CI rules, and delete verified merged branches without losing unmerged work.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}
