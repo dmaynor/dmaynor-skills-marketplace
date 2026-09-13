@@ -1,0 +1,66 @@
+{
+  "case_id": "fix_003",
+  "submode": "FIX",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Complete fix: root cause addressed"
+    },
+    {
+      "id": "H2",
+      "description": "Partial fix: some vectors"
+    },
+    {
+      "id": "H3",
+      "description": "Symptom-only fix"
+    },
+    {
+      "id": "H4",
+      "description": "Ineffective"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Diff wraps crash site in try/except and logs",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "-",
+        "H3": "++",
+        "H4": "+"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Underlying integer overflow untouched",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "-",
+        "H3": "++",
+        "H4": "++"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "PoC no longer crashes; corrupted output written",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "-",
+        "H3": "++",
+        "H4": "-"
+      }
+    }
+  ],
+  "ground_truth": "H3",
+  "ground_truth_basis": "synthetic: exception swallowing masks the bug"
+}

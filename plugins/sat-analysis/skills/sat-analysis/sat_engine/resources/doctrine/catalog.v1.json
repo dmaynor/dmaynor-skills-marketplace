@@ -1,0 +1,226 @@
+{
+  "schema_version": "1",
+  "catalog_version": "1.1.0",
+  "rules": [
+    {
+      "rule_id": "EVID-ACH-NOT-A-DEBIASER",
+      "title": "Do not present ACH as a bias remover",
+      "summary": "Controlled studies found ACH did not reduce confirmation bias, improve accuracy, or improve coherence, and sometimes slightly worsened them. Present ACH output as an auditable consistency check, never as evidence that bias was removed.",
+      "standard": "Mandel et al. (2018); Dhami, Belton and Mandel (2019); Karvetski and Mandel (2020); Whitesmith (2019)",
+      "section": "Findings",
+      "citation": "Dhami, M. K., Belton, I. K., and Mandel, D. R. (2019). Applied Cognitive Psychology, 33(6), 1080-1090; Whitesmith, M. (2019). Intelligence and National Security, 34(2), 225-242.",
+      "url": "https://strathprints.strath.ac.uk/69049/",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-ALTERNATIVES",
+      "title": "Compare reasonable hypotheses",
+      "summary": "Generate and compare reasonable alternatives before committing to a preferred explanation.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 1, printed pp. 96-99",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 1, printed pp. 96-99.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-DISCONFIRMATION",
+      "title": "Examine contrary evidence",
+      "summary": "Seek evidence that challenges hypotheses; evaluate whether expected evidence could actually have been observed before interpreting its absence.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Steps 2 and 5; Conclusions, printed pp. 99, 103-105, 108-109",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Steps 2 and 5; Conclusions, printed pp. 99, 103-105, 108-109.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-JUDGMENT",
+      "title": "Keep analyst judgment explicit",
+      "summary": "Use a matrix to assist judgment; investigate disagreements between the matrix and the analyst instead of treating the matrix as the decision maker.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 5, printed pp. 104-105",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 5, printed pp. 104-105.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "HEUER8-SENSITIVITY",
+      "title": "Revisit critical evidence",
+      "summary": "Examine how conclusions depend on critical evidence and assumptions, including errors and alternative interpretations.",
+      "standard": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (1999)",
+      "section": "Chapter 8, Step 6, printed pp. 105-106",
+      "citation": "Richards J. Heuer, Jr., Psychology of Intelligence Analysis (CIA, Center for the Study of Intelligence, 1999), Chapter 8, Step 6, printed pp. 105-106.",
+      "url": "https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ALTERNATIVES",
+      "title": "Consider plausible alternatives",
+      "summary": "Assess plausible alternative explanations and identify observations that would change their assessed likelihood.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(4)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(4).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ARGUMENT",
+      "title": "Make reasoning assessable",
+      "summary": "Connect judgments to relevant information and coherent reasoning, acknowledging significant contrary information.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(6)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(6).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-ASSUMPTIONS",
+      "title": "Separate information, assumptions, and judgments",
+      "summary": "Distinguish source information, assumptions, and judgments; explain consequential assumptions and what changes if they fail.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(3)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(3).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-LIKELIHOOD-CONFIDENCE-SENTENCE",
+      "title": "Keep likelihood and confidence in separate sentences",
+      "summary": "A product expressing confidence with a confidence level must not combine a confidence level and a degree of likelihood in the same sentence. Likelihood refers to an event; confidence refers to the evidentiary basis.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(2)(b)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(2)(b).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "BLOCKING",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-LIKELIHOOD-TERMS",
+      "title": "Use the likelihood ladder without mixing rows",
+      "summary": "Express likelihood with one of the seven ICD 203 terms and its numeric band: almost no chance 01-05; very unlikely 05-20; unlikely 20-45; roughly even chance 45-55; likely 55-80; very likely 80-95; almost certain 95-99. Do not mix terms from different rows.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(2)(a)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(2)(a).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "BLOCKING",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-SOURCES",
+      "title": "Describe the source basis",
+      "summary": "Identify the source and methodological basis of judgments, including relevant limits on quality and credibility.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(1)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(1).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "ICD203-UNCERTAINTY",
+      "title": "Explain uncertainty",
+      "summary": "Explain uncertainty in major judgments, distinguishing an event's likelihood from confidence in the judgment's evidential and reasoning basis.",
+      "standard": "ICD 203, Analytic Standards (2 January 2015, as amended)",
+      "section": "D.6.e.(2)",
+      "citation": "Office of the Director of National Intelligence, ICD 203 (2015, as amended), D.6.e.(2).",
+      "url": "https://archive.dni.gov/files/documents/ICD/ICD-203.pdf",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "KM2020-PSEUDODIAGNOSTIC",
+      "title": "Do not move judgments on nondiagnostic evidence",
+      "summary": "Evidence rated identically against every hypothesis carries no diagnostic weight. In a controlled study, ACH users let such evidence exert about a third of the pull of diagnostic evidence; list nondiagnostic evidence and keep it out of the judgment.",
+      "standard": "Karvetski and Mandel, Coherence of probability judgments from uncertain evidence: Does ACH help? Judgment and Decision Making 15(6) (2020)",
+      "section": "Results",
+      "citation": "Karvetski, C. W., and Mandel, D. R. (2020). Judgment and Decision Making, 15(6), 939-958.",
+      "url": "https://jbaron.org/journal/20/200430/jdm200430.html",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "MANDEL-COHERENTIZE",
+      "title": "Coherentize probability judgments and report the incoherence metric",
+      "summary": "For an exclusive and exhaustive hypothesis set, record the analyst's raw probabilities, project them onto the simplex by normalization, and report the Euclidean distance between raw and coherent vectors. Coherentizing then aggregating independent judgments reduced mean absolute error by 61 percent; ACH alone did not improve accuracy or coherence.",
+      "standard": "Mandel, Karvetski and Dhami, Boosting intelligence analysts' judgment accuracy: What works, what fails? Judgment and Decision Making 13(6) (2018)",
+      "section": "Results; coherentization and aggregation",
+      "citation": "Mandel, D. R., Karvetski, C. W., and Dhami, M. K. (2018). Judgment and Decision Making, 13(6), 607-621.",
+      "url": "https://www.cambridge.org/core/journals/judgment-and-decision-making",
+      "severity": "WARNING",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "NATO-INFORMATION-CREDIBILITY",
+      "title": "Assess information credibility separately from source reliability",
+      "summary": "The Admiralty Code rates source reliability A-F and information credibility 1-6, each assessed in isolation so the source rating does not colour the assessed accuracy of the report. F and 6 mean the rating cannot be judged; they are not low ratings.",
+      "standard": "NATO AJP-2.1 under STANAG 2511 (Admiralty Code)",
+      "section": "Source reliability and information credibility",
+      "citation": "NATO Standardization Office, AJP-2.1 Allied Joint Doctrine for Intelligence Procedures; STANAG 2511.",
+      "url": "https://en.wikipedia.org/wiki/Admiralty_code",
+      "severity": "NOTE",
+      "implementation_policy": false
+    },
+    {
+      "rule_id": "SAT-DEPENDENCE",
+      "title": "Retain observation dependence",
+      "summary": "Deduplicate explicit derivative origins without merging distinct observations. Test source, origin, and declared dependency groups during sensitivity analysis.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "WARNING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-DERIVED-ENRICHMENT",
+      "title": "Keep enrichment separate from canonical analysis",
+      "summary": "Add doctrine references only to derived renderings. Enrichment cannot rewrite canonical artifacts, fabricate citations, or certify compliance.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Doctrine; Canonical snapshot and artifacts",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Doctrine; Canonical snapshot and artifacts; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-FALSIFICATION",
+      "title": "Qualify falsification and negative evidence",
+      "summary": "A contradiction rating is not verified falsification. Establish a necessary prediction, valid observation process, scope, and adequate detection coverage before excluding an explanation.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Corrected helper invariants: Judgment rules",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Corrected helper invariants: Judgment rules; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "WARNING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-NO-CAUSAL-WINNER",
+      "title": "Do not compute a causal winner",
+      "summary": "Descriptive ACH totals and variance do not determine causation, probability, or confidence. Preserve tied, incomplete, and insufficient states; any causal judgment remains analyst supplied.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    },
+    {
+      "rule_id": "SAT-UNKNOWN-RELIABILITY",
+      "title": "Keep unknown reliability unknown",
+      "summary": "Do not convert source reliability categories into numeric support weights or confidence adjustments. F and unknown remain unjudged.",
+      "standard": "SAT engine implementation policy, version 1.0.0",
+      "section": "Computation and cross-record validation",
+      "citation": "Local SAT engine implementation contract (9 September 2026), Computation and cross-record validation; this is an engine policy, not an external standard.",
+      "url": "urn:sat-engine:implementation-contract:2026-09-09",
+      "severity": "BLOCKING",
+      "implementation_policy": true
+    }
+  ]
+}

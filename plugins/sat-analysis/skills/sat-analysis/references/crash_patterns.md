@@ -1,332 +1,51 @@
-# Crash Patterns Reference
+# Crash, hang, and resource-failure analysis
 
-## Memory Corruption
+Establish the exact failure type, binary/build, relevant environment, inputs, and
+available capture. Separate the instruction or subsystem detecting the fault from
+the earlier state transition that made it possible. A trace alone may establish
+the failure site without establishing the root cause.
 
-### Null Pointer Dereference
-**Indicators**:
-- SIGSEGV / Access Violation
-- Fault address is 0x0 or small offset (0x8, 0x10)
-- Stack shows pointer variable usage
-- Recent pointer assignment or return value
+| Observation | Mechanisms to consider | Discriminating evidence and limits |
+|---|---|---|
+| Access fault at a low address | Null-derived access, corrupted pointer, invalid mapping or permissions | Inspect the faulting instruction, registers, access type, and mapping. The address alone does not identify pointer provenance. |
+| Access fault in heap storage | Stale reference, out-of-bounds access, corrupted pointer, concurrency, inaccessible mapping | Link allocation, lifetime, and access histories. A heap address alone does not establish use-after-free. |
+| Allocator or canary reports corruption | Earlier invalid write, lifetime error, stack damage | Identify which invariant was detected and when it could first have been violated. Detection location is often downstream. |
+| Intermittent failure affected by scheduling | Shared-state race, lifetime issue, timeout, external dependency, nondeterministic input | Identify competing accesses and synchronization, instrument the relevant state transition, and compare controlled runs. Timing sensitivity alone does not prove a race. |
+| Hang with waiting threads | Lock cycle, external wait, starvation, missed wakeup, intentional wait | Inspect all relevant waits, ownership and progress over time. Idle CPU does not prove deadlock; starvation and deadlock differ. |
+| Allocation failure or process termination | Limit reached, memory pressure, fragmentation, retained data, leak, oversized request | Use exact runtime failure semantics, process/cgroup limits, allocator results, and termination evidence. Memory growth alone does not establish a leak. |
+| File/socket operation fails with exhaustion | Per-process or system limit, leak, bounded peak demand, unavailable external resource | Inspect the actual error and resource lifecycle. Count and classify the resource under the applicable limit. |
+| Unexpected size, index, or state assertion | Arithmetic error, conversion, contract violation, earlier corruption, concurrency | Trace operand ranges and types or the state transition; verify language and build semantics before classifying. |
+| Failure after a dependency call | Invalid return handling, API mismatch, unavailable dependency, unrelated earlier damage | Link the return/result to the failing path. Temporal adjacency alone does not establish causation. |
 
-**Root Causes**:
-- Uninitialized pointer
-- Failed allocation not checked (`malloc` returned NULL)
-- Pointer cleared/freed then used
-- Function returned NULL, caller didn't check
+## Respect implementation semantics
 
-**Distinguishing Questions**:
-- Was pointer ever assigned?
-- Was allocation checked?
-- Did function return NULL?
-- Race condition (sometimes null)?
+- Match source and debug symbols to the actual executable. Optimized code,
+  inlining, missing symbols, and corrupted unwind data limit a stack's precision.
+- Identify the allocator, runtime, and diagnostic mode before interpreting memory
+  fill patterns. Repeated hex values are not universal evidence of allocation state.
+- Keep C allocation failure, ordinary throwing C++ allocation, explicit nothrow
+  allocation, runtime-managed exceptions, and operating-system termination distinct.
+  Verify the relevant platform behavior rather than treating all failures as null.
+- Distinguish a race condition in a multi-step operation from a language-defined
+  data race. Concurrency failures do not all have the same synchronization remedy.
+- Treat a returned reference to expired stack storage as a lifetime issue; do not
+  mislabel every dangling reference as freed heap memory.
+- Verify signedness, width, conversion, overflow behavior, and zero cases before
+  recommending arithmetic checks. An unsigned type alone does not prevent overflow.
 
-### Use After Free
-**Indicators**:
-- SIGSEGV with heap address
-- Address was previously valid
-- Memory shows freed pattern (0xdeadbeef, 0xfeeefeee)
-- Crash location differs from bug location
+## Design a useful reproduction or check
 
-**Root Causes**:
-- Explicit free then use
-- Double free
-- Return of stack/local variable
-- Object lifecycle error (destructor then use)
+Preserve the observed build/input/environment before varying a suspected cause.
+Specify the expected difference under the main competing explanations and the
+time or input coverage needed for a meaningful negative result. Instrumentation
+can change timing, memory layout, and workload; record those changes.
 
-**Distinguishing Questions**:
-- When was memory freed?
-- What's the object lifecycle?
-- Is there a dangling pointer?
-- Heap state analysis?
+Sanitizer findings can establish specific violations in the exercised execution;
+a clean run does not establish absence outside supported instrumentation and paths.
+One successful rerun does not eliminate an intermittent problem. Avoid a sequence
+of simultaneous changes that makes recovery causally uninterpretable.
 
-### Buffer Overflow
-**Indicators**:
-- Stack smashing / canary failure
-- Return address overwritten
-- Adjacent memory corrupted
-- Crash after array/buffer operation
-
-**Root Causes**:
-- Unbounded copy (`strcpy`, `sprintf`, `gets`)
-- Off-by-one in loop bounds
-- Integer overflow affecting buffer size
-- Missing bounds check
-
-**Distinguishing Questions**:
-- What buffer was written?
-- Intended size vs actual?
-- Source of size value?
-- Integer arithmetic involved?
-
-### Heap Corruption
-**Indicators**:
-- Crash in malloc/free/new/delete
-- Heap metadata corruption
-- glibc: "corrupted double-linked list"
-- Crash location varies
-
-**Root Causes**:
-- Heap buffer overflow
-- Use after free
-- Double free
-- Uninitialized heap memory
-
----
-
-## Threading Issues
-
-### Race Condition
-**Indicators**:
-- Intermittent crash (non-deterministic)
-- State inconsistency
-- Works single-threaded, fails multi-threaded
-- Timing-dependent failure
-
-**Root Causes**:
-- Missing lock
-- Lock ordering violation
-- Need atomic operation
-- TOCTOU (time-of-check vs time-of-use)
-
-**Distinguishing Questions**:
-- Multiple threads accessing same data?
-- Locking discipline followed?
-- Reproducible with sleep() injection?
-- Thread sanitizer output?
-
-### Deadlock
-**Indicators**:
-- Application hangs (not crash)
-- Multiple threads waiting
-- Locks held in cross order
-- No progress, CPU idle
-
-**Root Causes**:
-- Lock order inversion (A→B, B→A)
-- Self-deadlock (non-recursive lock)
-- Resource starvation
-- Signal handler lock acquisition
-
-**Distinguishing Questions**:
-- What locks are held?
-- What locks are waited for?
-- Expected lock order?
-- Thread stack traces?
-
-### Data Race
-**Indicators**:
-- Intermittent wrong results
-- Memory corruption symptoms
-- Thread sanitizer errors
-- Unpredictable state
-
-**Root Causes**:
-- Concurrent read/write without sync
-- Partial writes visible
-- Compiler reordering
-- CPU memory ordering
-
----
-
-## Resource Exhaustion
-
-### Memory Exhaustion (OOM)
-**Indicators**:
-- `malloc`/`new` returns NULL
-- OOM killer invoked
-- Memory growing over time
-- Crash after prolonged runtime
-
-**Root Causes**:
-- Memory leak (allocate, never free)
-- Unbounded growth (cache, queue, buffer)
-- Single large allocation
-- Memory fragmentation
-
-**Distinguishing Questions**:
-- Memory usage over time?
-- What objects accumulating?
-- Leak detected (valgrind, ASAN)?
-- What triggered final failure?
-
-### File Descriptor Exhaustion
-**Indicators**:
-- "Too many open files"
-- Socket/file operations fail
-- ulimit reached
-- FD count growing
-
-**Root Causes**:
-- FD leak (open, never close)
-- Connection pool failure
-- Unbounded connection acceptance
-- Fork without FD management
-
-**Distinguishing Questions**:
-- FD count over time?
-- What's in `/proc/pid/fd`?
-- Resources closed in error paths?
-- Exception handling cleanup?
-
-### Thread Exhaustion
-**Indicators**:
-- Thread creation fails
-- "Resource temporarily unavailable"
-- Thread count growing
-- Stack space exhausted
-
-**Root Causes**:
-- Thread leak (create, never join)
-- Thread pool not bounded
-- Recursive thread creation
-- Stack size too large
-
----
-
-## Logic Errors
-
-### State Machine Error
-**Indicators**:
-- "Invalid state" assertion
-- Operation in wrong state
-- Inconsistent object state
-- State transition error
-
-**Root Causes**:
-- Missing state transition
-- Wrong state check
-- Concurrent state modification
-- State corruption
-
-**Distinguishing Questions**:
-- Expected state vs found?
-- What caused state change?
-- State machine logic correct?
-- Race on state variable?
-
-### Integer Overflow/Underflow
-**Indicators**:
-- Unexpectedly large/small value
-- Negative where positive expected
-- Huge allocation size
-- Loop runs wrong iterations
-
-**Root Causes**:
-- Arithmetic overflow
-- Sign confusion (signed/unsigned)
-- Truncation (64→32 bit)
-- Unchecked arithmetic
-
-**Distinguishing Questions**:
-- What arithmetic produced value?
-- Types involved?
-- Input value ranges?
-- Overflow checks present?
-
-### Assertion Failure
-**Indicators**:
-- `assert()` triggered
-- Precondition violated
-- Invariant broken
-- SIGABRT
-
-**Root Causes**:
-- Caller violated contract
-- Implementation bug
-- Corrupted state
-- Missing error handling
-
----
-
-## External/Input Issues
-
-### Invalid Input
-**Indicators**:
-- Crash on specific input
-- Format parsing failure
-- Unexpected input values
-- Malformed data handling
-
-**Root Causes**:
-- Missing input validation
-- Parser bug
-- Type confusion
-- Encoding issues
-
-### Dependency Failure
-**Indicators**:
-- Crash after external call
-- Network/IPC error handling
-- Missing dependency
-- Version mismatch
-
-**Root Causes**:
-- Unhandled error return
-- Timeout not handled
-- Dependency unavailable
-- API change
-
-### Environment Issue
-**Indicators**:
-- Works in dev, fails in prod
-- Configuration dependent
-- OS/library version dependent
-- Resource limit related
-
-**Root Causes**:
-- Missing environment variable
-- Different library version
-- Resource limits different
-- Permissions different
-
----
-
-## Quick Diagnosis Guide
-
-| Symptom | First Check | Likely Pattern |
-|---------|-------------|----------------|
-| SIGSEGV at 0x0 | Pointer initialization | Null deref |
-| SIGSEGV at heap addr | Free/use timeline | Use-after-free |
-| "stack smashing" | Buffer operations | Buffer overflow |
-| Intermittent crash | Threading | Race condition |
-| Hang, CPU idle | Lock state | Deadlock |
-| "Out of memory" | Memory growth | Leak/exhaustion |
-| "Invalid state" | State transitions | State machine |
-| Huge allocation | Size arithmetic | Integer overflow |
-| Crash in malloc/free | Heap operations | Heap corruption |
-
----
-
-## Analysis Artifacts
-
-### Stack Trace Analysis
-```
-#0  0x... in crash_function() at file.c:123     ← Crash location
-#1  0x... in caller_function() at file.c:456    ← Call chain
-#2  0x... in main() at main.c:789               ← Entry point
-```
-
-**Key questions**:
-- Is crash location the bug location? (Often not for corruption)
-- What arguments were passed?
-- What's the call chain context?
-
-### Memory State
-| Pattern | Meaning |
-|---------|---------|
-| 0x0 | Null pointer |
-| 0xcdcdcdcd | MSVC uninitialized heap |
-| 0xcccccccc | MSVC uninitialized stack |
-| 0xdddddddd | MSVC freed heap |
-| 0xfeeefeee | MSVC freed heap (HeapFree) |
-| 0xdeadbeef | Common freed/poison pattern |
-| 0xbaadf00d | MSVC LocalAlloc uninitialized |
-
-### Core Dump Checklist
-- [ ] Get stack trace (all threads)
-- [ ] Check register values
-- [ ] Examine memory at fault address
-- [ ] Check heap state
-- [ ] Review nearby memory
-- [ ] Check thread states
+When choosing mitigation, separate reduced impact from confirmed repair. State the
+workload and duration covered, the burden of monitoring or restarting, and an
+early trigger to change course. If containment interrupts evidence collection,
+explain that tradeoff when it matters to the pending decision.

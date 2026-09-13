@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/evidence.v1.json",
+  "title": "Observation-linked analyst ratings",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "observation_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "ratings": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "additionalProperties": {
+        "enum": [
+          "++",
+          "+",
+          "N",
+          "-",
+          "--"
+        ]
+      }
+    },
+    "rationale": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "observation_id",
+    "ratings"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,189 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "full_crash_unknown_clocks",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-crash-unknown",
+    "revision": 2,
+    "mode": "FULL",
+    "submode": "CRASH",
+    "question": "Which crash explanations remain open when clocks and a rating are missing?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "crash.stack",
+        "raw": "Sep 9 10:00:00 worker access violation",
+        "source": "worker.log",
+        "parse_status": "parsed",
+        "timestamp": "Sep 9 10:00:00",
+        "record_sha256": "9bd3a9cb394991de393cbf62ed5decae639d222df31cc8f3c24473668b5330b2",
+        "reliability": "unknown",
+        "timestamp_context": {},
+        "timestamp_semantics": "unknown"
+      },
+      {
+        "schema_version": "1",
+        "id": "crash.restart",
+        "raw": "2026-09-09 10:00:02 process restarted",
+        "source": "supervisor.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09 10:00:02",
+        "record_sha256": "9a6d1ab1abb74f7580126491537a3776da58f1af6cb9a04f97e5f0b8114b2a51",
+        "reliability": "unknown",
+        "timestamp_context": {}
+      },
+      {
+        "schema_version": "1",
+        "id": "crash.bytes",
+        "raw": "dump=�",
+        "source": "dump.bin",
+        "parse_status": "rejected",
+        "timestamp": null,
+        "record_sha256": "ce7a59bf7437123ec03534dce6eaf704b1ec2bfd3197fe141116fe2beb785c32",
+        "reliability": "unknown",
+        "parse_error": "Invalid UTF-8 byte retained.",
+        "raw_bytes_base64": "ZHVtcD3/"
+      }
+    ],
+    "judgment": {
+      "summary": "A race and memory pressure remain open; the unrated alternative and unresolved clocks prevent a complete comparison.",
+      "observation_ids": [
+        "crash.stack",
+        "crash.restart",
+        "crash.bytes"
+      ],
+      "likelihood": {
+        "proposition": "Memory pressure contributed to this observed crash.",
+        "value": null,
+        "basis": "No rating or memory trace establishing this contribution was supplied."
+      },
+      "confidence": {
+        "level": "unassessed",
+        "reasoning": "The dump is partially undecodable and clock context is missing."
+      }
+    },
+    "calculations": [
+      {
+        "id": "reported_restart_interval",
+        "operation": "reported_interval",
+        "start_observation_id": "crash.stack",
+        "end_observation_id": "crash.restart"
+      },
+      {
+        "id": "reported_headroom",
+        "operation": "difference",
+        "operands": [
+          4096,
+          3072
+        ],
+        "unit": "MiB"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ],
+    "relationship": "overlapping",
+    "hypotheses": [
+      {
+        "schema_version": "1",
+        "id": "H_race",
+        "description": "A race contributed.",
+        "initial_probability": 0.8
+      },
+      {
+        "schema_version": "1",
+        "id": "H_memory",
+        "description": "Memory pressure contributed.",
+        "initial_probability": 0.7
+      }
+    ],
+    "evidence": [
+      {
+        "schema_version": "1",
+        "id": "E_stack",
+        "observation_id": "crash.stack",
+        "ratings": {
+          "H_race": "+"
+        }
+      },
+      {
+        "schema_version": "1",
+        "id": "E_restart",
+        "observation_id": "crash.restart",
+        "ratings": {
+          "H_race": "N",
+          "H_memory": "N"
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "id": "T_dump",
+        "action": "Collect a decodable dump and explicit source clock context.",
+        "observation_ids": [
+          "crash.bytes"
+        ]
+      }
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "reported_restart_interval": null,
+      "reported_headroom": 1024
+    },
+    "event_ids_ordered": [
+      "crash.stack",
+      "crash.restart",
+      "crash.bytes"
+    ],
+    "timestamp_utc_by_id": {
+      "crash.stack": null,
+      "crash.restart": null,
+      "crash.bytes": null
+    },
+    "parse_counts": {
+      "parsed": 2,
+      "rejected": 1,
+      "unparsed": 0
+    },
+    "resolved_events": 0,
+    "unresolved_events": 3,
+    "ach": {
+      "status": "incomplete",
+      "scores": {
+        "H_memory": 0,
+        "H_race": 1
+      },
+      "heuristic_leaders": [
+        "H_race"
+      ],
+      "contributing_record_count": 2,
+      "missing_ratings": [
+        {
+          "evidence_id": "E_stack",
+          "hypothesis_id": "H_memory"
+        }
+      ],
+      "diagnosticity": {
+        "E_restart": 0,
+        "E_stack": null
+      },
+      "heuristic_stable": null
+    },
+    "rejected_original_bytes_hex": {
+      "crash.bytes": "64756d703dff"
+    }
+  },
+  "expected_result_file": "full_crash_unknown_clocks.expected.json",
+  "expected_result_bytes_sha256": "a4569f22a529156bcb48be3299d8de1780487f3066e325739e275f8d599fe011",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "4c988df645a55dfa3748291318b655d33f3eab0ac69f31f594e2e304f4c7c636",
+    "analytic_trace": "3323afd3dbad6ab22cad8105b5819cf2da9bfd77d38f31e733377317f66aca88",
+    "tasking_view": "96b7f1211cbc1aedf947be4ce576d5bfec85382fe2b14dd158ecdec840bf9182"
+  }
+}

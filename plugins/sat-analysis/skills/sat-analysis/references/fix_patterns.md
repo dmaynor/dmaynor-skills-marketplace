@@ -1,270 +1,66 @@
-# Fix Verification Patterns Reference
+# Fix verification
 
-## Fix Effectiveness Categories
+Define the original violated invariant, the supplied failure case, supported
+versions/configurations, and the behavior the change is intended to preserve.
+Trace how the change interrupts the causal path. Separate source review from
+executed validation, and state which evidence supports each conclusion.
 
-### Complete Fix
-**Definition**: Addresses root cause, all attack vectors/failure modes closed
+## Evaluate separate dimensions
 
-**Indicators**:
-- Fix targets root cause, not symptoms
-- All code paths to vulnerability addressed
-- Edge cases considered
-- Regression tests added
+| Dimension | Possible judgments | Required scope |
+|---|---|---|
+| Intended repair | Supported, partially supported, unsupported, contradicted | Which invariant, entry points, inputs, and environment were examined? |
+| Mechanism | Removes cause, prevents exposure, bounds impact, suppresses symptom | Does the remedy change the faulty state or only its visible result? |
+| Completeness | Covered paths established; other paths remain unresolved | What evidence supports coverage beyond the reported example? |
+| Regression | Identified regression, tested compatible behavior, unassessed risk | Which existing contracts, resource limits, or callers can change? |
+| Operational use | Feasible, conditional, infeasible under current constraints | Who deploys and operates it, with what fallback and burden? |
 
-### Partial Fix  
-**Definition**: Addresses some vectors but not all
+A repair can work for the original defect and introduce a regression. These are
+not mutually exclusive hypotheses. Reserve “complete” for a defined scope backed
+by adequate evidence; do not imply every possible future failure is excluded.
 
-**Indicators**:
-- Some attack paths remain
-- Edge cases not covered
-- Works for common case, fails edge cases
-- Missing validation in some paths
+## Review mechanisms rather than patch appearance
 
-### Symptom Fix
-**Definition**: Masks symptoms, root cause remains
+| Pattern | Question that changes the assessment |
+|---|---|
+| Enforcement at the wrong boundary | Is the invariant enforced at an authoritative boundary reached by all relevant callers, or only by a cooperative client? |
+| Incomplete path coverage | Which alternate entry points reach the same operation, and do they share the repaired invariant? Avoid expanding scope to unrelated code without evidence. |
+| Integer or size handling | Are operand domains, signedness, conversions, overflow, and zero cases handled before unsafe arithmetic? A type change or post-overflow comparison is insufficient by itself. |
+| Check/use gap | Does the checked object remain the same object at use? Could opening or probing it already cause a side effect before authorization? A handle check is not a universal race fix. |
+| Representation mismatch | Do validation and consumption interpret the same representation, and can a later transformation change its meaning? Test only relevant formats and boundaries. |
+| State/lifetime repair | Does every applicable state transition preserve the invariant, including exceptional and concurrent paths? |
+| Error handling | Does failure leave a defined safe state, or hide the error while damaged state or an unsafe action persists? |
+| Configuration/dependency assumption | Is the required behavior present in supported deployed configurations and actual dependency versions? |
+| Regression | What existing capability or resource envelope changes as a consequence of this fix? |
 
-**Indicators**:
-- Error suppressed rather than handled
-- Exception caught and ignored
-- Condition checked after damage possible
-- Workaround rather than fix
+Do not infer quality from patch length, “workaround” wording, the presence of new
+tests, or an extra defensive layer. A small central fix can be sufficient. A
+temporary mitigation can be appropriate when its limits and expiration are clear.
+Additional checks can also create inconsistent policies or new failure states.
 
-### Ineffective Fix
-**Definition**: Does not address the issue
+## Match validation to the remaining claim
 
-**Indicators**:
-- Wrong variable/location modified
-- Logic error in fix itself
-- Fix never executes (dead code)
-- Misunderstanding of root cause
+1. Compare the reported failure before and after the change when execution is
+   authorized and a suitable reproduction exists. Record the actual build and
+   environment; a test that passes both versions may not demonstrate the repair.
+2. Exercise boundary, error, and alternate-path behavior only where it bears on the
+   repaired invariant or a concrete regression risk. Keep legitimate behavior in
+   scope; rejection of the original bad case alone does not establish correctness.
+3. For concurrent or intermittent failures, state what instrumentation and trial
+   coverage establish. Failure to reproduce under different timing is inconclusive.
+4. Distinguish unexecuted tests, missing coverage, and passing results. Do not claim
+   “no bypass” from a source scan or a handful of examples. Keep analysis within
+   the user's requested review and testing authorization.
+5. Stop broadening tests when the meaningful remaining risk is resolved or the
+   required gate is met. List residual uncertainty instead of implying exhaustive
+   correctness through test quantity.
 
-### Regression Risk
-**Definition**: May introduce new issues
+## Decide within the evidence
 
-**Indicators**:
-- Behavioral change beyond fix scope
-- Performance impact
-- New code paths untested
-- Dependency changes
-
-### Bypass Possible
-**Definition**: Fix can be circumvented
-
-**Indicators**:
-- Validation on client only
-- Check can be skipped
-- Alternative paths exist
-- Encoding/format variations not covered
-
----
-
-## Common Fix Failure Patterns
-
-### Wrong Layer Fix
-**Problem**: Fix applied at wrong abstraction level
-
-**Example**:
-```
-BUG: SQL injection in web form
-WRONG: Escape quotes in JavaScript (client-side)
-RIGHT: Parameterized queries in database layer
-```
-
-**Detection**: Ask "Can this check be bypassed?"
-
-### Incomplete Coverage
-**Problem**: Fix covers main path but not all entry points
-
-**Example**:
-```
-BUG: Path traversal in file upload
-WRONG: Check only POST /upload endpoint
-RIGHT: Check all file path inputs system-wide
-```
-
-**Detection**: Enumerate all paths to vulnerable code
-
-### Type Confusion Persistence
-**Problem**: Fix checks type but doesn't prevent confusion
-
-**Example**:
-```
-BUG: Integer overflow in size calculation
-WRONG: if (size > MAX) return error;
-RIGHT: Use size_t, check before arithmetic
-```
-
-**Detection**: Trace data types through full flow
-
-### Race Condition Window
-**Problem**: Fix creates or doesn't close race window
-
-**Example**:
-```
-BUG: TOCTOU in file access
-WRONG: Check permissions, then open file
-RIGHT: Open file, then check permissions on handle
-```
-
-**Detection**: Identify check-use gap
-
-### Integer Issue Persistence
-**Problem**: Integer overflow/underflow not fully addressed
-
-**Example**:
-```
-BUG: Integer overflow in buffer allocation
-WRONG: if (n * size > MAX) error;  // overflow in check!
-RIGHT: if (n > MAX / size) error;  // safe check
-```
-
-**Detection**: Analyze all arithmetic operations
-
-### Encoding Bypass
-**Problem**: Validation bypassed via encoding
-
-**Common bypasses**:
-- URL encoding (%2e%2e = ..)
-- Double encoding (%252e = %2e after decode)
-- Unicode normalization
-- Null byte injection
-- Case variation
-
-**Detection**: Test with encoded variants
-
-### Logic Error in Fix
-**Problem**: Fix logic itself is flawed
-
-**Example**:
-```
-BUG: Off-by-one in loop
-WRONG: for (i = 0; i <= n; i++)  // still off-by-one
-RIGHT: for (i = 0; i < n; i++)
-```
-
-**Detection**: Trace fix logic carefully
-
-### Configuration Dependency
-**Problem**: Fix depends on configuration that may change
-
-**Example**:
-```
-BUG: Insecure default setting
-WRONG: Document that admin should change setting
-RIGHT: Secure default, require explicit insecure opt-in
-```
-
-**Detection**: Check if fix survives config changes
-
-### Version/Dependency Gap
-**Problem**: Fix depends on specific version behavior
-
-**Example**:
-```
-BUG: Library vulnerability
-WRONG: Upgrade library (may break compatibility)
-RIGHT: Upgrade + verify behavior + test
-```
-
-**Detection**: Check dependency assumptions
-
-### Regression Introduction
-**Problem**: Fix breaks existing functionality
-
-**Types**:
-- Behavioral regression (different output)
-- Performance regression (slower)
-- Compatibility regression (breaks clients)
-- Security regression (new vulnerability)
-
-**Detection**: Review scope of changes vs. tests
-
----
-
-## Fix Verification Checklist
-
-### Causal Chain Analysis
-- [ ] Root cause identified (not just trigger)?
-- [ ] Fix breaks causal chain at right point?
-- [ ] All paths to root cause addressed?
-- [ ] No alternative paths remain?
-
-### Completeness Check
-- [ ] All entry points covered?
-- [ ] All code paths through fix exercised?
-- [ ] Edge cases handled?
-- [ ] Error conditions handled?
-
-### Bypass Analysis
-- [ ] Can fix be skipped (client-side only)?
-- [ ] Encoding variations tested?
-- [ ] Alternative input formats considered?
-- [ ] Race conditions closed?
-
-### Regression Analysis
-- [ ] Existing tests still pass?
-- [ ] Behavioral changes documented?
-- [ ] Performance impact assessed?
-- [ ] Compatibility verified?
-
-### Defense in Depth
-- [ ] Single point of failure avoided?
-- [ ] Multiple layers of protection?
-- [ ] Fail-secure behavior?
-
----
-
-## Verification Test Categories
-
-### Positive Tests
-Verify fix works for intended cases:
-- Original bug trigger → now fails/safe
-- Documented attack vector → blocked
-- Reported exploit → no longer works
-
-### Negative Tests  
-Verify fix doesn't break legitimate use:
-- Normal operation → still works
-- Valid edge cases → still handled
-- Performance → acceptable
-
-### Bypass Tests
-Attempt to circumvent fix:
-- Encoding variations
-- Alternative paths
-- Timing variations
-- Unexpected input types
-
-### Regression Tests
-Ensure no new issues:
-- Existing test suite passes
-- Integration tests pass
-- Security test suite passes
-
----
-
-## Fix Quality Signals
-
-### Strong Fix Indicators
-- Addresses root cause at correct layer
-- Adds defense in depth
-- Includes comprehensive tests
-- Documents reasoning
-- Considers edge cases
-- Fails securely
-
-### Weak Fix Indicators
-- Addresses symptoms only
-- Single point of validation
-- No new tests
-- Minimal code change for complex bug
-- Configuration-dependent
-- Fails open
-
-### Red Flags
-- "Quick fix" or "workaround" language
-- Disables security feature
-- Adds exception/bypass
-- Catches and ignores errors
-- Client-side only validation
-- "Will fix properly later"
+State whether the intended fix is supported for the reviewed scope, what remains
+blocking, and which targeted evidence would change the judgment. If deployment is
+part of the request, account for rollout feasibility, operator burden, rollback
+effects, retained data compatibility, and early observable triggers. Where root
+cause remains uncertain, distinguish a reversible impact-reduction measure from
+an established repair. Do not turn approval of a code review into authorization
+to deploy or alter a live system.

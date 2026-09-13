@@ -1,0 +1,59 @@
+{
+  "case_id": "statement_001",
+  "submode": "STATEMENT",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Claim is true: 'The vendor patch closes CVE-2026-1234'"
+    },
+    {
+      "id": "H2",
+      "description": "Claim is false: 'The vendor patch closes CVE-2026-1234'"
+    },
+    {
+      "id": "H3",
+      "description": "Claim is underdetermined: 'The vendor patch closes CVE-2026-1234'"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "Vendor advisory lists CVE-2026-1234 as fixed in 4.2.1",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "-",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Independent PoC against 4.2.1 fails",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "--",
+        "H3": "-"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Diff touches the vulnerable function",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "+",
+        "H2": "-",
+        "H3": "N"
+      }
+    }
+  ],
+  "ground_truth": "H1",
+  "ground_truth_basis": "synthetic"
+}

@@ -1,3 +1,5 @@
+> Historical proposal. Implementation follows [the September engine contract](2026-09-09-engine-contract.md), which supersedes the probability, confidence, normalization, and acceptance rules in this document. See the implementation report for observed validation results.
+
 # SAT Analysis Skill v2.0.0 — Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

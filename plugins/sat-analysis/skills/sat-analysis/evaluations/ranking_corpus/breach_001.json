@@ -1,0 +1,125 @@
+{
+  "case_id": "breach_001",
+  "submode": "BREACH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "External attacker brute-forced SSH, established cron persistence"
+    },
+    {
+      "id": "H2",
+      "description": "Insider using external VPN egress"
+    },
+    {
+      "id": "H3",
+      "description": "Authorized red-team engagement"
+    },
+    {
+      "id": "H4",
+      "description": "Admin script misconfigured, retrying with wrong creds"
+    },
+    {
+      "id": "H5",
+      "description": "IDS false positive on log replay"
+    },
+    {
+      "id": "H6",
+      "description": "Normal activity"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "53 failed SSH logins in 3 min from 203.0.113.9",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "+",
+        "H4": "+",
+        "H5": "N",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "2-second regular intervals between attempts",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "+",
+        "H4": "++",
+        "H5": "N",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Accepted password for root after failures",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "+",
+        "H4": "--",
+        "H5": "-",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "cron entry created: /tmp/.x every 5 min",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "++",
+        "H3": "+",
+        "H4": "--",
+        "H5": "--",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O5",
+      "description": "No red-team engagement ticket open",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "H",
+      "ratings": {
+        "H1": "+",
+        "H2": "+",
+        "H3": "--",
+        "H4": "N",
+        "H5": "N",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O6",
+      "description": "Host uptime 400 days",
+      "reliability": "C",
+      "credibility": "4",
+      "relevance": "L",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "N",
+        "H4": "N",
+        "H5": "N",
+        "H6": "N"
+      }
+    }
+  ],
+  "ground_truth": "H1",
+  "ground_truth_basis": "synthetic: canonical brute-force + persistence"
+}

@@ -1,207 +1,141 @@
-# SAT Techniques Reference
+# SAT techniques
 
-## Generation Techniques
+Use the technique that changes the assessment; omit steps with no analytic value.
 
-### Hypothesis Saturation Drill
+Contents: [generation](#generate-distinguishable-explanations),
+[ACH](#compare-evidence-with-ach), [sensitivity](#test-sensitivity-and-falsification),
+[uncertainty](#express-likelihood-and-confidence), [decisions](#compare-actions-separately-from-causes).
 
-Generate maximum quantity before quality filtering. Quantity enables quality.
+## Generate distinguishable explanations
 
-**Process**:
-1. Set minimum target (simple: 5, moderate: 10, complex: 15)
-2. Apply ≥3 generation methods
-3. Check category coverage
-4. Quality filter AFTER generation complete
+| Method | Useful prompt | Guard against |
+|---|---|---|
+| Causal decomposition | Which different mechanisms can produce this specific effect? | Confusing an initiating cause with a downstream symptom. |
+| Inversion | What if the measurement, assumed intent, or stated scope is wrong? | Denying an established event merely to create a null. |
+| Actor enumeration | Who has relevant access, incentives, or an authorized reason? | Treating opportunity or identity as proof of intent. |
+| Dimensional decomposition | Which changes in environment, timing, load, or state change predictions? | Assuming these dimensions are independent. |
+| Assumption challenge | Which plausible condition would invalidate the preferred explanation? | Choosing an uncomfortable story only for its dramatic effect. |
 
-**Methods**:
+Use multiple methods when they yield distinct alternatives, not as an unconditional
+quota. In a **requested hypothesis-saturation drill**, set the target and method count
+in the exercise instructions. Generate broadly, then remove duplicates, scope vague
+claims, and identify distinguishable predictions. Score training compliance separately
+from analytic quality; more hypotheses do not establish a better answer.
 
-#### Dimensional Decomposition
-Break into independent dimensions:
-- WHO: Actors (external/internal/system/environmental)
-- WHAT: Events (what actually occurred)
-- WHY: Motivations (malicious/accidental/legitimate)
-- HOW: Mechanisms (technical methods)
-- WHEN: Timeline (immediate/staged/dormant)
+Define the event, mechanism, scope, and necessary assumptions for each explanation.
+Keep component hypotheses and combinations explicit. “A contributes” and “B
+contributes” may both be true; “A alone” makes a different claim. A broad fallback
+such as “some other cause” records model incompleteness but predicts little.
 
-#### Causal Pathway Enumeration
-Work backward from observed effect:
-```
-EFFECT → What directly caused this?
-       → What caused that?
-       → Continue to initiating events
-```
+## Compare evidence with ACH
 
-#### Actor Enumeration
-| Category | Examples |
-|----------|----------|
-| External Malicious | APT, criminal, competitor |
-| Internal Malicious | Insider, disgruntled |
-| External Non-Malicious | Vendor, partner, researcher |
-| Internal Non-Malicious | Employee, IT, security team |
-| System/Automated | Software bug, hardware failure |
-| Environmental | Power, network, physical |
+Assess each material observation against each hypothesis using the same scope.
+Record ratings as analyst judgments, with an explanation for pivotal cells:
 
-#### Inversion/Negation
-For each obvious hypothesis, generate opposite:
-- "Attacker did X" → "No attacker, system did X"
-- "Bug caused crash" → "Crash is expected behavior"
-- "Malicious" → "Legitimate but unusual"
+| Rating | Interpretation |
+|---|---|
+| `++` | Strong relative support under stated assumptions; explain why rival explanations predict it less well. |
+| `+` | Some relative support; mere compatibility does not suffice. |
+| `N` | Evaluated and nondiscriminating, irrelevant, or equally compatible within this comparison. |
+| `-` | Tension with an expected prediction; not necessarily exclusion. |
+| `--` | Strong contradiction under stated scope and measurement assumptions; justify any exclusion separately. |
+| Missing | Not evaluated or insufficient basis to rate; retain as missing, never silently zero. |
 
-#### Devil's Hypothesis Injection
-Force uncomfortable hypotheses:
-- What would embarrass the organization?
-- What would challenge stakeholder assumptions?
-- What do we NOT want to be true?
+Diagnosticity depends on alternatives. An observation compatible with all columns
+may establish an event while doing little to distinguish its cause. Recheck the
+interpretation of evidence that drives the assessment.
+[Heuer, chapter 8](https://www.cia.gov/resources/csi/static/Pyschology-of-Intelligence-Analysis.pdf)
 
-### Required Categories Checklist
-- [ ] Obvious/Expected
-- [ ] Null (nothing wrong)
-- [ ] Uncomfortable (challenges assumptions)
-- [ ] Low-probability/High-impact
-- [ ] Combined (multiple factors)
+The helper maps symbols to descriptive values `2, 1, 0, -1, -2`. Do not convert
+their sums, variance, or contradiction counts into probabilities, certainty, or an
+automatic causal winner. One verified contradiction of a necessary prediction
+matters differently from several weakly compatible observations. An untestable
+hypothesis does not win by avoiding contradictions.
 
----
+Inspect source identity before counting evidence. Exact derivative copies of one
+established observation do not create corroboration. Different measurements of one
+business event can have different origins; do not merge them merely by order or
+incident ID. Distinct observations can share a collector, clock, parser, or author;
+these dependencies matter even when records are not duplicates. Unknown dependence
+is a limitation.
 
-## Evaluation Techniques
+### Known limits of the comparison
 
-### Analysis of Competing Hypotheses (ACH)
+Evidence rated identically against every hypothesis carries no diagnostic weight;
+analysts nonetheless let it move judgments (`KM2020-PSEUDODIAGNOSTIC`). Counting
+only contradictions ranks a hypothesis consistent with everything first (Mandel,
+Karvetski and Dhami 2018; reproduced on this engine in
+`evaluations/ranking_baselines.py`, case `breach_002`). Controlled studies found ACH
+did not improve accuracy or coherence (`EVID-ACH-NOT-A-DEBIASER`); treat the
+matrix as an audit trail of ratings. An opt-in PARC weighted-inconsistency ranking
+lives in `sat_engine.parc` for harness comparison only.
 
-Systematic evaluation against evidence using consistency matrix.
+## Test sensitivity and falsification
 
-**When to use**: 3+ hypotheses, multiple evidence items, confirmation bias risk
+Vary the evidence or assumption that could plausibly change the conclusion:
 
-**Process**:
-1. List hypotheses as columns (3-7 optimal, max 10)
-2. List evidence as rows (atomic facts)
-3. Rate each cell for consistency
-4. Sum scores
-5. Identify discriminating evidence
-6. Perform sensitivity analysis
+- Remove a pivotal observation, then an entire established dependency group.
+- Reassess a disputed rating or the meaning of a key field.
+- Check the assumption behind the best explanation and its strongest competitor.
+- Report loss of discrimination, including a unique heuristic leader becoming tied.
 
-**Rating Scale**:
-```
-++  Strongly Supports    (+2)  Evidence predicted by hypothesis
-+   Supports             (+1)  Consistent with hypothesis
-N   Neutral              (0)   Neither supports nor contradicts
--   Contradicts          (-1)  Inconsistent with hypothesis
---  Strongly Contradicts (-2)  Argues against hypothesis
-```
+State what was varied and what remained unchanged. Do not call a conclusion robust
+because one row removal leaves a numerical order intact. Preserve the helper's
+`insufficient_evidence`, `incomplete`, `underdetermined`, or `differentiated` result as
+a description of its inputs; a differentiated score still requires causal reasoning.
 
-**Rating Rules**:
-- Rate DIAGNOSTICITY, not just consistency
-- Ask: "If H is true, would I expect E?"
-- Consider: "Does E distinguish between hypotheses?"
-- Neutral is valid—don't force ratings
+Falsification requires a verified observation inconsistent with a necessary
+prediction. A failed search supports exclusion only within its collection coverage.
+For noisy or probabilistic predictions, explain how the result changes relative
+support; do not claim logical disproof. Use the measurement-check reference for
+independence, clocks, detection opportunity, and combined-cause traps.
 
-**Sensitivity Analysis**:
-Remove most influential evidence item. Does conclusion change?
-- Yes → Single-point dependency (vulnerability)
-- No → Robust conclusion
+## Express likelihood and confidence
 
-**Interpretation**:
-- ACH shows CONSISTENCY, not truth
-- High score ≠ high probability (missing evidence possible)
-- Low score = strong argument against
-- Multiple high scores = genuine uncertainty
+Use a consistent declared likelihood vocabulary. If no customer vocabulary is given,
+these terms and approximate bands come from
+[ICD 203, D.6.e.(2)](https://archive.dni.gov/files/documents/ICD/ICD-203.pdf):
 
-### Weighted Ranking Matrix
+| Likelihood term | Approximate probability band |
+|---|---|
+| Almost no chance | 1–5% |
+| Very unlikely | 5–20% |
+| Unlikely | 20–45% |
+| Roughly even chance | 45–55% |
+| Likely | 55–80% |
+| Very likely | 80–95% |
+| Almost certain | 95–99% |
 
-Prioritize options across multiple criteria.
+These published bands communicate meaning; they are not numerical measurements or
+strict interval-validation bins. A number is optional in this adapted skill. If
+quantifying, label a subjective estimate as such and state its scope and basis.
+Use confidence separately to describe source quality, coverage, reasoning, and
+dependence on assumptions. Unknown reliability remains unknown.
 
-**When to use**: Comparing options, prioritization needed, criteria vary in importance
+State the likelihood term and the confidence level in separate sentences
+(`ICD203-LIKELIHOOD-CONFIDENCE-SENTENCE`, D.6.e.(2)(b)); the engine rejects a
+sentence carrying both, and a term whose band excludes the value
+(`ICD203-LIKELIHOOD-TERMS`, D.6.e.(2)(a)).
 
-**Process**:
-1. Define criteria
-2. Assign weights (must sum to 100%)
-3. Score each option on each criterion (1-5)
-4. Calculate weighted scores
-5. Sensitivity test weights
+For exclusive and exhaustive alternatives, quantified point probabilities must sum
+to one. Elicit raw values first and coherentize them (`sat coherentize`, or
+`sat_engine.coherence.check_and_project`), recording the incoherence metric — the
+distance between what was elicited and what was authored (`MANDEL-COHERENTIZE`).
+Independent elicitations can be pooled with equal weight; exclusive nonexhaustive sets may sum to less. For overlapping propositions,
+there is no arbitrary total band. Do not invent missing estimates or redistribute
+beliefs to pass validation. The general conjunction rule is
+`P(A ∩ B) = P(A) × P(B | A)` for `P(A) > 0`; use `P(A) × P(B)` only with independence.
+Always `P(A ∩ B) ≤ min(P(A), P(B))`.
 
-### Falsification Testing
+## Compare actions separately from causes
 
-Actively seek evidence that would disprove hypothesis.
+Use a weighted option matrix only when criteria and weights represent the decision
+maker's actual priorities. Label weights as preferences, apply consistent units,
+and test plausible weight changes. A preferred action need not depend on the most
+likely cause; it may preserve acceptable outcomes across unresolved alternatives.
 
-**Process**:
-1. For top hypothesis, ask: "What evidence would prove this wrong?"
-2. Search for that evidence
-3. If found → reduce confidence significantly
-4. If searched and not found → may increase confidence slightly
-5. If unable to search → note gap
-
----
-
-## Cognitive Discipline Techniques
-
-### Observation/Interpretation Separation
-
-**The O/I Test**:
-1. Could a camera record this exactly? → Observation
-2. Requires inference or judgment? → Interpretation
-3. Could reasonable people disagree? → Interpretation
-
-**Common Violations**:
-| Interpretation | Pure Observation |
-|----------------|------------------|
-| "Attacker logged in" | "Login for user X from IP Y at time T" |
-| "Malicious beacon" | "HTTP POST to [domain] every 60s" |
-| "Data exfiltration" | "500MB transferred to [IP] over 3 hours" |
-| "Brute force attack" | "53 failed password attempts in 3 minutes" |
-| "Memory leak" | "Memory usage increased 500MB over 4 hours" |
-
-**Red Flag Words** (indicate interpretation):
-- Causal: "caused", "resulted in", "led to"
-- Intent: "tried to", "attempted", "wanted"
-- Classification: "malicious", "suspicious", "legitimate"
-- Certainty: "clearly", "obviously", "definitely"
-- Labels: "attacker", "victim", "insider"
-
-### Confidence Calibration
-
-**Scale with Practical Meaning**:
-| Term | Range | Practical Test |
-|------|-------|----------------|
-| Almost Certain | 90-99% | Would bet heavily; alternatives nearly impossible |
-| Highly Likely | 80-89% | Strong confidence; meaningful wrong chance |
-| Likely | 65-79% | More likely than not; alternatives credible |
-| Moderate | 50-64% | Toss-up; wouldn't be surprised either way |
-| Unlikely | 20-49% | Probably not, but possible |
-| Remote | 5-19% | Surprised, but not shocked |
-| Almost None | 1-4% | Would require extraordinary evidence |
-
-**Rules**:
-1. Always pair verbal AND numeric
-2. Use ranges, not points
-3. Calibrate to evidence, not feeling
-4. Check for overconfidence signals
-
-**Overconfidence Signals**:
-- Confidence >80% with limited evidence
-- Cannot articulate what would change mind
-- Dismissing alternatives quickly
-- Using certainty language
-- Anchored on first hypothesis
-
-### Assumption Breaks
-
-Identify conditions that invalidate conclusions.
-
-**Process**:
-1. List all assumptions (stated and unstated)
-2. For each: How critical? What would break it?
-3. Document: "If [condition], then [conclusion changes to]"
-
-**Common Hidden Assumptions**:
-- Logs are authentic and complete
-- Timestamps are synchronized
-- No authorized testing was occurring
-- Actor is rational by our definition
-- Tools behave as documented
-
-### Pre-Mortem Analysis
-
-Assume conclusion is WRONG. Why did it fail?
-
-**Process**:
-1. Assume your top hypothesis is proven wrong in 6 months
-2. Write the story of why it failed
-3. Identify vulnerabilities in your analysis
-4. Strengthen weak points or reduce confidence
+Record immediate feasibility, the assumption that forces a different action, and
+what measurable capability the action improves. Expose burden, alternate capacity,
+reversibility, and triggers before a delayed adverse outcome. Stop adding analysis
+when it cannot change the bounded decision within its deadline; preserve unresolved
+questions for a named later check rather than disguising them as certainty.

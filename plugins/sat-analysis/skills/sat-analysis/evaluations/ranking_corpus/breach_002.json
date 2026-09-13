@@ -1,0 +1,125 @@
+{
+  "case_id": "breach_002",
+  "submode": "BREACH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "External scanner probing web app"
+    },
+    {
+      "id": "H2",
+      "description": "Insider exfiltrating via web"
+    },
+    {
+      "id": "H3",
+      "description": "Scheduled authorized vulnerability scan"
+    },
+    {
+      "id": "H4",
+      "description": "Dev running unapproved fuzzer"
+    },
+    {
+      "id": "H5",
+      "description": "WAF signature update replaying test traffic"
+    },
+    {
+      "id": "H6",
+      "description": "Elevated but benign traffic"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "4,000 requests in 10 min to /api/* from 10.20.0.7",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "+",
+        "H2": "+",
+        "H3": "++",
+        "H4": "+",
+        "H5": "+",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "10.20.0.7 is the scan appliance per CMDB",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "--",
+        "H3": "++",
+        "H4": "--",
+        "H5": "-",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Scheduler shows scan job 02:00 Sundays; window matches",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "-",
+        "H2": "-",
+        "H3": "++",
+        "H4": "-",
+        "H5": "N",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "User-Agent contains scanner product string",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "+",
+        "H2": "-",
+        "H3": "++",
+        "H4": "-",
+        "H5": "N",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O5",
+      "description": "No data egress above baseline",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "--",
+        "H3": "+",
+        "H4": "N",
+        "H5": "N",
+        "H6": "+"
+      }
+    },
+    {
+      "id": "O6",
+      "description": "One request returned 500",
+      "reliability": "C",
+      "credibility": "4",
+      "relevance": "L",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "-",
+        "H4": "N",
+        "H5": "N",
+        "H6": "+"
+      }
+    }
+  ],
+  "ground_truth": "H3",
+  "ground_truth_basis": "synthetic: vague Null hypothesis consistent with everything \u2014 legacy-sum trap"
+}

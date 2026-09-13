@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "suite_version": "1.0.0",
+  "cases": [
+    {
+      "id": "case-01",
+      "split": "regression",
+      "prompt": "A utility operates 12 dispatch gateways. Eight high-traffic sites received firmware and queue changes at 06:00. Between 06:12 and 06:32, monitoring flagged 45-120 second delivery delays at six upgraded gateways and one unchanged gateway. Provider B carries seven upgraded and two unchanged gateways; all seven flagged gateways use B. The remaining three gateways use A and were not flagged. The dashboard uses COL-2/events, a vendor bulletin uses COL-2/export, and the SLA report uses COL-2/events. COL-2 was patched at 05:50 to change device timestamp mapping; its passing health check tests ingestion and storage only. At two flagged sites, continuous audio recordings show 18 and 22 seconds from spoken request to crew acknowledgment, versus a usual 3-8 seconds; they do not record gateway delivery. A 06:05 vendor administrator session authenticated successfully through the usual VPN exit; a routine-verification ticket was entered at 06:07; commands were not recorded. One site restored old firmware and changed WAN B to A at 06:24; COL-2 showed normal latency at 06:26. No missed priority order has been confirmed; reconciliation runs 30 minutes behind. Voice dispatch has tested capacity of four priority orders per minute; current demand is three, forecast six in 30 minutes. Two engineers can each perform one five-minute check before the continuity decision. Analyze the likely causes, identify what the evidence establishes, choose exactly two checks with expected results, and recommend a bounded immediate dispatch decision. Keep the answer to 700 words."
+    },
+    {
+      "id": "case-02",
+      "split": "regression",
+      "prompt": "An HTTP API's p95 latency fell from 9 seconds to 100 milliseconds after an operator simultaneously rolled back application build 41 to 40, increased worker count from 2 to 12, and switched database region. Concurrent demand also fell from 180 to 55 requests/second. The dashboard's p95 is computed from actual completed client requests, but those are the only measurements available. Management says the rollback proves build 41 defective and asks whether build 40 should become the permanent release. Assess that claim and give one practical next check and an immediate reversible decision."
+    },
+    {
+      "id": "case-03",
+      "split": "regression",
+      "prompt": "A command channel occasionally takes 60 seconds to acknowledge a 40-kilobyte TLS application message sent to a controller over a provider WAN. Five ICMP pings to that controller returned in 8 milliseconds with no loss. The engineer concludes the network is cleared and the application must be at fault. No packet capture, route comparison, application retry trace, or clock-offset bound has been collected. Evaluate the conclusion, choose a next measurement, and state which outcomes would or would not exclude a transport-related explanation."
+    },
+    {
+      "id": "case-04",
+      "split": "regression",
+      "prompt": "A warehouse UI reports 80-second job-delivery latency. A test harness measures an independent 20-second interval between sending a job and receiving its application acknowledgment using one monotonic clock; the usual interval is 2 seconds. The UI subtracts a sender timestamp from a receiver timestamp on a different host; nobody has measured those hosts' offset. All observations refer to the same job ID. The lead says: 'We proved a real delay, therefore the UI calculation is correct and telemetry defects are eliminated.' Analyze this conclusion and recommend the next measurement and interim operational response."
+    },
+    {
+      "id": "case-05",
+      "split": "regression",
+      "prompt": "Electronic dispatch delivery cannot currently be verified. Independent voice dispatch has tested capacity of four priority orders/minute, present demand is three, and demand is forecast to reach six in 30 minutes. The reconciliation report arrives 30 minutes late. Voice operators can obtain explicit crew acknowledgment and use a shared order-ID ledger to prevent duplicates. Staffing can sustain that arrangement for 15 minutes before relief must be assigned. An advisor says: 'Never switch to voice because the forecast exceeds capacity; continue digital until a missed safety order appears in reconciliation.' Assess the advice and specify an immediate decision, owner, capacity/acknowledgment triggers, failure mode, and review time."
+    },
+    {
+      "id": "case-06",
+      "split": "regression",
+      "prompt": "A local test program computes integer division by a command-line divisor. With argument 0 it reliably raises ZeroDivisionError at the division expression; argument 2 succeeds. The program received exactly the arguments recorded by the test harness. No network, asynchronous work, or shared state participates. The proposed change rejects divisor 0 with a clear usage error before evaluation and retains division behavior for nonzero integers. Explain the cause, assess whether the fix addresses the observed failure, and name a proportionate verification step."
+    },
+    {
+      "id": "case-07",
+      "split": "regression",
+      "prompt": "A parser processes a five-line gateway log. Raw lines are: (1) '2026-09-09T10:00:00Z request id=17'; (2) '{broken-json'; (3) 'Sep 9 10:00:02 received id=17'; (4) '2026-09-09T10:00:03Z audit: discussed address 192.0.2.17'; (5) '2026-09-09T10:00:05Z completed id=17'. It exports only lines 1 and 5, claims total_records=2 and zero errors, and labels the mentioned IP as the attacking source. A second device reports id=17 delivered at '2026-09-09 10:00:01' without timezone or clock documentation. The analyst concludes there were no intermediate errors, that 192.0.2.17 originated an attack, and that cross-device delivery took one second. Review those conclusions and describe the minimum evidence-preserving correction."
+    },
+    {
+      "id": "case-08",
+      "split": "regression",
+      "prompt": "An ACH helper receives H1='scheduled reboot' and H2='unexpected power interruption'. With no evidence rows, it initializes scores to zero and returns H1 as winner. Adding one record 'host unavailable for one minute' rated neutral for both leaves the same winner. Reversing the hypothesis input order makes H2 the winner. In a separate matrix the only discriminating row is removed and the helper calls the result robust because the earlier leader remains among the tied top scorers. Evaluate the helper behavior and specify defensible result states."
+    },
+    {
+      "id": "case-09",
+      "split": "held_out",
+      "prompt": "Three teams independently email that a certificate is expired. Their attachments are exports of the same scanner run R18, using scanner clock S. A browser on a managed workstation successfully negotiates TLS without a warning. The workstation trusts an enterprise interception certificate, and no direct-origin certificate or scanner-clock comparison is available. The owner asks whether to force immediate origin certificate rotation or dismiss the scanner. Assess what has been established and propose a bounded next check and decision."
+    },
+    {
+      "id": "case-10",
+      "split": "held_out",
+      "prompt": "Three propositions are assigned probabilities: a retry storm contributes to delay 0.9, a monitoring conversion defect contributes to overstatement 0.8, and a slow database contributes to delay 0.7. The analyst explicitly allows all three to occur together. A validator rejects their 2.4 sum, rescales them to total 1, and calls the resulting values calibrated confidence. Evaluate the validator and state what relationships or information would justify any probability-total requirement."
+    },
+    {
+      "id": "case-11",
+      "split": "held_out",
+      "prompt": "An operations team removed the only external queue metric and now has four graphs derived from one exporter. They all show the same queue growth. A restart followed by doubled worker count coincided with recovery. Peak traffic ended in the same minute. The four graphs agree after recovery. The team says agreement plus recovery establishes both the original cause and the fix. Identify the strongest supportable conclusion, remaining alternatives, and a low-disruption discriminating check."
+    },
+    {
+      "id": "case-12",
+      "split": "held_out",
+      "prompt": "A queue consumer is paused because its local configuration says enabled=false. Its log explicitly records 'startup skipped: enabled=false'. An operator changes only that value to true on one isolated replica, which begins processing queued jobs; reverting only that value pauses consumption again. The test is repeated twice at the same input rate with no other recorded changes. There is no observed wider incident. A reviewer demands five competing causes, a compromise investigation, and numerical confidence adjustments for each confirming log. Give a proportionate causal assessment, the remaining scope limit, and a useful deployment verification step."
+    }
+  ]
+}

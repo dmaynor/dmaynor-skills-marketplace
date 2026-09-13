@@ -1,0 +1,110 @@
+{
+  "case_id": "breach_003",
+  "submode": "BREACH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "External credential stuffing"
+    },
+    {
+      "id": "H2",
+      "description": "Insider accessing HR share off-hours"
+    },
+    {
+      "id": "H3",
+      "description": "Manager doing approved year-end review"
+    },
+    {
+      "id": "H4",
+      "description": "Employee browsing shares out of curiosity"
+    },
+    {
+      "id": "H5",
+      "description": "Backup agent enumerating shares"
+    },
+    {
+      "id": "H6",
+      "description": "Normal activity"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "HR share accessed 02:14 by jdoe from corp VLAN",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "+",
+        "H4": "+",
+        "H5": "--",
+        "H6": "-"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "jdoe not on HR review roster",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "N",
+        "H2": "++",
+        "H3": "--",
+        "H4": "+",
+        "H5": "N",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "312 files opened, 40 copied to USB",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "-",
+        "H2": "++",
+        "H3": "-",
+        "H4": "--",
+        "H5": "--",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "jdoe badge-in at 02:05",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "--",
+        "H2": "++",
+        "H3": "+",
+        "H4": "+",
+        "H5": "-",
+        "H6": "-"
+      }
+    },
+    {
+      "id": "O5",
+      "description": "Backup window is 23:00-01:00",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "N",
+        "H4": "N",
+        "H5": "--",
+        "H6": "N"
+      }
+    }
+  ],
+  "ground_truth": "H2",
+  "ground_truth_basis": "synthetic: insider with physical presence and USB copy"
+}

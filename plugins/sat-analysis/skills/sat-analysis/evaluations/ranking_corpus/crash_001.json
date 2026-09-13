@@ -1,0 +1,110 @@
+{
+  "case_id": "crash_001",
+  "submode": "CRASH",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Use-after-free in session cache"
+    },
+    {
+      "id": "H2",
+      "description": "Race between reaper thread and request handler"
+    },
+    {
+      "id": "H3",
+      "description": "FD exhaustion under load"
+    },
+    {
+      "id": "H4",
+      "description": "Null deref on unexpected state transition"
+    },
+    {
+      "id": "H5",
+      "description": "Malformed client header"
+    },
+    {
+      "id": "H6",
+      "description": "Expected abort on SIGTERM"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "SIGSEGV in cache_lookup(), freed chunk per ASan",
+      "reliability": "A",
+      "credibility": "1",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "--",
+        "H4": "-",
+        "H5": "N",
+        "H6": "--"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Reproduces single-threaded",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "+",
+        "H2": "--",
+        "H3": "N",
+        "H4": "+",
+        "H5": "+",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "FD count 120 of 65536",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "--",
+        "H4": "N",
+        "H5": "N",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "Crash only after session eviction",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "+",
+        "H3": "N",
+        "H4": "+",
+        "H5": "-",
+        "H6": "N"
+      }
+    },
+    {
+      "id": "O5",
+      "description": "No SIGTERM in journal",
+      "reliability": "C",
+      "credibility": "3",
+      "relevance": "M",
+      "ratings": {
+        "H1": "N",
+        "H2": "N",
+        "H3": "N",
+        "H4": "N",
+        "H5": "N",
+        "H6": "--"
+      }
+    }
+  ],
+  "ground_truth": "H1",
+  "ground_truth_basis": "synthetic: UAF after eviction"
+}

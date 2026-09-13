@@ -1,0 +1,580 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/analysis_request.v1.json",
+  "title": "Explicit analyst inputs",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "mode": {
+      "enum": [
+        "LIGHT",
+        "FULL"
+      ]
+    },
+    "submode": {
+      "enum": [
+        "BREACH",
+        "CRASH",
+        "FIX",
+        "STATEMENT",
+        "GENERAL"
+      ]
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "analysis_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "$ref": "observation.v1.json"
+      }
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "$ref": "hypothesis.v1.json"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence.v1.json"
+      }
+    },
+    "relationship": {
+      "enum": [
+        "unspecified",
+        "exclusive_exhaustive",
+        "exclusive_nonexhaustive",
+        "overlapping"
+      ]
+    },
+    "judgment": {
+      "anyOf": [
+        {
+          "$ref": "analysis_request.v1.json#/$defs/judgment"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "analysis_request.v1.json#/$defs/task"
+      }
+    },
+    "rule_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "calculations": {
+      "type": "array",
+      "items": {
+        "$ref": "analysis_request.v1.json#/$defs/calculation"
+      }
+    },
+    "timeline_options": {
+      "$ref": "analysis_request.v1.json#/$defs/timeline_options"
+    }
+  },
+  "required": [
+    "schema_version",
+    "mode",
+    "submode",
+    "question"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "LIGHT"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "evidence": {
+            "type": "array",
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "judgment": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "selected_hypothesis_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "likelihood": {
+          "type": "object",
+          "properties": {
+            "proposition": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "value": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 1
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "term": {
+              "type": "string"
+            },
+            "horizon": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "proposition",
+            "value",
+            "basis"
+          ],
+          "additionalProperties": false
+        },
+        "confidence": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "enum": [
+                "low",
+                "moderate",
+                "high",
+                "unassessed"
+              ]
+            },
+            "reasoning": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "level",
+            "reasoning"
+          ],
+          "additionalProperties": false
+        },
+        "implications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "likelihood": {
+      "type": "object",
+      "properties": {
+        "proposition": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "term": {
+          "type": "string"
+        },
+        "horizon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "proposition",
+        "value",
+        "basis"
+      ],
+      "additionalProperties": false
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "enum": [
+            "low",
+            "moderate",
+            "high",
+            "unassessed"
+          ]
+        },
+        "reasoning": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "level",
+        "reasoning"
+      ],
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "hypothesis_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "calculation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "operation": {
+              "enum": [
+                "sum",
+                "product"
+              ]
+            },
+            "operands": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "unit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "operation",
+            "operands"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "operation": {
+              "enum": [
+                "difference",
+                "ratio"
+              ]
+            },
+            "operands": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "unit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "operation",
+            "operands"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "operation": {
+              "const": "reported_interval"
+            },
+            "start_observation_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "end_observation_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "unit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "operation",
+            "start_observation_id",
+            "end_observation_id"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "calculation_result": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "operation": {
+          "enum": [
+            "sum",
+            "difference",
+            "product",
+            "ratio",
+            "reported_interval"
+          ]
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "physical_latency_established": {
+          "const": false
+        }
+      },
+      "required": [
+        "id",
+        "operation",
+        "value",
+        "unit",
+        "status",
+        "caveats"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "unresolved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "reported_interval"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "physical_latency_established"
+            ],
+            "properties": {
+              "unit": {
+                "const": "seconds"
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "physical_latency_established"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "timeline_options": {
+      "type": "object",
+      "properties": {
+        "gap_threshold_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "default": 300
+        },
+        "rapid_threshold_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "default": 1
+        },
+        "default_year": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9999
+        },
+        "default_timezone": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "fold": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+}

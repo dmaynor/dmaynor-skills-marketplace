@@ -1,0 +1,115 @@
+{
+  "fixture_version": "1",
+  "fixture_id": "light_zoned_clocks",
+  "review_method": "Input and numeric, temporal, provenance and assessment invariants were hand-authored before capturing the complete Python-engine result.",
+  "portability_limit": "This is a portable contract fixture, not a claim that another language or platform has executed it.",
+  "request": {
+    "schema_version": "1",
+    "analysis_id": "portable-light-zoned",
+    "revision": 2,
+    "mode": "LIGHT",
+    "submode": "GENERAL",
+    "question": "What is the supplied reported-clock interval?",
+    "observations": [
+      {
+        "schema_version": "1",
+        "id": "light.send",
+        "raw": "send report at 10:00:00.125Z",
+        "source": "sender.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T10:00:00.125Z",
+        "record_sha256": "7e500de220ebe30c2cf41a263a565a06f3f73a76e5c3f8ea4ac31842af00dd6f",
+        "reliability": "unknown",
+        "clock_domain": "sender",
+        "timestamp_semantics": "send-report",
+        "timestamp_uncertainty_seconds": null
+      },
+      {
+        "schema_version": "1",
+        "id": "light.receive",
+        "raw": "receive report at 12:00:02.625+02:00",
+        "source": "receiver.log",
+        "parse_status": "parsed",
+        "timestamp": "2026-09-09T12:00:02.625+02:00",
+        "record_sha256": "9eed05bec182be454d555d23f828d4522a4de446b367bc4c42cdc23f26646557",
+        "reliability": "F",
+        "clock_domain": "receiver",
+        "timestamp_semantics": "receive-report",
+        "timestamp_uncertainty_seconds": null
+      }
+    ],
+    "judgment": {
+      "summary": "The reported clocks differ by 2.5 seconds; transport latency remains unestablished.",
+      "observation_ids": [
+        "light.send",
+        "light.receive"
+      ],
+      "confidence": {
+        "level": "low",
+        "reasoning": "The two clock domains have no established synchronization bounds."
+      }
+    },
+    "calculations": [
+      {
+        "id": "elapsed",
+        "operation": "reported_interval",
+        "start_observation_id": "light.send",
+        "end_observation_id": "light.receive"
+      },
+      {
+        "id": "remaining",
+        "operation": "difference",
+        "operands": [
+          15,
+          6
+        ],
+        "unit": "records"
+      },
+      {
+        "id": "per_batch",
+        "operation": "ratio",
+        "operands": [
+          9,
+          3
+        ],
+        "unit": "records per batch"
+      }
+    ],
+    "assumptions": [
+      "Source records are supplied assertions; collection completeness is unverified."
+    ],
+    "limitations": [
+      "This fixture tests deterministic contracts, not whether a causal explanation is true."
+    ]
+  },
+  "independent_expectations": {
+    "calculation_values": {
+      "elapsed": 2.5,
+      "remaining": 9,
+      "per_batch": 3
+    },
+    "event_ids_ordered": [
+      "light.send",
+      "light.receive"
+    ],
+    "timestamp_utc_by_id": {
+      "light.send": "2026-09-09T10:00:00.125000+00:00",
+      "light.receive": "2026-09-09T10:00:02.625000+00:00"
+    },
+    "parse_counts": {
+      "parsed": 2,
+      "rejected": 0,
+      "unparsed": 0
+    },
+    "resolved_events": 2,
+    "unresolved_events": 0,
+    "ach": null
+  },
+  "expected_result_file": "light_zoned_clocks.expected.json",
+  "expected_result_bytes_sha256": "c41c5baadfa9bcae6401b376a21ba6d282454e2a9740b22cf230e3cf7677cfbf",
+  "expected_artifact_canonical_sha256": {
+    "decision_card": "10d98487ddc9338275c65d7f6ab552c8f426279b591b2f06fce91be7d0c01d4f",
+    "analytic_trace": "f4d96d19e97ee4db9ebf4fe623b2f46e918587cdae1c231b3337f928a1d1ce87",
+    "tasking_view": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "case_id": "statement_003",
+  "submode": "STATEMENT",
+  "synthetic": true,
+  "hypotheses": [
+    {
+      "id": "H1",
+      "description": "Claim is true: 'The outage was caused by the DNS change'"
+    },
+    {
+      "id": "H2",
+      "description": "Claim is false: 'The outage was caused by the DNS change'"
+    },
+    {
+      "id": "H3",
+      "description": "Claim is underdetermined: 'The outage was caused by the DNS change'"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "O1",
+      "description": "DNS change 14:02; outage 14:05",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "-",
+        "H3": "N"
+      }
+    },
+    {
+      "id": "O2",
+      "description": "Concurrent BGP flap at 14:04 on upstream",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "-",
+        "H2": "+",
+        "H3": "++"
+      }
+    },
+    {
+      "id": "O3",
+      "description": "Rollback of DNS at 14:30; recovery 14:31",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "++",
+        "H2": "--",
+        "H3": "-"
+      }
+    },
+    {
+      "id": "O4",
+      "description": "BGP stabilized 14:29",
+      "reliability": "B",
+      "credibility": "2",
+      "relevance": "H",
+      "ratings": {
+        "H1": "-",
+        "H2": "+",
+        "H3": "++"
+      }
+    }
+  ],
+  "ground_truth": "H3",
+  "ground_truth_basis": "synthetic: confounded causes"
+}

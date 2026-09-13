@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sat-analysis.local/schemas/engine_result.v1.json",
+  "title": "Structured engine success or validation failure",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "engine_version": {
+      "const": "1.1.0"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "invalid"
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "analytic_trace.v1.json#/$defs/diagnostic"
+      }
+    },
+    "artifacts": {
+      "anyOf": [
+        {
+          "$ref": "engine_result.v1.json#/$defs/artifacts"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "engine_version",
+    "status",
+    "diagnostics",
+    "artifacts"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "artifacts": {
+            "$ref": "engine_result.v1.json#/$defs/artifacts"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "artifacts": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "diagnostics"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "decision_card": {
+          "$ref": "decision_card.v1.json"
+        },
+        "analytic_trace": {
+          "$ref": "analytic_trace.v1.json"
+        },
+        "tasking_view": {
+          "anyOf": [
+            {
+              "$ref": "tasking_view.v1.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "decision_card",
+        "analytic_trace",
+        "tasking_view"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "analytic_trace": {
+                "properties": {
+                  "request": {
+                    "properties": {
+                      "mode": {
+                        "const": "LIGHT"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "tasking_view": {
+                "type": "null"
+              },
+              "decision_card": {
+                "properties": {
+                  "assessment_status": {
+                    "const": "not_evaluated"
+                  }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "tasking_view": {
+                "$ref": "tasking_view.v1.json"
+              },
+              "decision_card": {
+                "properties": {
+                  "assessment_status": {
+                    "enum": [
+                      "insufficient_evidence",
+                      "incomplete",
+                      "underdetermined",
+                      "differentiated"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
