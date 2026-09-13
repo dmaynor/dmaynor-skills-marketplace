@@ -1,0 +1,10 @@
+{
+  "name": "repeatable-demo-evidence",
+  "version": "1.0.0",
+  "description": "Prepare and rehearse a repeatable application demonstration with synthetic accounts, role-specific journeys, recovery instructions, screenshots, and a portable offline walkthrough ZIP. Use for demo preparation and evidence handoff, not ordinary screenshot capture.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "license": "MIT",
+  "skills": "./skills/"
+}

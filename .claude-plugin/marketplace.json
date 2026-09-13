@@ -184,6 +184,18 @@
       "source": "./plugins/macos-screen-flash-triage",
       "description": "Triage macOS display flashes using WindowServer and unified-log evidence.",
       "version": "1.1.0"
+    },
+    {
+      "name": "mvp-acceptance-audit",
+      "source": "./plugins/mvp-acceptance-audit",
+      "description": "Audit an MVP or release against its actual requirements, qualify recovery and user journeys, and produce evidence-backed completion and delivery records. Use for readiness assessments and requested release qualification, not routine isolated code edits.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "repeatable-demo-evidence",
+      "source": "./plugins/repeatable-demo-evidence",
+      "description": "Prepare and rehearse a repeatable application demonstration with synthetic accounts, role-specific journeys, recovery instructions, screenshots, and a portable offline walkthrough ZIP. Use for demo preparation and evidence handoff, not ordinary screenshot capture.",
+      "version": "1.0.0"
     }
   ]
 }
