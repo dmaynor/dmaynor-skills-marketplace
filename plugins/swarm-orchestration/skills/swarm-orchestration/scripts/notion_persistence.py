@@ -21,8 +21,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-
-TEAMS_BASE = Path.home() / ".claude" / "teams"
+from swarm_persistence import get_team_dir
 
 
 def timestamp() -> str:
@@ -32,7 +31,7 @@ def timestamp() -> str:
 
 def get_sync_state_path(team_name: str) -> Path:
     """Get path to sync state file."""
-    return TEAMS_BASE / team_name / "sync_state.json"
+    return get_team_dir(team_name) / "sync_state.json"
 
 
 def load_sync_state(team_name: str) -> dict:
@@ -63,7 +62,7 @@ def sync_logs(team_name: str) -> dict:
         - current_sync_ts: Timestamp for this sync
         - is_first_sync: True if no prior sync
     """
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         print(f"[ERR] Team not found: {team_dir}", file=sys.stderr)
         sys.exit(1)
@@ -165,7 +164,7 @@ def confirm_sync(team_name: str, logs_page_id: Optional[str] = None) -> None:
 
 def get_sync_status(team_name: str) -> dict:
     """Get current sync status for a team."""
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         return {"error": f"Team not found: {team_name}"}
     
@@ -215,7 +214,7 @@ def load_jsonl(path: Path) -> list[dict]:
 
 def export_logs(team_name: str) -> dict:
     """Export full channel logs to Notion-ready format."""
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         print(f"[ERR] Team not found: {team_dir}", file=sys.stderr)
         sys.exit(1)
@@ -268,7 +267,7 @@ def export_logs(team_name: str) -> dict:
 
 def restore_logs(team_name: str, content: str) -> None:
     """Restore channel logs from Notion page content."""
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     team_dir.mkdir(parents=True, exist_ok=True)
     
     # Extract JSONL from content
@@ -310,7 +309,7 @@ def export_team(team_name: str, include_full_logs: bool = False) -> dict:
     - Channel summary (last 20) or full logs
     - Version tracking for existing projects
     """
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         print(f"[ERR] Team not found: {team_dir}", file=sys.stderr)
         sys.exit(1)
@@ -429,7 +428,7 @@ def set_session_context(team_name: str, original_prompt: str = None,
     Call this at swarm initialization with the user's original prompt,
     and update td_reasoning/td_response as TD processes the request.
     """
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         print(f"[ERR] Team not found: {team_dir}", file=sys.stderr)
         sys.exit(1)
@@ -456,7 +455,7 @@ def increment_version(team_name: str) -> int:
     
     Call this before saving when a project already exists in Notion.
     """
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     if not team_dir.exists():
         print(f"[ERR] Team not found: {team_dir}", file=sys.stderr)
         sys.exit(1)
@@ -477,7 +476,7 @@ def increment_version(team_name: str) -> int:
 
 def restore_team(team_name: str, content: str, include_logs: bool = False) -> None:
     """Restore team state from Notion page content."""
-    team_dir = TEAMS_BASE / team_name
+    team_dir = get_team_dir(team_name)
     team_dir.mkdir(parents=True, exist_ok=True)
     (team_dir / "artifacts").mkdir(exist_ok=True)
     

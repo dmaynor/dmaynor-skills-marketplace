@@ -3,7 +3,7 @@ name: swarm-orchestration
 description: Multi-agent swarm orchestration for complex tasks. TD (Technical Director) decomposes user requests into task lists, delegates to specialized role-based agents (Architect, Programmer, QA, Critic, Security Engineer, Red Team, etc.), and coordinates via shared channel communication. Supports comprehensive Notion persistence for cross-session continuity - captures conversation dialogue, extended thinking, agent communication, artifacts (code/config/docs), and outputs. Use when tasks require parallel specialist work, coordinated implementation pipelines, multi-perspective review, or when user says "save/load project", "sync logs", "team-based", "swarm", "multi-agent", or references existing projects by name.
 metadata:
   author: dmaynor
-  version: 1.1.0
+  version: 1.2.0
   date: 2026-03-29
 ---
 
@@ -98,6 +98,15 @@ Container resets between sessions. Persist **everything** to Notion for complete
 
 Setup (one-time): Create Swarm Hub database. See `references/notion-persistence.md` for schema.
 
+The first sync is deliberately two-phase. Run `notion_sync.py sync`, create the
+hub row, save the returned ID with `notion_sync.py save-ids --hub-row-id`, then
+rerun `sync` to generate child-page operations with a concrete parent. Never
+substitute or execute unresolved page-ID placeholders.
+
+State defaults to `~/.claude/teams`. Set `SWARM_TEAMS_BASE` when the runtime uses
+a different durable directory. Team names are restricted to letters, digits,
+dot, underscore, and hyphen to prevent path traversal.
+
 ---
 
 ## Autonomy Levels
@@ -130,7 +139,7 @@ Setup (one-time): Create Swarm Hub database. See `references/notion-persistence.
 | Shutdown | `Teammate({ operation: "requestShutdown", target_agent_id: "role" })` |
 | Init persistence | `python3 scripts/swarm_persistence.py init --team X --description "..."` |
 | Export full | `python3 scripts/swarm_persistence.py export-full --team X` |
-| Prepare sync | `python3 scripts/notion_sync.py sync --team X` |
+| Prepare first sync | `python3 scripts/notion_sync.py sync --team X --hub-id ID` |
 
 ---
 
@@ -140,7 +149,7 @@ Setup (one-time): Create Swarm Hub database. See `references/notion-persistence.
 2. Agents spawn and communicate: channel.jsonl shows messages from each spawned agent with proper `--from` attribution
 3. Blocked tasks respect dependencies: no agent begins work on a task whose `addBlockedBy` predecessors are incomplete
 4. Results merge correctly: final output incorporates deliverables from all agents, with no missing or duplicated work
-5. Persistence round-trips: `swarm_persistence.py export-full` produces a complete session export, and `notion_sync.py sync` generates valid sync instructions
+5. Persistence round-trips: `swarm_persistence.py export-full` produces a complete session export; first-run `notion_sync.py sync` emits only hub creation, and the second run emits child operations containing the saved concrete hub ID
 
 ## Notes
 

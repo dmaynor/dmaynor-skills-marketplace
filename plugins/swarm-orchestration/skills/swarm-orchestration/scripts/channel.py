@@ -7,16 +7,17 @@ Provides read/write operations for the shared communication channel.
 
 import argparse
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+from swarm_persistence import get_team_dir
+
 
 def get_channel_path(team: str) -> Path:
     """Get path to team's channel file."""
-    return Path.home() / ".claude" / "teams" / team / "channel.jsonl"
+    return get_team_dir(team) / "channel.jsonl"
 
 
 def ensure_channel_exists(team: str) -> Path:
