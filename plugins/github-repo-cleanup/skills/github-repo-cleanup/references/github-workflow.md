@@ -46,3 +46,14 @@ Consult these when local tool behavior or repository policy differs:
 - [Git push reference](https://git-scm.com/docs/git-push): deletion refspecs and explicit expected-value leases.
 - [GitHub CLI merge reference](https://cli.github.com/manual/gh_pr_merge): head matching, merge methods, and queue behavior.
 - [GitHub protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches): reviews, status checks, and retained-branch restrictions.
+
+
+## Change history and dates
+
+Inspect the diff against the intended base, including file-level changes needed to explain behavior. Compare commit messages with the actual patch; a message describes claimed intent, not proof. Record unique commits and their authorship and dates. A useful local format is `git log --format='%H %aI %cI %an %s' BASE..HEAD`; use resolved, safely quoted refs. `%aI` is the recorded author date and `%cI` is the recorded committer date, both ISO 8601 with offsets. Preserve timezone information or explicitly normalize to UTC.
+
+Git author/committer dates are supplied metadata. Rebasing and cherry-picking can change committer dates, and neither field reliably establishes when a branch was created or pushed. Do not label the oldest unique commit as branch creation. Use GitHub PR `createdAt`, `updatedAt`, `closedAt`, and `mergedAt` for those specific events; `updatedAt` is not necessarily a code change. When push/creation history is unavailable, report it as unknown. File modification times and local reflogs are not authoritative remote creation dates.
+
+A decision brief should identify the repository/ref and current SHA, summarize substantive changes and likely impact, link dated commits/PRs, state whether integration is proven, and identify the exact unresolved user choice. Explain recorded authorship without asserting that it proves which person physically initiated an action. Do not expose private email addresses unnecessarily.
+
+For cleanup chronology, capture operation time from an available host clock and retain GitHub's returned event times separately. Never invent a timestamp from conversation context. Record source and timezone, including whether the time is local observation or server-reported. User-facing explanations should lead with the actual change; provide the detailed timeline when it helps the decision or when requested.

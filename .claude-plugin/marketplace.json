@@ -201,7 +201,7 @@
       "name": "github-repo-cleanup",
       "source": "./plugins/github-repo-cleanup",
       "description": "Inventory local or remote GitHub repositories, create PRs for eligible branches, merge under repository review and CI rules, and delete verified merged branches without losing unmerged work.",
-      "version": "1.0.0"
+      "version": "1.0.1"
     }
   ]
 }

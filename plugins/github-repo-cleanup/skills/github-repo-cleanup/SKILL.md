@@ -2,7 +2,7 @@
 name: github-repo-cleanup
 description: Clean up a local or remote GitHub repository by inventorying branches and pull requests, creating PRs for eligible work, merging validated changes under repository rules, and deleting verified merged branches. Use for repository or branch cleanup and consolidation; an inventory-only request remains read-only.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   lifecycle: active
 ---
 
@@ -23,11 +23,21 @@ Create a branch/action ledger from [the cleanup template](assets/cleanup-record.
 ## Classify before acting
 
 - **Already merged:** prove ancestry into the retained target, or verify a merged PR for the exact current branch head under a squash/rebase strategy. Follow the reference's additional reachability and race checks before deletion.
-- **Ready for integration:** in-scope completed work with a understood diff, appropriate validation, and no unresolved required review. Create or reuse its PR, then merge under repository policy.
+- **Ready for integration:** in-scope completed work with an understood diff, appropriate validation, and no unresolved required review. Create or reuse its PR, then merge under repository policy.
 - **Dependent work:** identify the stack and integrate parents first. Reassess the child's base and actual diff after each merge, especially after squash/rebase.
-- **Incomplete or ambiguous:** draft PRs, active WIP, unexplained local work, unresolved intent, missing permissions, failed gates, or abandoned-but-unmerged changes. Preserve and report a concrete next action. Create a draft PR only when publishing that work is authorized; draft status is not permission to publish.
+- **Incomplete or ambiguous:** draft PRs, active WIP, unexplained local work, unresolved intent, missing permissions, failed gates, or abandoned-but-unmerged changes. Preserve the work. If its purpose, ownership, intended base, or keep/merge/delete disposition remains unclear after inspection, ask the user a focused question with the evidence described below. Failed gates with a known remedy can proceed through already-authorized repair; a question does not substitute for required checks. Create a draft PR only when publishing that work is authorized; draft status is not permission to publish.
 
 Protect the actual default branch and branches retained by policy, active deployments, release/support workflows, open PR dependencies, or active worktrees. Do not delete a fork contributor's branch unless that repository is explicitly included in scope. A closed unmerged PR is not a merged branch.
+
+## Explain uncertainty and ask
+
+Before asking, inspect the actual diff and relevant commit/PR history. Prepare a concise explanation of what changed, which behavior or files it affects, recorded authorship, when it was authored/committed and when its PR was opened or merged, current integration status, and what remains uncertain. Link exact commits or PRs and distinguish observed behavior from inferred intent. Use [the history guidance](references/github-workflow.md#change-history-and-dates) to avoid presenting Git timestamps as branch creation or push dates.
+
+Ask the user explicitly when the unresolved choice changes whether work should be published, merged, retained, or deleted. Present the specific branch/head, the change summary and dated evidence, a recommendation if supported, and the decision needed. For example: “This branch changes invoice rounding and has two unmerged commits authored on March 4; there is no PR explaining whether the change is still wanted. Should I prepare it for review or retain it without merging?” Use dates and facts from the inspected repository, not this example.
+
+Do not merely list an ambiguous branch as skipped, silently infer abandonment, or treat no response as permission. Keep the affected action pending until the user answers; continue independent authorized cleanup where possible. Group related questions to reduce interruption, but keep distinct decisions clear. Record the answer and its scope, and revalidate the head before acting. Existing authorization remains sufficient for unambiguous eligible work.
+
+Be ready to explain both the original changes and your cleanup actions. Record what you changed, why, the relevant before/after SHAs, and the observed operation or platform timestamps. If a date or author cannot be established, say so rather than inferring it.
 
 ## Create and merge PRs
 
