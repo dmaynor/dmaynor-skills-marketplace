@@ -45,7 +45,7 @@
       "name": "sat2",
       "source": "./plugins/sat2",
       "description": "Evolved SAT \u2014 hypothesis-first structured analysis, budget-aware, dual-interface (human + machine JSON). Adds ceremony gate, discrimination-first test ordering, prior-basis discipline, and a completion contract. Pairs with pdf-report-formatting.",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     {
       "name": "simulation-components",
