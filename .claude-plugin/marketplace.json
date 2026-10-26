@@ -38,8 +38,14 @@
     {
       "name": "sat-analysis",
       "source": "./plugins/sat-analysis",
-      "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data. Pairs with pdf-report-formatting for polished PDF deliverables (light/cyber themes; formal/tactical/navigable_tactical layouts).",
-      "version": "1.3.0"
+      "description": "Structured Analytic Techniques (SAT) for rigorous analysis of user-supplied data. Pairs with pdf-report-formatting for polished PDF deliverables (light or cyber theme).",
+      "version": "1.2.1"
+    },
+    {
+      "name": "sat2",
+      "source": "./plugins/sat2",
+      "description": "Evolved SAT \u2014 hypothesis-first structured analysis, budget-aware, dual-interface (human + machine JSON). Adds ceremony gate, discrimination-first test ordering, prior-basis discipline, and a completion contract. Pairs with pdf-report-formatting.",
+      "version": "1.0.0"
     },
     {
       "name": "simulation-components",
@@ -57,7 +63,7 @@
       "name": "swarm-orchestration",
       "source": "./plugins/swarm-orchestration",
       "description": "Multi-agent swarm orchestration for complex tasks with TD coordination.",
-      "version": "1.2.0"
+      "version": "1.1.0"
     },
     {
       "name": "zero-analysis",
@@ -99,7 +105,7 @@
       "name": "autonomous-research-loop",
       "source": "./plugins/autonomous-research-loop",
       "description": "Run Claude Code as an autonomous research agent with restart-with-state loops.",
-      "version": "1.2.0"
+      "version": "1.1.0"
     },
     {
       "name": "claude-code-hook-debugging",
@@ -172,54 +178,6 @@
       "source": "./plugins/pdf-report-formatting",
       "description": "Produce branded, professionally formatted PDF reports with selectable themes (light/cyber) and structural layouts (formal/tactical/navigable_tactical), cover page, table of contents, running header, page-N-of-M footer, modern tables, callouts, ordered/unordered lists. Cyber theme provides a dark navy + cyan/magenta tactical aesthetic with L-shaped corner brackets. Tactical layout drops cover/TOC/numbering for the strix-halo briefing pattern. Pair with any analysis skill (sat-analysis, zero-analysis, strategic-advisor).",
       "version": "1.2.0"
-    },
-    {
-      "name": "openproject",
-      "source": "./plugins/openproject",
-      "description": "Evidence-preserving OpenProject work-package, Gantt, activity, attachment, reconciliation, and API automation workflows.",
-      "version": "1.0.0"
-    },
-    {
-      "name": "macos-screen-flash-triage",
-      "source": "./plugins/macos-screen-flash-triage",
-      "description": "Triage macOS display flashes using WindowServer and unified-log evidence.",
-      "version": "1.1.0"
-    },
-    {
-      "name": "mvp-acceptance-audit",
-      "source": "./plugins/mvp-acceptance-audit",
-      "description": "Audit an MVP or release against its actual requirements, qualify recovery and user journeys, and produce evidence-backed completion and delivery records. Use for readiness assessments and requested release qualification, not routine isolated code edits.",
-      "version": "1.0.0"
-    },
-    {
-      "name": "repeatable-demo-evidence",
-      "source": "./plugins/repeatable-demo-evidence",
-      "description": "Prepare and rehearse a repeatable application demonstration with synthetic accounts, role-specific journeys, recovery instructions, screenshots, and a portable offline walkthrough ZIP. Use for demo preparation and evidence handoff, not ordinary screenshot capture.",
-      "version": "1.0.0"
-    },
-    {
-      "name": "github-repo-cleanup",
-      "source": "./plugins/github-repo-cleanup",
-      "description": "Inventory local or remote GitHub repositories, create PRs for eligible branches, merge under repository review and CI rules, and delete verified merged branches without losing unmerged work.",
-      "version": "1.0.1"
-    },
-    {
-      "name": "apple-vuln-research-apple-silicon-kernel-layout",
-      "source": "./plugins/apple-vuln-research-apple-silicon-kernel-layout",
-      "description": "Find the correct arm64e kernel and per-SoC kernelcache for a research target on Apple Silicon macOS.",
-      "version": "1.1.0"
-    },
-    {
-      "name": "apple-vuln-research-kernelcache-kext-binary-diff",
-      "source": "./plugins/apple-vuln-research-kernelcache-kext-binary-diff",
-      "description": "Reliably diff a single macOS kext between two macOS versions when both kexts ship inside the kernelcache.",
-      "version": "1.1.0"
-    },
-    {
-      "name": "apple-vuln-research-nsxpc-listener-enum",
-      "source": "./plugins/apple-vuln-research-nsxpc-listener-enum",
-      "description": "Enumerate an Apple daemon's server-side NSXPC surface via runtime reflection without extracting shared-cache frameworks.",
-      "version": "1.1.0"
     }
   ]
 }
