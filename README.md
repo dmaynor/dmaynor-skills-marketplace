@@ -33,6 +33,7 @@ Private plugin marketplace for Claude Code.
 | `macos-screen-flash-triage` | Diagnose macOS display flashes from logs |
 | `openproject` | Evidence-preserving OpenProject planning and API automation |
 | `purple-teaming` | Purple team exercises and detection validation |
+| `sat2` | Budget-aware hypothesis analysis with validated human and JSON interfaces |
 | `sat-analysis` | Structured Analytic Techniques for rigorous analysis |
 | `simulation-components` | Modular virtualized services for cyber range sims |
 | `strategic-advisor` | Brutally honest strategic evaluation |
@@ -49,3 +50,4 @@ Private plugin marketplace for Claude Code.
 # Install a plugin
 /plugin install cyber-range-design@dmaynor-skills-marketplace
 ```
+

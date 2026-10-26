@@ -1,0 +1,9 @@
+{
+  "name": "sat2",
+  "version": "1.0.1",
+  "description": "Budget-aware hypothesis-first analysis with human and validated JSON output.",
+  "author": {
+    "name": "dmaynor"
+  },
+  "skills": "./skills/"
+}

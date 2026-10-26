@@ -1,109 +1,111 @@
 #!/usr/bin/env python3
-"""Validate a sat2 machine output document against the sat2.output.v1 invariants.
-
-Usage:
-    validate_output.py --file out.json      # or pipe JSON on stdin
-    echo '<json>' | validate_output.py
-
-Exit codes: 0 = valid; 1 = invalid; 2 = usage/IO error.
-"""
+"""Validate sat2.output.v1; exit 0 valid, 1 invalid, 2 IO/usage error."""
+from __future__ import annotations
 import argparse
 import json
+import math
+from pathlib import Path
 import sys
+from typing import Any
 
-REQUIRED_KEYS = {"schema", "claim", "gate", "hypotheses", "assessment", "completion"}
-CATEGORIES = {"obvious", "null", "uncomfortable", "malicious", "systemic"}
-COMPLETION_CONDITIONS = {"a", "b", "c"}
-ANCHOR_HINTS = ("measured", "historical", "document", "rate", "frequency")
+MODES = {'BREACH_DETECTION', 'CRASH_ANALYSIS', 'FIX_VERIFICATION', 'STATEMENT_ANALYSIS', 'GENERAL_HYPOTHESIS'}
 
+def validate(doc: Any) -> None:
+    """Raise ValueError when an output violates the structural contract."""
+    def require(ok: bool, message: str) -> None:
+        if not ok:
+            raise ValueError(message)
+    def obj(value: Any) -> dict:
+        require(isinstance(value, dict), 'expected object')
+        return value
+    def text(value: Any) -> bool:
+        return isinstance(value, str) and bool(value.strip())
+    def seq(value: Any) -> list:
+        require(isinstance(value, list), 'expected array')
+        return value
+    def probability(value: Any) -> bool:
+        return type(value) in (int, float) and math.isfinite(value) and 0 <= value <= 1
+    d = obj(doc)
+    require(d.get('schema') == 'sat2.output.v1', 'invalid schema')
+    if 'error' in d:
+        require(set(d) == {'schema', 'error'}, 'error must be exclusive')
+        e = obj(d['error'])
+        require(e.get('code') == 'bad_input' and text(e.get('message')), 'invalid error')
+        return
+    require(text(d.get('claim')) and d.get('mode') in MODES, 'invalid claim/mode')
+    gate = obj(d.get('gate'))
+    require(type(gate.get('passed')) is bool and text(gate.get('note')), 'invalid gate')
+    c = obj(d.get('completion'))
+    require(type(c.get('discriminated')) is bool and text(c.get('statement')), 'invalid completion')
+    remaining = seq(c.get('remaining_tests'))
+    require(all(text(x) for x in remaining) and len(set(remaining)) == len(remaining), 'invalid remaining IDs')
+    if d.get('result_kind') == 'direct':
+        r = obj(d.get('direct_result'))
+        require(not gate['passed'] and text(r.get('result')) and text(r.get('source')), 'invalid direct result')
+        require(c.get('condition') == 'direct' and c['discriminated'] and not remaining, 'invalid direct completion')
+        require(not d.get('hypotheses'), 'direct output must not invent hypotheses')
+        return
+    require(d.get('result_kind') == 'analysis' and gate['passed'], 'invalid analysis gate')
+    require(bool(seq(gate.get('conditions'))), 'missing gate condition')
+    require(all(x in {'competition','adversarial_surface','downstream_action'} for x in gate['conditions']), 'invalid gate condition')
+    hs = seq(d.get('hypotheses'))
+    require(len(hs) >= 5, 'need >=5 hypotheses')
+    ids: set[str] = set()
+    cats: set[str] = set()
+    for value in hs:
+        h = obj(value)
+        require(all(text(h.get(k)) for k in ('id','text','category','prior_basis','falsified_by')), 'incomplete hypothesis')
+        require(h['id'] not in ids, 'duplicate hypothesis ID')
+        ids.add(h['id']); cats.add(h['category'])
+        require(probability(h.get('prior')), 'invalid prior')
+    require({'obvious','null','uncomfortable'} <= cats, 'missing required categories')
+    tests = seq(d.get('discriminating_tests'))
+    require(bool(tests), 'missing discriminating tests')
+    test_ids: set[str] = set()
+    for index, value in enumerate(tests, 1):
+        t = obj(value)
+        require(all(text(t.get(k)) for k in ('id','action','exit_condition')), 'incomplete test')
+        require(t['id'] not in test_ids, 'duplicate test ID'); test_ids.add(t['id'])
+        refs = seq(t.get('discriminates'))
+        require(all(text(x) for x in refs), 'invalid hypothesis references')
+        require(len(set(refs)) >= 2 and set(refs) <= ids, 'invalid discrimination references')
+        require(type(t.get('order')) is int and t['order'] == index, 'invalid test order')
+    require(set(remaining) <= test_ids, 'unknown remaining test')
+    cond = c.get('condition')
+    require(cond in {'a','b','c','unresolved'}, 'invalid completion condition')
+    require((cond == 'a') == c['discriminated'], 'inconsistent completion')
+    require((not remaining) if cond == 'a' else bool(remaining), 'inconsistent remaining tests')
+    if cond == 'b':
+        for t in tests:
+            if t['id'] in remaining:
+                require(text(t.get('owner')) and text(t.get('queue_evidence')), 'queue requires owner and acknowledgment')
+    if cond == 'c':
+        require(text(c.get('budget_exhaustion_source')), 'caller budget declaration required')
+    a = obj(d.get('assessment'))
+    require(all(text(a.get(k)) for k in ('conclusion','confidence_term','basis')), 'invalid assessment')
+    bounds = seq(a.get('confidence_range'))
+    require(len(bounds) == 2 and all(probability(x) for x in bounds) and bounds[0] <= bounds[1], 'invalid confidence range')
+    for key in ('assumptions','limitations'):
+        require(bool(seq(d.get(key))) and all(text(x) for x in d[key]), 'missing '+key)
+    ach = obj(d.get('ach'))
+    require(type(ach.get('included')) is bool and text(ach.get('reason')), 'invalid ACH')
+    if ach['included']:
+        require(ach.get('trigger') in {'explicit_request','planned_evidence_round','programmatic_scores_requested'}, 'invalid ACH trigger')
 
-def fail(msg):
-    print(f"INVALID: {msg}")
-    return 1
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--file")
-    args = ap.parse_args()
-
+def main() -> int:
+    """Read a UTF-8 JSON document and report validity without tracebacks."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--file', type=Path)
+    args = parser.parse_args()
     try:
-        if args.file:
-            with open(args.file) as fh:
-                doc = json.load(fh)
-        else:
-            doc = json.load(sys.stdin)
-    except Exception as exc:
-        return fail(f"not parseable JSON: {exc}")
+        raw = args.file.read_text(encoding='utf-8') if args.file else sys.stdin.read()
+    except (OSError, UnicodeError) as exc:
+        print(f'IO ERROR: {exc}', file=sys.stderr); return 2
+    try:
+        validate(json.loads(raw))
+    except (ValueError, TypeError, KeyError, AttributeError) as exc:
+        print(f'INVALID: {exc}', file=sys.stderr); return 1
+    print('VALID'); return 0
 
-    if not isinstance(doc, dict):
-        return fail("top level is not an object")
-
-    if "error" in doc:
-        missing = REQUIRED_KEYS - {"schema", "claim"}
-        if missing & set(doc):
-            return fail(f"error document also contains analysis keys: {sorted(missing & set(doc))}")
-        err = doc.get("error") or {}
-        if not err.get("code"):
-            return fail("error document lacks error.code")
-        print("VALID (error document)")
-        return 0
-
-    missing = REQUIRED_KEYS - set(doc)
-    if missing:
-        return fail(f"missing required keys: {sorted(missing)}")
-    if doc["schema"] != "sat2.output.v1":
-        return fail(f"schema must be sat2.output.v1, got {doc['schema']!r}")
-
-    hypos = doc["hypotheses"]
-    if not isinstance(hypos, list) or len(hypos) < 5:
-        return fail(f"hypotheses must be a list of >=5, got {len(hypos) if isinstance(hypos, list) else type(hypos).__name__}")
-
-    cats = set()
-    for h in hypos:
-        for field in ("id", "text", "category", "prior", "prior_basis", "falsified_by"):
-            if not h.get(field):
-                return fail(f"hypothesis {h.get('id', '?')} missing field {field}")
-        if h["category"] not in CATEGORIES:
-            return fail(f"hypothesis {h['id']}: unknown category {h['category']!r}")
-        cats.add(h["category"])
-        try:
-            p = float(h["prior"])
-        except (TypeError, ValueError):
-            return fail(f"hypothesis {h['id']}: prior not numeric")
-        if not 0.0 <= p <= 1.0:
-            return fail(f"hypothesis {h['id']}: prior {p} outside [0,1]")
-        basis = str(h["prior_basis"]).lower()
-        if not any(k in basis for k in ANCHOR_HINTS) and "subjective prior" not in basis:
-            print(f"WARN: hypothesis {h['id']} prior_basis names no anchor and is not labeled 'subjective prior'")
-
-    for required in ("null", "uncomfortable"):
-        if required not in cats:
-            return fail(f"hypotheses missing required category: {required}")
-
-    completion = doc["completion"]
-    cond = completion.get("condition")
-    if cond not in COMPLETION_CONDITIONS:
-        return fail(f"completion.condition must be a|b|c, got {cond!r}")
-    remaining = completion.get("remaining_tests") or []
-    if not completion.get("discriminated") and not remaining:
-        return fail("completion.discriminated is false but remaining_tests is empty")
-
-    tests = doc.get("discriminating_tests") or []
-    if tests:
-        first = tests[0]
-        if len(first.get("discriminates") or []) < 2:
-            return fail("discriminating_tests[0] must discriminate >=2 hypotheses")
-        if not first.get("exit_condition"):
-            return fail("discriminating_tests[0] missing exit_condition")
-
-    ach = doc.get("ach") or {}
-    if ach.get("included") and not (ach.get("reason") or "").strip():
-        return fail("ach.included=true requires ach.reason naming the gate condition")
-
-    print("VALID")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+if __name__ == '__main__':
+    raise SystemExit(main())
